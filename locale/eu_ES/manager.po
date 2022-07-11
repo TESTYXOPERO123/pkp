@@ -6,8 +6,7 @@ msgstr ""
 "POT-Creation-Date: 2019-11-19T10:49:45+00:00\n"
 "PO-Revision-Date: 2022-01-25 13:03+0000\n"
 "Last-Translator: Aitor Renobales <aitor.renobales@ehu.eus>\n"
-"Language-Team: Basque <http://translate.pkp.sfu.ca/projects/pkp-lib/manager/"
-"eu/>\n"
+"Language-Team: Basque <http://translate.pkp.sfu.ca/projects/pkp-lib/manager/eu/>\n"
 "Language: eu_ES\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -640,5 +639,3 @@ msgstr "Mezu hau Ataleko editoreak bidaltzen dio Ebaluatzaile bati, artikulu bat
 #, fuzzy
 msgid "mailable.reviewRequestSubsequent.description"
 msgstr "Atalen Editoreak Berrikusleari bidalitako mezu honetan berrikusleari eskatzen dio bidalitakoaren bigarren edo hurrengo berrikuspen bat onartu edo baztertu dezala. Bidalitakoari buruzko informazioa ematen du, besteak beste, titulua eta aurkezpena, berrikuspena egiteko muga, eta nola sartu bidalitakora.  Mezu hau erabiltzen da Aldizkariaren Konfigurazioan, 2. urratsean Berrikuspen Estandarraren Prozesua hautatzen denean. (Bestela, ikus BERRIKUSPENA_ESKAKIZUNA_ERANTSIA_ONDORENGOA.)"
-
-#, fuzzy

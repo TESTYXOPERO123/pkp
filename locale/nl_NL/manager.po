@@ -9,7 +9,8 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2019-11-19T10:49:56+00:00\n"
 "PO-Revision-Date: 2019-11-19T10:49:56+00:00\n"
-"Language: \n"
+"Language: nl_NL\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 msgid "manager.website.information"
 msgstr "Informatie"
@@ -1745,9 +1746,7 @@ msgstr "Deze e-mail wordt door de reviewer verstuurd naar de sectieredacteur als
 
 #, fuzzy
 msgid "mailable.reviewRemind.description"
-msgstr ""
-"Deze e-mail wordt door de sectieredacteur verstuurd om een reviewer eraan te "
-"herinneren dat de afgesproken reviewperiode verstreken is."
+msgstr "Deze e-mail wordt door de sectieredacteur verstuurd om een reviewer eraan te herinneren dat de afgesproken reviewperiode verstreken is."
 
 #, fuzzy
 msgid "mailable.reviewRemindAuto.description"
@@ -1764,5 +1763,3 @@ msgstr "Deze e-mail van de sectieredacteur aan een reviewer vraagt aan de review
 #, fuzzy
 msgid "mailable.reviewRequestSubsequent.description"
 msgstr "Deze e-mail van de sectieredacteur aan de reviewer vraagt de reviewer een inzending voor een tweede of latere ronde te reviewen. Het bevat informatie over de inzending zoals titel en samenvatting, de uiterste datum voor de review en de gegevens om de inzending te benaderen. Dit bericht wordt gebruikt bij het standaard review proces, zoals gekozen in instellen, stap 2"
-
-#, fuzzy

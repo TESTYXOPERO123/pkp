@@ -9,7 +9,8 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2019-11-19T10:49:46+00:00\n"
 "PO-Revision-Date: 2019-11-19T10:49:46+00:00\n"
-"Language: \n"
+"Language: fa_IR\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
 
 msgid "manager.website.information"
 msgstr "اطلاعات"
@@ -1537,5 +1538,3 @@ msgstr "This email from the Section Editor to a Reviewer requests that the revie
 #, fuzzy
 msgid "mailable.reviewRequestSubsequent.description"
 msgstr "ایمیلی از طرف دبیر یا دبیر بخش به داور برای درخواست انجام داوری"
-
-#, fuzzy
