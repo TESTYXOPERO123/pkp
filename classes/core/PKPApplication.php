@@ -27,6 +27,7 @@ use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Database\MySqlConnection;
 use Illuminate\Support\Facades\DB;
 use PKP\config\Config;
+use PKP\context\Context;
 use PKP\db\DAORegistry;
 use PKP\facades\Locale;
 use PKP\security\Role;
@@ -128,6 +129,13 @@ abstract class PKPApplication implements iPKPApplicationInfoProvider
     public $allProducts;
 
     /**
+     * Instance of context(journal/press/server) when running on CLI
+     *
+     * @var Context|null
+     */
+    protected ?Context $cliContext = null;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -208,6 +216,44 @@ abstract class PKPApplication implements iPKPApplicationInfoProvider
             $appVersion = $versionDao->getCurrentVersion()->getVersionString();
             Registry::set('appVersion', $appVersion);
         }
+    }
+
+    /**
+     * Set the context set when app running on CLI
+     */
+    public function setCliContext(int|Context $context = null): void
+    {
+        if (is_null($context)) {
+            return;
+        }
+        
+        if ($context instanceof Context) {
+            $this->cliContext = $context;
+            return;
+        }
+
+        /** @var \PKP\context\ContextDAO $contextDao */
+        $contextDao = DAORegistry::getDAO(ucfirst($this->getContextName()) . 'DAO');
+
+        if($context = $contextDao->getById($context)) {
+            $this->cliContext = $context;
+        }
+    }
+
+    /**
+     * Clear/unset the context set on CLI
+     */
+    public function clearCliContext(): void
+    {
+        $this->cliContext = null;
+    }
+
+    /**
+     * Get the context set when app running on CLI
+     */
+    public function getCliContext(): ?Context
+    {
+        return $this->cliContext;
     }
 
     /**
@@ -768,6 +814,30 @@ abstract class PKPApplication implements iPKPApplicationInfoProvider
         if (!defined('RUNNING_UPGRADE')) {
             define('RUNNING_UPGRADE', true);
         }
+    }
+
+    /**
+     * Check if application currently running on CLI
+     */
+    public static function isRunningOnCLI(string $scriptPath = null): bool
+    {
+        if (php_sapi_name() && strtolower(php_sapi_name()) === 'cli') {
+            return true;
+        }
+
+        if ($scriptPath) {
+            $serverVars = $_SERVER;
+
+            if (isset($serverVars['SCRIPT_NAME']) && strpos(strtolower($serverVars['SCRIPT_NAME']), strtolower($scriptPath)) !== false) {
+                return true;
+            }
+
+            if (isset($serverVars['SCRIPT_FILENAME']) && strpos(strtolower($serverVars['SCRIPT_FILENAME']), strtolower($scriptPath)) !== false) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

@@ -41,7 +41,7 @@ class ProcessQueueJobs extends ScheduledTask
             return true;
         }
 
-        $jobQueue = app('pkpJobQueue');
+        $jobQueue = app('pkpJobQueue'); /** @var \PKP\core\PKPQueueProvider $jobQueue */
 
         $jobBuilder = $jobQueue->getJobModelBuilder();
 
@@ -50,7 +50,7 @@ class ProcessQueueJobs extends ScheduledTask
         }
 
         // Run queue jobs on CLI
-        if (runOnCLI('runScheduledTasks.php')) {
+        if (Application::isRunningOnCLI('runScheduledTasks.php')) {
             while ($jobBuilder->count()) {
                 $jobQueue->runJobInQueue();
             }
