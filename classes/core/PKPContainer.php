@@ -30,6 +30,7 @@ use Illuminate\Log\LogServiceProvider;
 use Illuminate\Queue\Failed\DatabaseFailedJobProvider;
 use Illuminate\Support\Facades\Facade;
 use PKP\config\Config;
+use PKP\core\PKPBladeViewServiceProvider;
 use PKP\i18n\LocaleServiceProvider;
 use PKP\core\PKPUserProvider;
 use PKP\proxy\ProxyParser;
@@ -161,6 +162,7 @@ class PKPContainer extends Container
         $this->register(new AppServiceProvider($this));
         $this->register(new LocaleServiceProvider($this));
         $this->register(new PKPRoutingProvider($this));
+        $this->register(new PKPBladeViewServiceProvider($this));
     }
 
     /**
