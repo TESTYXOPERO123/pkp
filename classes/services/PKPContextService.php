@@ -47,8 +47,10 @@ use PKP\security\RoleDAO;
 use PKP\services\interfaces\EntityPropertyInterface;
 use PKP\services\interfaces\EntityReadInterface;
 use PKP\services\interfaces\EntityWriteInterface;
-use PKP\submission\GenreDAO;
+use PKP\submission\genre\GenreDAO;
 use PKP\validation\ValidatorFactory;
+use PKP\submission\genre\Genre;
+
 
 abstract class PKPContextService implements EntityPropertyInterface, EntityReadInterface, EntityWriteInterface
 {
@@ -543,6 +545,8 @@ abstract class PKPContextService implements EntityPropertyInterface, EntityReadI
         }
         $context = $this->edit($context, $params, $request);
 
+        // TODO: transition to using Genre repository once installDefaults is implemented
+        // this usage is temporary and pending finalization of settings management.
         $genreDao = DAORegistry::getDAO('GenreDAO'); /** @var GenreDAO $genreDao */
         $genreDao->installDefaults($context->getId(), $context->getData('supportedLocales'));
 
@@ -622,8 +626,9 @@ abstract class PKPContextService implements EntityPropertyInterface, EntityReadI
 
         Repo::userGroup()->deleteByContextId($context->getId());
 
-        $genreDao = DAORegistry::getDAO('GenreDAO'); /** @var GenreDAO $genreDao */
-        $genreDao->deleteByContextId($context->getId());
+
+        Genre::where('context_id', $context->getId())->delete();
+
 
         Repo::announcement()->deleteMany(
             Repo::announcement()

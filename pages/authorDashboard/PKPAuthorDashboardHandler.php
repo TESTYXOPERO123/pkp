@@ -39,7 +39,6 @@ use PKP\log\SubmissionEmailLogDAO;
 use PKP\log\SubmissionEmailLogEntry;
 use PKP\security\authorization\AuthorDashboardAccessPolicy;
 use PKP\security\Role;
-use PKP\submission\GenreDAO;
 use PKP\submission\PKPSubmission;
 use PKP\submission\reviewRound\ReviewRound;
 use PKP\submission\reviewRound\ReviewRoundDAO;
@@ -167,8 +166,8 @@ abstract class PKPAuthorDashboardHandler extends Handler
         }
 
         $contextUserGroups = Repo::userGroup()->getByRoleIds([Role::ROLE_ID_AUTHOR], $submission->getData('contextId'));
-        $genreDao = DAORegistry::getDAO('GenreDAO'); /** @var GenreDAO $genreDao */
-        $contextGenres = $genreDao->getEnabledByContextId($submission->getData('contextId'))->toArray();
+        $contextGenres = Repo::genre()->getEnabledByContextId($submission->getData('contextId'))->toArray();
+
         $workflowStages = WorkflowStageDAO::getWorkflowStageKeysAndPaths();
 
         $stageNotifications = [];

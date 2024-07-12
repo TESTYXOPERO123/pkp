@@ -25,7 +25,7 @@ use PKP\core\PKPRequest;
 use PKP\db\DAORegistry;
 use PKP\security\authorization\PKPSiteAccessPolicy;
 use PKP\security\Role;
-use PKP\submission\GenreDAO;
+use PKP\submission\genre\Genre;
 use PKP\submission\PKPSubmission;
 
 define('SUBMISSIONS_LIST_ACTIVE', 'active');
@@ -113,9 +113,7 @@ class DashboardHandler extends Handler
             ->filterByContextIds([$context->getId()])
             ->getMany();
 
-        /** @var GenreDAO $genreDao */
-        $genreDao = DAORegistry::getDAO('GenreDAO');
-        $genres = $genreDao->getByContextId($context->getId())->toArray();
+        $genres = Genre::where('context_id', $context->getId())->get()->toArray();
 
         $items = Repo::submission()->getSchemaMap()->mapManyToSubmissionsList($items, $userGroups, $genres);
 

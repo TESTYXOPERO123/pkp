@@ -49,7 +49,7 @@ use PKP\security\authorization\internal\UserAccessibleWorkflowStageRequiredPolic
 use PKP\security\authorization\WorkflowStageAccessPolicy;
 use PKP\security\Role;
 use PKP\stageAssignment\StageAssignment;
-use PKP\submission\GenreDAO;
+use PKP\submission\genre\Genre;
 use PKP\submission\PKPSubmission;
 use PKP\submission\reviewRound\ReviewRoundDAO;
 use PKP\user\User;
@@ -216,9 +216,8 @@ abstract class PKPWorkflowHandler extends Handler
         if (!empty($accessibleWorkflowStages[$currentStageId]) && array_intersect([Role::ROLE_ID_MANAGER, Role::ROLE_ID_SITE_ADMIN, Role::ROLE_ID_SUB_EDITOR], $accessibleWorkflowStages[$currentStageId] ?? [])) {
             $canAccessEditorialHistory = true;
         }
-        /** @var GenreDAO $genreDao */
-        $genreDao = DAORegistry::getDAO('GenreDAO');
-        $genres = $genreDao->getByContextId($submission->getData('contextId'))->toArray();
+
+        $genres = Genre::where('context_id', $submission->getData('contextId'))->get()->toArray();
 
         $latestPublication = $submission->getLatestPublication();
 
