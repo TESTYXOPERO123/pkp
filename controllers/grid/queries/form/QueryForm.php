@@ -331,9 +331,7 @@ class QueryForm extends Form
                         // Replaces StageAssignmentDAO::getBySubmissionAndRoleId
                         $excludeUsers = StageAssignment::withSubmissionIds([$query->assocId])
                             ->withRoleIds([Role::ROLE_ID_AUTHOR])
-                            ->withUserId($user->getId())
-                            ->get()
-                            ->pluck('userId')
+                            ->pluck('user_id')
                             ->all();
                     }
                 }
