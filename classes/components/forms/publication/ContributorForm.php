@@ -17,6 +17,7 @@ namespace PKP\components\forms\publication;
 
 use APP\facades\Repo;
 use APP\submission\Submission;
+use PKP\components\forms\FieldAffiliation;
 use PKP\components\forms\FieldOptions;
 use PKP\components\forms\FieldOrcid;
 use PKP\components\forms\FieldRichTextarea;
@@ -120,6 +121,12 @@ class ContributorForm extends FormComponent
                 'label' => __('user.affiliation'),
                 'isMultilingual' => true,
             ]));
+
+        $this->addField(new FieldAffiliation('authorAffiliation', [
+            'label' => __('user.affiliation'),
+            'description' => __('user.affiliation.description'),
+            'isMultilingual' => true,
+        ]));
 
         if ($authorUserGroupsOptions->count() > 1) {
             $this->addField(new FieldOptions('userGroupId', [
