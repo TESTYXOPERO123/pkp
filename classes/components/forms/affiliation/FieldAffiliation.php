@@ -13,12 +13,14 @@
  * @brief A field for author affiliations.
  */
 
-namespace PKP\components\forms;
+namespace PKP\components\forms\affiliation;
+
+use PKP\components\forms\Field;
 
 class FieldAffiliation extends Field
 {
     /** @copydoc Field::$component */
-    public $component = 'table';
+    public $component = 'affiliation';
 
     /**
      * @copydoc Field::getConfig()
@@ -26,7 +28,6 @@ class FieldAffiliation extends Field
     public function getConfig()
     {
         $config = parent::getConfig();
-        $config['bottom-controls'] = 'hello';
 
         return $config;
     }
