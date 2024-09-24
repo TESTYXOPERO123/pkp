@@ -71,21 +71,23 @@
 							</div>
 						</div>
 					</div>
-					<table class="-screenReader" role="region" aria-live="polite">
-						<caption>{translate key="stats.views.timelineInterval"}</caption>
-						<thead>
-							<tr>
-								<th scope="col">{translate key="common.date"}</th>
-								<th scope="col">{translate key="stats.views"}</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr	v-for="segment in timeline" :key="segment.date">
-								<th scope="row">{{ segment.label }}</th>
-								<td>{{ segment.value }}</td>
-							</tr>
-						</tbody>
-					</table>
+					<div class="sr-only">
+						<table class="-screenReader" role="region" aria-live="polite">
+							<caption>{translate key="stats.views.timelineInterval"}</caption>
+							<thead>
+								<tr>
+									<th scope="col">{translate key="common.date"}</th>
+									<th scope="col">{translate key="stats.views"}</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr	v-for="segment in timeline" :key="segment.date">
+									<th scope="row">{{ segment.label }}</th>
+									<td>{{ segment.value }}</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
 					<line-chart :chart-data="chartData" aria-hidden="true"></line-chart>
 					<span v-if="isLoadingTimeline" class="pkpStats__loadingCover">
 						<spinner></spinner>
@@ -93,7 +95,7 @@
 				</div>
 				<div class="pkpStats__panel" role="region" aria-live="polite">
 					<pkp-header>
-						<h2>
+						<h2 id="contextDetailTableLabel">
 							{translate key="stats.views"}
 							<tooltip
 								tooltip="{translate key="stats.context.tooltip.text"}"
@@ -110,21 +112,15 @@
 							</pkp-button>
 						</template>
 					</pkp-header>
-					<pkp-table
-						labelled-by="contextDetailTableLabel"
-						:class="tableClasses"
-						:columns="tableColumns"
-						:rows="items"
-					>
-						<template #default="{ row, rowIndex }">
-							<table-cell
-								v-for="(column, columnIndex) in tableColumns"
-								:key="column.name"
-								:column="column"
-								:row="row"
-								:tabindex="!rowIndex && !columnIndex ? 0 : -1"
-							>
-								<template #default v-if="column.name === 'title'">
+					<pkp-table labelled-by="contextDetailTableLabel">
+						<table-header>
+							<table-column v-for="column in tableColumns" :key="column.name" :id="column.name">
+								{{ column.label }}
+							</table-column>
+						</table-header>
+						<table-body>
+							<table-row v-for="(row) in items" :key="row.key">
+								<table-cell>
 									<a
 										:href="row.url"
 										class="pkpStats__itemLink"
@@ -132,16 +128,14 @@
 									>
 										<span class="pkpStats__itemTitle">{{ localize(row.name) }}</span>
 									</a>
-								</template>
-							</table-cell>
-						</template>
+								</table-cell>
+								<table-cell>{{ row.total }}</table-cell>
+							</table-row>
+							<template #no-content v-if="!items.length && isLoadingItems">
+								{translate key="common.loading"}
+							</template>
+						</table-body>
 					</pkp-table>
-					<div v-if="!items.length" class="pkpStats__noRecords">
-						<template v-if="isLoadingItems">
-							<spinner></spinner>
-							{translate key="common.loading"}
-						</template>
-					</div>
 				</div>
 			</div>
 		</div>

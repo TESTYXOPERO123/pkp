@@ -71,6 +71,9 @@ msgstr "The following locales are not supported: {$locales}."
 msgid "api.dois.403.editItemOutOfContext"
 msgstr "You cannot edit an item's DOI that is not in this context."
 
+msgid "api.dois.403.editItemDoiCantBeAssigned"
+msgstr "A DOI cannot be assigned to this item."
+
 msgid "api.dois.403.pubTypeNotRecognized"
 msgstr "The publication type was not recognized."
 
@@ -331,3 +334,6 @@ msgstr "The reviewer for the assignment could not be found"
 
 msgid "api.submission.400.sectionDoesNotExist"
 msgstr "The provided section does not exist."
+
+msgid "api.publications.403.noEnabledIdentifiers"
+msgstr "Publication identifiers form is unavailable as there are no enabled Identifiers."

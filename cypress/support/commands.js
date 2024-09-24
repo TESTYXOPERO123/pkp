@@ -647,13 +647,13 @@ Cypress.Commands.add('checkTable', (articleDetails, articles, authors, submissio
 	cy.get('h2:contains("' + articleDetails + '")').scrollIntoView();
 	cy.get(`div:contains("${submissionCount} of ${submissionCount} ${articles}")`);
 	authors.forEach(author => {
-		cy.get('.pkpStats__panel .pkpTable__cell:contains("' + author + '")');
+		cy.get('.pkpStats__panel .pkpStats__itemAuthors:contains("' + author + '")');
 	});
 	cy.get('input.pkpSearch__input').type('shouldreturnzeromatches', {delay: 0});
 	cy.get('div:contains("No ' + articles + ' were found with usage statistics matching these parameters.")');
 	cy.get('div:contains("0 of 0 ' + articles + '")');
 	cy.get('input.pkpSearch__input').clear().type(authors[0], {delay: 0});
-	cy.get('.pkpStats__panel .pkpTable__cell:contains("' + authors[0] + '")');
+	cy.get('.pkpStats__panel .pkpStats__itemAuthors:contains("' + authors[0] + '")');
 	cy.get(`div:contains("${submissionCountFromAuthor} of ${submissionCountFromAuthor} ${articles}")`);
 	cy.get('input.pkpSearch__input').clear();
 });
@@ -667,7 +667,9 @@ Cypress.Commands.add('checkFilters', filters => {
 });
 
 Cypress.Commands.add('checkDoiConfig', doiTypes => {
-	cy.get('a:contains("Distribution")').click();
+	cy.get('nav').contains('Settings').click();
+	// Ensure submenu item click despite animation
+	cy.get('nav').contains('Distribution').click({ force: true });
 
 	cy.get('button#dois-button').click();
 
@@ -743,6 +745,10 @@ Cypress.Commands.add('checkDoiAssignment', (selectorId) => {
 			/10.1234\/[0-9abcdefghjkmnpqrstvwxyz]{6}[0-9]{2}/
 			);
 	});
+});
+
+Cypress.Commands.add('checkDisabledDoiAssignment', (selectorId) => {
+	cy.get(`input#${selectorId}`).should('have.value', '');
 });
 
 Cypress.Commands.add('checkDoiFilterResults', (filterName, textToCheck, expectedCount, itemType = 'submission') => {
