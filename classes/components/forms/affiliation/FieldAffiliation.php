@@ -20,7 +20,7 @@ use PKP\components\forms\Field;
 class FieldAffiliation extends Field
 {
     /** @copydoc Field::$component */
-    public $component = 'affiliation';
+    public $component = 'field-affiliation';
 
     /**
      * @copydoc Field::getConfig()
