@@ -17,7 +17,7 @@ namespace PKP\components\forms\publication;
 
 use APP\facades\Repo;
 use APP\submission\Submission;
-use PKP\components\forms\affiliation\FieldAffiliation;
+use PKP\components\forms\FieldAffiliation;
 use PKP\components\forms\FieldOptions;
 use PKP\components\forms\FieldOrcid;
 use PKP\components\forms\FieldRichTextarea;
