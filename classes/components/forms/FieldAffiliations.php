@@ -15,10 +15,10 @@
 
 namespace PKP\components\forms;
 
-class FieldAuthorAffiliation extends Field
+class FieldAffiliations extends Field
 {
     /** @copydoc Field::$component */
-    public $component = 'field-author-affiliation';
+    public $component = 'field-affiliations';
 
     /**
      * @copydoc Field::getConfig()

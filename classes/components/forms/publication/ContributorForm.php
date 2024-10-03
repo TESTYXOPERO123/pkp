@@ -17,7 +17,7 @@ namespace PKP\components\forms\publication;
 
 use APP\facades\Repo;
 use APP\submission\Submission;
-use PKP\components\forms\FieldAuthorAffiliation;
+use PKP\components\forms\FieldAffiliations;
 use PKP\components\forms\FieldOptions;
 use PKP\components\forms\FieldOrcid;
 use PKP\components\forms\FieldRichTextarea;
@@ -71,10 +71,10 @@ class ContributorForm extends FormComponent
             return strcmp($a['label'], $b['label']);
         });
 
-        $this->addField(new FieldAuthorAffiliation('authorAffiliations', [
+        $this->addField(new FieldAffiliations('authorAffiliations', [
             'label' => __('user.affiliation'),
             'description' => __('user.affiliation.description'),
-            'isMultilingual' => true,
+            'isMultilingual' => false,
         ]));
 
         $this->addField(new FieldText('givenName', [
