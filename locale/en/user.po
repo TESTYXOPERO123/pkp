@@ -20,6 +20,9 @@ msgstr "Affiliation"
 msgid "user.affiliation.description"
 msgstr "(Your institution, e.g. \"Simon Fraser University\")"
 
+msgid "user.affiliations"
+msgstr "Affiliations"
+
 msgid "user.affiliations.description"
 msgstr ""
 "Enter the full name of the institution below, avoiding any acronyms. "
