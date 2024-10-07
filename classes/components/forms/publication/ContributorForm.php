@@ -113,7 +113,6 @@ class ContributorForm extends FormComponent
             ]), [FIELD_POSITION_AFTER, 'url']);
         }
 
-
         if ($context->getSetting('requireAuthorCompetingInterests')) {
             $this->addField(new FieldRichTextarea('competingInterests', [
                 'label' => __('author.competingInterests'),
@@ -124,7 +123,11 @@ class ContributorForm extends FormComponent
         $this->addField(new FieldRichTextarea('biography', [
             'label' => __('user.biography'),
             'isMultilingual' => true,
-        ]));
+        ]))
+            ->addField(new FieldText('affiliation', [
+                'label' => __('user.affiliation'),
+                'isMultilingual' => true,
+            ]));
 
         if ($authorUserGroupsOptions->count() > 1) {
             $this->addField(new FieldOptions('userGroupId', [
