@@ -8,10 +8,10 @@
 		"userGroupId"
 	],
 	"properties": {
-		"affiliation": {
+		"affiliations": {
 			"type": "string",
 			"description": "The scholarly institution this contributor is employed by or affiliated with.",
-			"multilingual": true,
+			"multilingual": false,
 			"apiSummary": true,
 			"validation": [
 				"nullable"

@@ -107,7 +107,14 @@ abstract class PKPScheduler
             ->daily()
             ->name(RemoveExpiredInvitations::class)
             ->withoutOverlapping();
-        
+
+        $this
+            ->schedule
+            ->call(fn () => (new UpdateRorRegistryDataset)->execute())
+            ->twiceMonthly()
+            ->name(UpdateRorRegistryDataset::class)
+            ->withoutOverlapping();
+
         // We only load all plugins and register their scheduled tasks when running under the CLI
         // On the web based task runner the scheduled tasks must be registered before it starts running
         if (PKPContainer::getInstance()->runningInConsole()) {

@@ -18,16 +18,24 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\LazyCollection;
 use PKP\core\interfaces\CollectorInterface;
+use PKP\plugins\Hook;
 
 /**
  * @template T of Affiliation
  */
 class Collector implements CollectorInterface
 {
+    /** @var DAO */
     public DAO $dao;
-    public ?string $searchPhrase = null;
+
     public ?int $count = null;
+
     public ?int $offset = null;
+
+    /** @var int[]|null */
+    public ?array $authorIds = null;
+
+    public ?string $searchPhrase = null;
 
     public function __construct(DAO $dao)
     {
@@ -55,6 +63,15 @@ class Collector implements CollectorInterface
     public function getMany(): LazyCollection
     {
         return $this->dao->getMany($this);
+    }
+
+    /**
+     * Filter by authors
+     */
+    public function filterByAuthorIds(?array $authorIds): self
+    {
+        $this->authorIds = $authorIds;
+        return $this;
     }
 
     /**
@@ -90,7 +107,8 @@ class Collector implements CollectorInterface
      */
     public function getQueryBuilder(): Builder
     {
-        $qb = DB::table($this->dao->table . ' as i')->select('i.*');
+        $qb = DB::table($this->dao->table . ' as a')
+            ->select('a.*');
 
         if (!is_null($this->count)) {
             $qb->limit($this->count);
@@ -99,6 +117,13 @@ class Collector implements CollectorInterface
         if (!is_null($this->offset)) {
             $qb->offset($this->offset);
         }
+
+        if (!is_null($this->authorIds)) {
+            $qb->whereIn('a.author_id', $this->authorIds);
+        }
+
+        // Add app-specific query statements
+        Hook::call('Affiliation::Collector', [&$qb, $this]);
 
         return $qb;
     }
