@@ -114,10 +114,7 @@ class DAO extends EntityDAO
      */
     public function fromRow(object $row): Affiliation
     {
-        /** @var Affiliation $ror */
-        $ror = parent::fromRow($row);
-
-        return $ror;
+        return parent::fromRow($row);
     }
 
     /**
