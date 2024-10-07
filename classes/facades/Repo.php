@@ -24,7 +24,7 @@
 
 namespace PKP\facades;
 
-use PKP\affiliation\Affiliation as AffiliationRepository;
+use PKP\affiliation\Repository as AffiliationRepository;
 use PKP\announcement\Repository as AnnouncementRepository;
 use PKP\author\Repository as AuthorRepository;
 use PKP\category\Repository as CategoryRepository;
