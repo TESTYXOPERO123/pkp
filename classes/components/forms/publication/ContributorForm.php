@@ -71,10 +71,12 @@ class ContributorForm extends FormComponent
             return strcmp($a['label'], $b['label']);
         });
 
-        $this->addField(new FieldAffiliations('authorAffiliations', [
+        $affiliations = '[{"id":1,"authorId":1,"ror":"https://ror.org/0213rcc28","name":{"en":"Simon Fraser University","de":"Simon Fraser University","fr_CA":"Simon Fraser University"}},{"id":2,"authorId":1,"ror":"https://ror.org/02e2c7k09","name":{"en":"Delft University of Technology","de":"","fr_CA":""}},{"id":3,"authorId":1,"ror":"","name":{"en":"German National Library of Science and Technology","de":"Technische Informationsbibliothek (TIB)","fr_CA":""}},{"id":4,"authorId":1,"ror":"https://ror.org/0304hq317","name":{"en":"Leibniz University Hannover","de":"Technische Universität Hannover","fr_CA":""}}]';
+        $this->addField(new FieldAffiliations('affiliations', [
             'label' => __('user.affiliation'),
-            'description' => __('user.affiliation.description'),
+            'description' => __('user.affiliations.description'),
             'isMultilingual' => false,
+            'value' => $affiliations
         ]));
 
         $this->addField(new FieldText('givenName', [
@@ -122,12 +124,6 @@ class ContributorForm extends FormComponent
         $this->addField(new FieldRichTextarea('biography', [
             'label' => __('user.biography'),
             'isMultilingual' => true,
-        ]));
-
-        $this->addField(new FieldAffiliations('affiliations', [
-            'label' => __('user.affiliation'),
-            'description' => __('user.affiliations.description'),
-            'isMultilingual' => false,
         ]));
 
         if ($authorUserGroupsOptions->count() > 1) {
