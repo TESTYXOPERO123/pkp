@@ -17,7 +17,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use PKP\migration\Migration;
 
-class AuthorAffiliationsMigration extends Migration
+class AffiliationsMigration extends Migration
 {
     /**
      * Run the migrations.
@@ -28,14 +28,15 @@ class AuthorAffiliationsMigration extends Migration
             $table->comment('Author affiliations');
             $table->bigInteger('author_affiliation_id')->autoIncrement();
             $table->bigInteger('author_id');
-            $table->string('ror');
+            $table->string('ror')->nullable();
 
+            $table->index(['ror'], 'author_affiliations_ror');
             $table->foreign('author_id')->references('author_id')->on('authors')->cascadeOnDelete();
         });
 
         Schema::create('author_affiliation_settings', function (Blueprint $table) {
             $table->comment('More data about author affiliations');
-            $table->bigInteger('author_affiliation_setting_id');
+            $table->bigInteger('author_affiliation_setting_id')->autoIncrement();
             $table->bigInteger('author_affiliation_id');
             $table->string('locale', 28)->default('');
             $table->string('setting_name', 255);
