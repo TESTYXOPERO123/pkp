@@ -256,4 +256,59 @@ class Author extends Identity
     {
         return $this->getLocalizedData('competingInterests');
     }
+
+    /**
+     * Get affiliations (position, institution, etc.).
+     */
+    public function getAffiliations()
+    {
+        error_log(__CLASS__ . '/' . __METHOD__);
+        return $this->getData('affiliations');
+    }
+
+    /**
+     * Set affiliations.
+     *
+     * @param $affiliations
+     *
+     * @return void
+     */
+    public function setAffiliations($affiliations): void
+    {
+        error_log(__CLASS__ . '/' . __METHOD__);
+        $this->setData('affiliations', $affiliations);
+    }
+
+    /**
+     * Get affiliation (position, institution, etc.).
+     *
+     * @param string $locale
+     *
+     * @return string|array
+     */
+    public function getAffiliation($locale)
+    {
+        error_log(__CLASS__ . '/' . __METHOD__);
+        return $this->getData('affiliation', $locale);
+    }
+
+    /**
+     * Set affiliation.
+     *
+     * @param string $affiliation
+     * @param string $locale
+     */
+    public function setAffiliation($affiliation, $locale)
+    {
+        error_log(__CLASS__ . '/' . __METHOD__);
+        $this->setData('affiliation', $affiliation, $locale);
+    }
+
+    /**
+     * Get the localized affiliation
+     */
+    public function getLocalizedAffiliation()
+    {
+        return $this->getLocalizedData('affiliation');
+    }
 }

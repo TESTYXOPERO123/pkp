@@ -512,6 +512,37 @@ class User extends Identity implements Authenticatable
     {
         return 'remember_token';
     }
+
+    /**
+     * Get affiliation (position, institution, etc.).
+     *
+     * @param string $locale
+     *
+     * @return string|array
+     */
+    public function getAffiliation($locale)
+    {
+        return $this->getData('affiliation', $locale);
+    }
+
+    /**
+     * Set affiliation.
+     *
+     * @param string $affiliation
+     * @param string $locale
+     */
+    public function setAffiliation($affiliation, $locale)
+    {
+        $this->setData('affiliation', $affiliation, $locale);
+    }
+
+    /**
+     * Get the localized affiliation
+     */
+    public function getLocalizedAffiliation()
+    {
+        return $this->getLocalizedData('affiliation');
+    }
 }
 
 if (!PKP_STRICT_MODE) {
