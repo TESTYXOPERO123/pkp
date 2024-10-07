@@ -20,13 +20,21 @@ class FieldAffiliations extends Field
     /** @copydoc Field::$component */
     public $component = 'field-affiliations';
 
+    /** @var string The value of this field.  */
+    public $value;
+
+    /** @var string A default for this field when no value is specified. */
+    public $default = '[]';
+
     /**
      * @copydoc Field::getConfig()
      */
     public function getConfig()
     {
         $config = parent::getConfig();
+        $config['value'] = $this->value ?? $this->default ?? null;
 
         return $config;
     }
 }
+
