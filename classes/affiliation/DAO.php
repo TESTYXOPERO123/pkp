@@ -142,15 +142,23 @@ class DAO extends EntityDAO
     }
 
     /**
-     * Save affiliations.
+     * * Insert on duplicate update.
      *
-     * @param int $authorId
-     * @param array $affiliations [Affiliation, Affiliation, ...]
+     * @param Affiliation[] $affiliations
      *
      * @return void
      */
-    public function saveAffiliations(int $authorId, array $affiliations): void
+    public function updateOrInsert(array $affiliations): void
     {
-        error_log(json_encode($affiliations, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+        foreach($affiliations as $affiliation) {
+            if($affiliation instanceof Affiliation) {
+                if(empty($affiliation->getId())){
+                    $this->insert($affiliation);
+                }
+                else{
+                    $this->update($affiliation);
+                }
+            }
+        }
     }
 }

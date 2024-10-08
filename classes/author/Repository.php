@@ -18,6 +18,7 @@ use APP\author\DAO;
 use APP\core\Request;
 use APP\facades\Repo;
 use APP\submission\Submission;
+use Illuminate\Support\LazyCollection;
 use PKP\context\Context;
 use PKP\plugins\Hook;
 use PKP\services\PKPSchemaService;
@@ -270,5 +271,30 @@ class Repository
 
             $seq++;
         }
+    }
+
+    /**
+     * Get all affiliations for a given author.
+     *
+     * @param int $authorId
+     *
+     * @return LazyCollection
+     */
+    public function retrieveAffiliations(int $authorId): LazyCollection
+    {
+        return Repo::affiliation()->getAffiliations($authorId);
+    }
+
+    /**
+     * Save affiliations.
+     *
+     * @param Author $author
+     *
+     * @return void
+     */
+    public function saveAffiliations(Author $author): void
+    {
+        Repo::affiliation()
+            ->saveAffiliations($author->getData('affiliations'));
     }
 }

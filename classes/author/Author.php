@@ -262,52 +262,18 @@ class Author extends Identity
      */
     public function getAffiliations(): LazyCollection
     {
-        return Repo::affiliation()
-            ->getCollector()
-            ->filterByAuthorIds($this->getId())
-            ->getMany();
+        return $this->getData('affiliations');
     }
 
     /**
      * Set affiliations.
      *
-     * @param $affiliations
+     * @param LazyCollection $affiliations
      *
      * @return void
      */
-    public function setAffiliations($affiliations): void
+    public function setAffiliations(LazyCollection $affiliations): void
     {
-        Repo::affiliation()->saveAffiliations($this->getId(), $affiliations);
-    }
-
-    /**
-     * Get affiliation (position, institution, etc.).
-     *
-     * @param string $locale
-     *
-     * @return string|array
-     */
-    public function getAffiliation($locale)
-    {
-        return $this->getData('affiliation', $locale);
-    }
-
-    /**
-     * Set affiliation.
-     *
-     * @param string $affiliation
-     * @param string $locale
-     */
-    public function setAffiliation($affiliation, $locale)
-    {
-        $this->setData('affiliation', $affiliation, $locale);
-    }
-
-    /**
-     * Get the localized affiliation
-     */
-    public function getLocalizedAffiliation()
-    {
-        return $this->getLocalizedData('affiliation');
+        $this->setData('affiliations', $affiliations);
     }
 }

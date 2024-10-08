@@ -15,6 +15,7 @@ namespace PKP\affiliation;
 
 use APP\core\Request;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\LazyCollection;
 use PKP\plugins\Hook;
 use PKP\services\PKPSchemaService;
 use PKP\validation\ValidatorFactory;
@@ -158,15 +159,28 @@ class Repository
     }
 
     /**
-     * Save affiliations.
+     * Get all affiliations for a given author.
      *
      * @param int $authorId
-     * @param array $affiliations [Affiliation, Affiliation, ...]
+     *
+     * @return LazyCollection
+     */
+    public function getAffiliations(int $authorId): LazyCollection
+    {
+        return $this->getCollector()
+            ->filterByAuthorIds([$authorId])
+            ->getMany();
+    }
+
+    /**
+     * Save affiliations.
+     *
+     * @param Affiliation[] $affiliations
      *
      * @return void
      */
-    public function saveAffiliations(int $authorId, array $affiliations): void
+    public function saveAffiliations(array $affiliations): void
     {
-        $this->dao->saveAffiliations($authorId, $affiliations);
+        $this->dao->updateOrInsert($affiliations);
     }
 }

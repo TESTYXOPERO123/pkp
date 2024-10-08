@@ -22,6 +22,7 @@ use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\LazyCollection;
+use PKP\affiliation\Affiliation;
 use PKP\core\EntityDAO;
 use PKP\facades\Repo;
 use PKP\services\PKPSchemaService;
@@ -85,7 +86,7 @@ class DAO extends EntityDAO
             ->join('publications as p', 'a.publication_id', '=', 'p.publication_id')
             ->join('submissions as s', 'p.submission_id', '=', 's.submission_id')
             ->where('a.author_id', '=', $id)
-            ->when($publicationId !== null, fn (Builder $query) => $query->where('a.publication_id', '=', $publicationId))
+            ->when($publicationId !== null, fn(Builder $query) => $query->where('a.publication_id', '=', $publicationId))
             ->select(['a.*', 's.locale AS submission_locale'])
             ->first();
         return $row ? $this->fromRow($row) : null;
@@ -101,7 +102,7 @@ class DAO extends EntityDAO
     {
         return DB::table($this->table)
             ->where($this->primaryKeyColumn, '=', $id)
-            ->when($publicationId !== null, fn (Builder $query) => $query->where($this->getParentColumn(), $publicationId))
+            ->when($publicationId !== null, fn(Builder $query) => $query->where($this->getParentColumn(), $publicationId))
             ->exists();
     }
 
@@ -156,6 +157,8 @@ class DAO extends EntityDAO
         // Set the primary locale from the submission
         $author->setData('locale', $row->submission_locale);
 
+        $this->setAffiliations($author);
+
         return $author;
     }
 
@@ -164,6 +167,8 @@ class DAO extends EntityDAO
      */
     public function insert(Author $author): int
     {
+        $this->saveAffiliations($author);
+
         return parent::_insert($author);
     }
 
@@ -172,6 +177,8 @@ class DAO extends EntityDAO
      */
     public function update(Author $author)
     {
+        $this->saveAffiliations($author);
+
         parent::_update($author);
     }
 
@@ -183,6 +190,8 @@ class DAO extends EntityDAO
         DB::table('publications')
             ->where('primary_contact_id', $author->getId())
             ->update(['primary_contact_id' => null]);
+
+        $this->deleteAffiliations($author->getId());
 
         parent::_delete($author);
     }
@@ -223,6 +232,50 @@ class DAO extends EntityDAO
 
         foreach ($authorIds as $seq => $authorId) {
             DB::table('authors')->where('author_id', '=', $authorId)->update(['seq' => $seq]);
+        }
+    }
+
+    /**
+     * Set a author's affiliation properties
+     *
+     * @param Author $author
+     *
+     * @return void
+     */
+    protected function setAffiliations(Author $author): void
+    {
+        $author->setData('affiliations',
+            Repo::affiliation()
+                ->getAffiliations($author->getId())
+                ->remember()
+        );
+    }
+
+    /**
+     * Save affiliations.
+     *
+     * @param Author $author
+     *
+     * @return void
+     */
+    public function saveAffiliations(Author $author): void
+    {
+        Repo::affiliation()->saveAffiliations($author->getData('affiliations'));
+    }
+
+    /**
+     * Delete a author's affiliations
+     *
+     * @param int $authorId
+     *
+     * @return void
+     */
+    protected function deleteAffiliations(int $authorId): void
+    {
+        $affiliations = Repo::affiliation()->getAffiliations($authorId);
+
+        foreach ($affiliations as $affiliation) {
+            Repo::affiliation()->delete($affiliation);
         }
     }
 }
