@@ -54,8 +54,8 @@ class ContributorForm extends FormComponent
             ->filterByRoleIds([Role::ROLE_ID_AUTHOR])
             ->filterByContextIds([$context->getId()])
             ->getMany()
-            ->map(fn (UserGroup $authorUserGroup) => [
-                'value' => (int) $authorUserGroup->getId(),
+            ->map(fn(UserGroup $authorUserGroup) => [
+                'value' => (int)$authorUserGroup->getId(),
                 'label' => $authorUserGroup->getLocalizedName(),
             ]);
 
@@ -123,11 +123,12 @@ class ContributorForm extends FormComponent
         $this->addField(new FieldRichTextarea('biography', [
             'label' => __('user.biography'),
             'isMultilingual' => true,
-        ]))
-            ->addField(new FieldText('affiliation', [
-                'label' => __('user.affiliation'),
-                'isMultilingual' => true,
-            ]));
+        ]));
+
+        $this->addField(new FieldText('affiliation', [
+            'label' => __('user.affiliation'),
+            'isMultilingual' => true,
+        ]));
 
         if ($authorUserGroupsOptions->count() > 1) {
             $this->addField(new FieldOptions('userGroupId', [
