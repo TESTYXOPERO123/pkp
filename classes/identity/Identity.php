@@ -1,15 +1,13 @@
 <?php
-
 /**
  * @defgroup identity Identity
  * Implements an abstract identity underlying e.g. User and Author records.
  */
-
 /**
  * @file classes/identity/Identity.php
  *
- * Copyright (c) 2014-2021 Simon Fraser University
- * Copyright (c) 2000-2021 John Willinsky
+ * Copyright (c) 2014-2024 Simon Fraser University
+ * Copyright (c) 2000-2024 John Willinsky
  * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
  *
  * @class Identity

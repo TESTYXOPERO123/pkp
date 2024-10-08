@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file classes/author/Author.php
  *
