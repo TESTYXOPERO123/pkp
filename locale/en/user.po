@@ -29,6 +29,18 @@ msgstr ""
 "Select the name from the dropdown and click \"Add\" to include the "
 "affiliation in your profile. (e.g. \"Simon Fraser University\")"
 
+msgid "user.affiliations.institution"
+msgstr "Institution"
+
+msgid "user.affiliations.translation"
+msgstr "Translation"
+
+msgid "user.affiliations.translationAll"
+msgstr "All translations available"
+
+msgid "user.affiliations.translationSome"
+msgstr "{$translated} of {$total} languages completed"
+
 msgid "user.authorization.accessDenied"
 msgstr "Access denied."
 

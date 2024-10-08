@@ -11,6 +11,7 @@
 		"affiliations": {
 			"type": "array",
 			"description": "The scholarly institution this contributor is employed by or affiliated with.",
+			"apiSummary": true,
 			"readOnly": true,
 			"items": {
 				"$ref": "#/definitions/Affiliation"
