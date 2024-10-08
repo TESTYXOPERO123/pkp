@@ -120,24 +120,37 @@ class DAO extends EntityDAO
     /**
      * @copydoc EntityDAO::insert()
      */
-    public function insert(Affiliation $ror): int
+    public function insert(Affiliation $row): int
     {
-        return parent::_insert($ror);
+        return parent::_insert($row);
     }
 
     /**
      * @copydoc EntityDAO::update()
      */
-    public function update(Affiliation $ror): void
+    public function update(Affiliation $row): void
     {
-        parent::_update($ror);
+        parent::_update($row);
     }
 
     /**
      * @copydoc EntityDAO::delete()
      */
-    public function delete(Affiliation $ror): void
+    public function delete(Affiliation $row): void
     {
-        parent::_delete($ror);
+        parent::_delete($row);
+    }
+
+    /**
+     * Save affiliations.
+     *
+     * @param int $authorId
+     * @param array $affiliations [Affiliation, Affiliation, ...]
+     *
+     * @return void
+     */
+    public function saveAffiliations(int $authorId, array $affiliations): void
+    {
+        error_log(json_encode($affiliations, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
     }
 }

@@ -123,28 +123,28 @@ class Repository
     }
 
     /** @copydoc DAO::insert() */
-    public function add(Affiliation $ror): int
+    public function add(Affiliation $row): int
     {
-        $id = $this->dao->insert($ror);
-        Hook::call('Affiliation::add', [$ror]);
+        $id = $this->dao->insert($row);
+        Hook::call('Affiliation::add', [$row]);
         return $id;
     }
 
     /** @copydoc DAO::update() */
-    public function edit(Affiliation $ror, array $params): void
+    public function edit(Affiliation $row, array $params): void
     {
-        $newRor = clone $ror;
+        $newRor = clone $row;
         $newRor->setAllData(array_merge($newRor->_data, $params));
-        Hook::call('Affiliation::edit', [$newRor, $ror, $params]);
+        Hook::call('Affiliation::edit', [$newRor, $row, $params]);
         $this->dao->update($newRor);
     }
 
     /** @copydoc DAO::delete() */
-    public function delete(Affiliation $ror): void
+    public function delete(Affiliation $row): void
     {
-        Hook::call('Affiliation::delete::before', [$ror]);
-        $this->dao->delete($ror);
-        Hook::call('Affiliation::delete', [$ror]);
+        Hook::call('Affiliation::delete::before', [$row]);
+        $this->dao->delete($row);
+        Hook::call('Affiliation::delete', [$row]);
     }
 
     /**
@@ -155,5 +155,18 @@ class Repository
         foreach ($collector->getMany() as $ror) {
             $this->delete($ror);
         }
+    }
+
+    /**
+     * Save affiliations.
+     *
+     * @param int $authorId
+     * @param array $affiliations [Affiliation, Affiliation, ...]
+     *
+     * @return void
+     */
+    public function saveAffiliations(int $authorId, array $affiliations): void
+    {
+        $this->dao->saveAffiliations($authorId, $affiliations);
     }
 }

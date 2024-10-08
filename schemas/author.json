@@ -9,10 +9,13 @@
 	],
 	"properties": {
 		"affiliations": {
-			"type": "string",
+			"type": "array",
 			"description": "The scholarly institution this contributor is employed by or affiliated with.",
 			"multilingual": false,
 			"apiSummary": true,
+			"items": {
+				"$ref": "#/definitions/Affiliation"
+			},
 			"validation": [
 				"nullable"
 			]

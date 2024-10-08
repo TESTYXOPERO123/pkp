@@ -19,6 +19,7 @@
 namespace PKP\author;
 
 use APP\facades\Repo;
+use Illuminate\Support\LazyCollection;
 use PKP\facades\Locale;
 use PKP\identity\Identity;
 
@@ -260,10 +261,12 @@ class Author extends Identity
     /**
      * Get affiliations (position, institution, etc.).
      */
-    public function getAffiliations()
+    public function getAffiliations(): LazyCollection
     {
-        error_log(__CLASS__ . '/' . __METHOD__);
-        return $this->getData('affiliations');
+        return Repo::affiliation()
+            ->getCollector()
+            ->filterByAuthorIds($this->getId())
+            ->getMany();
     }
 
     /**
@@ -275,8 +278,7 @@ class Author extends Identity
      */
     public function setAffiliations($affiliations): void
     {
-        error_log(__CLASS__ . '/' . __METHOD__);
-        $this->setData('affiliations', $affiliations);
+        Repo::affiliation()->saveAffiliations($this->getId(), $affiliations);
     }
 
     /**
@@ -288,7 +290,6 @@ class Author extends Identity
      */
     public function getAffiliation($locale)
     {
-        error_log(__CLASS__ . '/' . __METHOD__);
         return $this->getData('affiliation', $locale);
     }
 
@@ -300,7 +301,6 @@ class Author extends Identity
      */
     public function setAffiliation($affiliation, $locale)
     {
-        error_log(__CLASS__ . '/' . __METHOD__);
         $this->setData('affiliation', $affiliation, $locale);
     }
 
