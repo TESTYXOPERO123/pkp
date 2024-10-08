@@ -2,19 +2,19 @@
 	"menu": {
 		"submissions": {
 			"name": "Submissions",
-			"url": "http://localhost/ojs350-multiple-author-affiliations-gy/index.php/publicknowledge/en/submissions",
+			"url": "http:\/\/localhost\/ojs350-multiple-author-affiliations-gy\/index.php\/publicknowledge\/en\/submissions",
 			"isCurrent": false,
 			"icon": "MySubmissions"
 		},
 		"issues": {
 			"name": "Issues",
-			"url": "http://localhost/ojs350-multiple-author-affiliations-gy/index.php/publicknowledge/en/manageIssues",
+			"url": "http:\/\/localhost\/ojs350-multiple-author-affiliations-gy\/index.php\/publicknowledge\/en\/manageIssues",
 			"isCurrent": false,
 			"icon": "Issues"
 		},
 		"dois": {
 			"name": "DOIs",
-			"url": "http://localhost/ojs350-multiple-author-affiliations-gy/index.php/publicknowledge/en/dois",
+			"url": "http:\/\/localhost\/ojs350-multiple-author-affiliations-gy\/index.php\/publicknowledge\/en\/dois",
 			"isCurrent": false,
 			"icon": "NavDoi"
 		},
@@ -24,27 +24,27 @@
 			"submenu": {
 				"context": {
 					"name": "Journal",
-					"url": "http://localhost/ojs350-multiple-author-affiliations-gy/index.php/publicknowledge/en/management/settings/context",
+					"url": "http:\/\/localhost\/ojs350-multiple-author-affiliations-gy\/index.php\/publicknowledge\/en\/management\/settings\/context",
 					"isCurrent": false
 				},
 				"website": {
 					"name": "Website",
-					"url": "http://localhost/ojs350-multiple-author-affiliations-gy/index.php/publicknowledge/en/management/settings/website",
+					"url": "http:\/\/localhost\/ojs350-multiple-author-affiliations-gy\/index.php\/publicknowledge\/en\/management\/settings\/website",
 					"isCurrent": false
 				},
 				"workflow": {
 					"name": "Workflow",
-					"url": "http://localhost/ojs350-multiple-author-affiliations-gy/index.php/publicknowledge/en/management/settings/workflow",
+					"url": "http:\/\/localhost\/ojs350-multiple-author-affiliations-gy\/index.php\/publicknowledge\/en\/management\/settings\/workflow",
 					"isCurrent": false
 				},
 				"distribution": {
 					"name": "Distribution",
-					"url": "http://localhost/ojs350-multiple-author-affiliations-gy/index.php/publicknowledge/en/management/settings/distribution",
+					"url": "http:\/\/localhost\/ojs350-multiple-author-affiliations-gy\/index.php\/publicknowledge\/en\/management\/settings\/distribution",
 					"isCurrent": false
 				},
 				"access": {
 					"name": "Users & Roles",
-					"url": "http://localhost/ojs350-multiple-author-affiliations-gy/index.php/publicknowledge/en/management/settings/access",
+					"url": "http:\/\/localhost\/ojs350-multiple-author-affiliations-gy\/index.php\/publicknowledge\/en\/management\/settings\/access",
 					"isCurrent": false
 				}
 			}
@@ -55,53 +55,53 @@
 			"submenu": {
 				"publications": {
 					"name": "Articles",
-					"url": "http://localhost/ojs350-multiple-author-affiliations-gy/index.php/publicknowledge/en/stats/publications/publications",
+					"url": "http:\/\/localhost\/ojs350-multiple-author-affiliations-gy\/index.php\/publicknowledge\/en\/stats\/publications\/publications",
 					"isCurrent": false
 				},
 				"issues": {
 					"name": "Issues",
-					"url": "http://localhost/ojs350-multiple-author-affiliations-gy/index.php/publicknowledge/en/stats/issues/issues",
+					"url": "http:\/\/localhost\/ojs350-multiple-author-affiliations-gy\/index.php\/publicknowledge\/en\/stats\/issues\/issues",
 					"isCurrent": false
 				},
 				"context": {
 					"name": "Journal",
-					"url": "http://localhost/ojs350-multiple-author-affiliations-gy/index.php/publicknowledge/en/stats/context/context",
+					"url": "http:\/\/localhost\/ojs350-multiple-author-affiliations-gy\/index.php\/publicknowledge\/en\/stats\/context\/context",
 					"isCurrent": false
 				},
 				"editorial": {
 					"name": "Editorial Activity",
-					"url": "http://localhost/ojs350-multiple-author-affiliations-gy/index.php/publicknowledge/en/stats/editorial/editorial",
+					"url": "http:\/\/localhost\/ojs350-multiple-author-affiliations-gy\/index.php\/publicknowledge\/en\/stats\/editorial\/editorial",
 					"isCurrent": false
 				},
 				"users": {
 					"name": "Users",
-					"url": "http://localhost/ojs350-multiple-author-affiliations-gy/index.php/publicknowledge/en/stats/users/users",
+					"url": "http:\/\/localhost\/ojs350-multiple-author-affiliations-gy\/index.php\/publicknowledge\/en\/stats\/users\/users",
 					"isCurrent": false
 				},
 				"reports": {
 					"name": "Reports",
-					"url": "http://localhost/ojs350-multiple-author-affiliations-gy/index.php/publicknowledge/en/stats/reports",
+					"url": "http:\/\/localhost\/ojs350-multiple-author-affiliations-gy\/index.php\/publicknowledge\/en\/stats\/reports",
 					"isCurrent": false
 				}
 			}
 		},
 		"tools": {
 			"name": "Tools",
-			"url": "http://localhost/ojs350-multiple-author-affiliations-gy/index.php/publicknowledge/en/management/tools",
+			"url": "http:\/\/localhost\/ojs350-multiple-author-affiliations-gy\/index.php\/publicknowledge\/en\/management\/tools",
 			"isCurrent": false,
 			"icon": "Tools"
 		},
 		"admin": {
 			"name": "Administration",
-			"url": "http://localhost/ojs350-multiple-author-affiliations-gy/index.php/index/en/admin",
+			"url": "http:\/\/localhost\/ojs350-multiple-author-affiliations-gy\/index.php\/index\/en\/admin",
 			"isCurrent": false,
 			"icon": "NavAdmin"
 		}
 	},
 	"tinyMCE": {
-		"skinUrl": "http://localhost/ojs350-multiple-author-affiliations-gy/lib/pkp/styles/tinymce"
+		"skinUrl": "http:\/\/localhost\/ojs350-multiple-author-affiliations-gy\/lib\/pkp\/styles\/tinymce"
 	},
-	"tasksUrl": "http://localhost/ojs350-multiple-author-affiliations-gy/index.php/publicknowledge/$$$call$$$/page/page/tasks",
+	"tasksUrl": "http:\/\/localhost\/ojs350-multiple-author-affiliations-gy\/index.php\/publicknowledge\/$$$call$$$\/page\/page\/tasks",
 	"unreadTasksCount": 0,
 	"activityLogLabel": "Activity Log & Notes",
 	"canAccessPublication": true,
@@ -112,7 +112,7 @@
 		"changeSubmissionLanguageMetadata": {
 			"id": "changeSubmissionLanguageMetadata",
 			"method": "PUT",
-			"action": "http://localhost/ojs350-multiple-author-affiliations-gy/index.php/publicknowledge/api/v1/submissions/1/publications/2/changeLocale",
+			"action": "http:\/\/localhost\/ojs350-multiple-author-affiliations-gy\/index.php\/publicknowledge\/api\/v1\/submissions\/1\/publications\/2\/changeLocale",
 			"fields": [
 				{
 					"name": "locale",
@@ -139,7 +139,7 @@
 					"name": "metadataDescription",
 					"component": "field-html",
 					"label": "",
-					"description": "<strong>Before changing the submission language, ensure you have filled out the following metadata fields to maintain system integrity. Also, note that contributor information and file names will be copied from previously entered information.</strong>",
+					"description": "<strong>Before changing the submission language, ensure you have filled out the following metadata fields to maintain system integrity. Also, note that contributor information and file names will be copied from previously entered information.<\/strong>",
 					"groupId": "metadata",
 					"isRequired": false,
 					"isMultilingual": false,
@@ -171,12 +171,12 @@
 					"isRequired": true,
 					"isMultilingual": false,
 					"isInert": false,
-					"value": "<p>The signaling theory suggests that dividends signal future prospects of a firm. However, recent empirical evidence from the US and the Uk does not offer a conclusive evidence on this issue. There are conflicting policy implications among financial economists so much that there is no practical dividend policy guidance to management, existing and potential investors in shareholding. Since corporate investment, financing and distribution decisions are a continuous function of management, the dividend decisions seem to rely on intuitive evaluation.</p>",
+					"value": "<p>The signaling theory suggests that dividends signal future prospects of a firm. However, recent empirical evidence from the US and the Uk does not offer a conclusive evidence on this issue. There are conflicting policy implications among financial economists so much that there is no practical dividend policy guidance to management, existing and potential investors in shareholding. Since corporate investment, financing and distribution decisions are a continuous function of management, the dividend decisions seem to rely on intuitive evaluation.<\/p>",
 					"plugins": "paste,link,noneditable",
 					"size": "large",
 					"toolbar": "bold italic superscript subscript | link",
 					"wordLimit": 500,
-					"wordCountLabel": "Word Count: {$count}/{$limit}"
+					"wordCountLabel": "Word Count: {$count}\/{$limit}"
 				}
 			],
 			"groups": [
@@ -228,11 +228,120 @@
 			"isSidebarVisible": false,
 			"items": [
 				{
-					"affiliation": {
-						"en": "University of Cape Town",
-						"fr_CA": ""
+					"affiliations": {
+						"9": {
+							"_data": {
+								"id": 9,
+								"authorId": 5,
+								"ror": "https:\/\/ror.org\/0213rcc28",
+								"name": {
+									"en": "Simon Fraser University",
+									"de": "Simon Fraser University",
+									"fr_CA": "Simon Fraser University"
+								}
+							},
+							"_hasLoadableAdapters": false,
+							"_metadataExtractionAdapters": [],
+							"_extractionAdaptersLoaded": false,
+							"_metadataInjectionAdapters": [],
+							"_injectionAdaptersLoaded": false,
+							"_localesTable": {
+								"be@cyrillic": "be",
+								"bs": "bs_Latn",
+								"fr_FR": "fr",
+								"nb": "nb_NO",
+								"sr@cyrillic": "sr_Cyrl",
+								"sr@latin": "sr_Latn",
+								"uz@cyrillic": "uz",
+								"uz@latin": "uz_Latn",
+								"zh_CN": "zh_Hans"
+							}
+						},
+						"10": {
+							"_data": {
+								"id": 10,
+								"authorId": 5,
+								"ror": "https:\/\/ror.org\/02e2c7k09",
+								"name": {
+									"en": "Delft University of Technology",
+									"de": "",
+									"fr_CA": ""
+								}
+							},
+							"_hasLoadableAdapters": false,
+							"_metadataExtractionAdapters": [],
+							"_extractionAdaptersLoaded": false,
+							"_metadataInjectionAdapters": [],
+							"_injectionAdaptersLoaded": false,
+							"_localesTable": {
+								"be@cyrillic": "be",
+								"bs": "bs_Latn",
+								"fr_FR": "fr",
+								"nb": "nb_NO",
+								"sr@cyrillic": "sr_Cyrl",
+								"sr@latin": "sr_Latn",
+								"uz@cyrillic": "uz",
+								"uz@latin": "uz_Latn",
+								"zh_CN": "zh_Hans"
+							}
+						},
+						"11": {
+							"_data": {
+								"id": 11,
+								"authorId": 5,
+								"ror": "",
+								"name": {
+									"en": "German National Library of Science and Technology",
+									"de": "Technische Informationsbibliothek (TIB)",
+									"fr_CA": ""
+								}
+							},
+							"_hasLoadableAdapters": false,
+							"_metadataExtractionAdapters": [],
+							"_extractionAdaptersLoaded": false,
+							"_metadataInjectionAdapters": [],
+							"_injectionAdaptersLoaded": false,
+							"_localesTable": {
+								"be@cyrillic": "be",
+								"bs": "bs_Latn",
+								"fr_FR": "fr",
+								"nb": "nb_NO",
+								"sr@cyrillic": "sr_Cyrl",
+								"sr@latin": "sr_Latn",
+								"uz@cyrillic": "uz",
+								"uz@latin": "uz_Latn",
+								"zh_CN": "zh_Hans"
+							}
+						},
+						"12": {
+							"_data": {
+								"id": 12,
+								"authorId": 5,
+								"ror": "https:\/\/ror.org\/0304hq317",
+								"name": {
+									"en": "Leibniz University Hannover",
+									"de": "Technische Universit\u00e4t Hannover",
+									"fr_CA": ""
+								}
+							},
+							"_hasLoadableAdapters": false,
+							"_metadataExtractionAdapters": [],
+							"_extractionAdaptersLoaded": false,
+							"_metadataInjectionAdapters": [],
+							"_injectionAdaptersLoaded": false,
+							"_localesTable": {
+								"be@cyrillic": "be",
+								"bs": "bs_Latn",
+								"fr_FR": "fr",
+								"nb": "nb_NO",
+								"sr@cyrillic": "sr_Cyrl",
+								"sr@latin": "sr_Latn",
+								"uz@cyrillic": "uz",
+								"uz@latin": "uz_Latn",
+								"zh_CN": "zh_Hans"
+							}
+						}
 					},
-					"affiliations": null,
 					"biography": {
 						"en": "",
 						"fr_CA": ""
@@ -280,11 +389,120 @@
 					}
 				},
 				{
-					"affiliation": {
-						"en": "",
-						"fr_CA": ""
+					"affiliations": {
+						"13": {
+							"_data": {
+								"id": 13,
+								"authorId": 6,
+								"ror": "https:\/\/ror.org\/0213rcc28",
+								"name": {
+									"en": "Simon Fraser University",
+									"de": "Simon Fraser University",
+									"fr_CA": "Simon Fraser University"
+								}
+							},
+							"_hasLoadableAdapters": false,
+							"_metadataExtractionAdapters": [],
+							"_extractionAdaptersLoaded": false,
+							"_metadataInjectionAdapters": [],
+							"_injectionAdaptersLoaded": false,
+							"_localesTable": {
+								"be@cyrillic": "be",
+								"bs": "bs_Latn",
+								"fr_FR": "fr",
+								"nb": "nb_NO",
+								"sr@cyrillic": "sr_Cyrl",
+								"sr@latin": "sr_Latn",
+								"uz@cyrillic": "uz",
+								"uz@latin": "uz_Latn",
+								"zh_CN": "zh_Hans"
+							}
+						},
+						"14": {
+							"_data": {
+								"id": 14,
+								"authorId": 6,
+								"ror": "https:\/\/ror.org\/02e2c7k09",
+								"name": {
+									"en": "Delft University of Technology",
+									"de": "",
+									"fr_CA": ""
+								}
+							},
+							"_hasLoadableAdapters": false,
+							"_metadataExtractionAdapters": [],
+							"_extractionAdaptersLoaded": false,
+							"_metadataInjectionAdapters": [],
+							"_injectionAdaptersLoaded": false,
+							"_localesTable": {
+								"be@cyrillic": "be",
+								"bs": "bs_Latn",
+								"fr_FR": "fr",
+								"nb": "nb_NO",
+								"sr@cyrillic": "sr_Cyrl",
+								"sr@latin": "sr_Latn",
+								"uz@cyrillic": "uz",
+								"uz@latin": "uz_Latn",
+								"zh_CN": "zh_Hans"
+							}
+						},
+						"15": {
+							"_data": {
+								"id": 15,
+								"authorId": 6,
+								"ror": "",
+								"name": {
+									"en": "German National Library of Science and Technology",
+									"de": "Technische Informationsbibliothek (TIB)",
+									"fr_CA": ""
+								}
+							},
+							"_hasLoadableAdapters": false,
+							"_metadataExtractionAdapters": [],
+							"_extractionAdaptersLoaded": false,
+							"_metadataInjectionAdapters": [],
+							"_injectionAdaptersLoaded": false,
+							"_localesTable": {
+								"be@cyrillic": "be",
+								"bs": "bs_Latn",
+								"fr_FR": "fr",
+								"nb": "nb_NO",
+								"sr@cyrillic": "sr_Cyrl",
+								"sr@latin": "sr_Latn",
+								"uz@cyrillic": "uz",
+								"uz@latin": "uz_Latn",
+								"zh_CN": "zh_Hans"
+							}
+						},
+						"16": {
+							"_data": {
+								"id": 16,
+								"authorId": 6,
+								"ror": "https:\/\/ror.org\/0304hq317",
+								"name": {
+									"en": "Leibniz University Hannover",
+									"de": "Technische Universit\u00e4t Hannover",
+									"fr_CA": ""
+								}
+							},
+							"_hasLoadableAdapters": false,
+							"_metadataExtractionAdapters": [],
+							"_extractionAdaptersLoaded": false,
+							"_metadataInjectionAdapters": [],
+							"_injectionAdaptersLoaded": false,
+							"_localesTable": {
+								"be@cyrillic": "be",
+								"bs": "bs_Latn",
+								"fr_FR": "fr",
+								"nb": "nb_NO",
+								"sr@cyrillic": "sr_Cyrl",
+								"sr@latin": "sr_Latn",
+								"uz@cyrillic": "uz",
+								"uz@latin": "uz_Latn",
+								"zh_CN": "zh_Hans"
+							}
+						}
 					},
-					"affiliations": null,
 					"biography": {
 						"en": "",
 						"fr_CA": ""
@@ -332,11 +550,120 @@
 					}
 				},
 				{
-					"affiliation": {
-						"en": "",
-						"fr_CA": ""
+					"affiliations": {
+						"17": {
+							"_data": {
+								"id": 17,
+								"authorId": 7,
+								"ror": "https:\/\/ror.org\/0213rcc28",
+								"name": {
+									"en": "Simon Fraser University",
+									"de": "Simon Fraser University",
+									"fr_CA": "Simon Fraser University"
+								}
+							},
+							"_hasLoadableAdapters": false,
+							"_metadataExtractionAdapters": [],
+							"_extractionAdaptersLoaded": false,
+							"_metadataInjectionAdapters": [],
+							"_injectionAdaptersLoaded": false,
+							"_localesTable": {
+								"be@cyrillic": "be",
+								"bs": "bs_Latn",
+								"fr_FR": "fr",
+								"nb": "nb_NO",
+								"sr@cyrillic": "sr_Cyrl",
+								"sr@latin": "sr_Latn",
+								"uz@cyrillic": "uz",
+								"uz@latin": "uz_Latn",
+								"zh_CN": "zh_Hans"
+							}
+						},
+						"18": {
+							"_data": {
+								"id": 18,
+								"authorId": 7,
+								"ror": "https:\/\/ror.org\/02e2c7k09",
+								"name": {
+									"en": "Delft University of Technology",
+									"de": "",
+									"fr_CA": ""
+								}
+							},
+							"_hasLoadableAdapters": false,
+							"_metadataExtractionAdapters": [],
+							"_extractionAdaptersLoaded": false,
+							"_metadataInjectionAdapters": [],
+							"_injectionAdaptersLoaded": false,
+							"_localesTable": {
+								"be@cyrillic": "be",
+								"bs": "bs_Latn",
+								"fr_FR": "fr",
+								"nb": "nb_NO",
+								"sr@cyrillic": "sr_Cyrl",
+								"sr@latin": "sr_Latn",
+								"uz@cyrillic": "uz",
+								"uz@latin": "uz_Latn",
+								"zh_CN": "zh_Hans"
+							}
+						},
+						"19": {
+							"_data": {
+								"id": 19,
+								"authorId": 7,
+								"ror": "",
+								"name": {
+									"en": "German National Library of Science and Technology",
+									"de": "Technische Informationsbibliothek (TIB)",
+									"fr_CA": ""
+								}
+							},
+							"_hasLoadableAdapters": false,
+							"_metadataExtractionAdapters": [],
+							"_extractionAdaptersLoaded": false,
+							"_metadataInjectionAdapters": [],
+							"_injectionAdaptersLoaded": false,
+							"_localesTable": {
+								"be@cyrillic": "be",
+								"bs": "bs_Latn",
+								"fr_FR": "fr",
+								"nb": "nb_NO",
+								"sr@cyrillic": "sr_Cyrl",
+								"sr@latin": "sr_Latn",
+								"uz@cyrillic": "uz",
+								"uz@latin": "uz_Latn",
+								"zh_CN": "zh_Hans"
+							}
+						},
+						"20": {
+							"_data": {
+								"id": 20,
+								"authorId": 7,
+								"ror": "https:\/\/ror.org\/0304hq317",
+								"name": {
+									"en": "Leibniz University Hannover",
+									"de": "Technische Universit\u00e4t Hannover",
+									"fr_CA": ""
+								}
+							},
+							"_hasLoadableAdapters": false,
+							"_metadataExtractionAdapters": [],
+							"_extractionAdaptersLoaded": false,
+							"_metadataInjectionAdapters": [],
+							"_injectionAdaptersLoaded": false,
+							"_localesTable": {
+								"be@cyrillic": "be",
+								"bs": "bs_Latn",
+								"fr_FR": "fr",
+								"nb": "nb_NO",
+								"sr@cyrillic": "sr_Cyrl",
+								"sr@latin": "sr_Latn",
+								"uz@cyrillic": "uz",
+								"uz@latin": "uz_Latn",
+								"zh_CN": "zh_Hans"
+							}
+						}
 					},
-					"affiliations": null,
 					"biography": {
 						"en": "",
 						"fr_CA": ""
@@ -386,11 +713,11 @@
 			],
 			"title": "Contributors",
 			"canEditPublication": true,
-			"publicationApiUrlFormat": "http://localhost/ojs350-multiple-author-affiliations-gy/index.php/publicknowledge/api/v1/submissions/1/publications/__publicationId__",
+			"publicationApiUrlFormat": "http:\/\/localhost\/ojs350-multiple-author-affiliations-gy\/index.php\/publicknowledge\/api\/v1\/submissions\/1\/publications\/__publicationId__",
 			"form": {
 				"id": "contributor",
 				"method": "POST",
-				"action": "http://localhost/ojs350-multiple-author-affiliations-gy/index.php/publicknowledge/api/v1/submissions/1/publications/__publicationId__/contributors",
+				"action": "http:\/\/localhost\/ojs350-multiple-author-affiliations-gy\/index.php\/publicknowledge\/api\/v1\/submissions\/1\/publications\/__publicationId__\/contributors",
 				"fields": [
 					{
 						"name": "affiliations",
@@ -401,7 +728,7 @@
 						"isRequired": false,
 						"isMultilingual": false,
 						"isInert": false,
-						"value": "[{\"id\":1,\"authorId\":1,\"ror\":\"https://ror.org/0213rcc28\",\"name\":{\"en\":\"Simon Fraser University\",\"de\":\"Simon Fraser University\",\"fr_CA\":\"Simon Fraser University\"}},{\"id\":2,\"authorId\":1,\"ror\":\"https://ror.org/02e2c7k09\",\"name\":{\"en\":\"Delft University of Technology\",\"de\":\"\",\"fr_CA\":\"\"}},{\"id\":3,\"authorId\":1,\"ror\":\"\",\"name\":{\"en\":\"German National Library of Science and Technology\",\"de\":\"Technische Informationsbibliothek (TIB)\",\"fr_CA\":\"\"}},{\"id\":4,\"authorId\":1,\"ror\":\"https://ror.org/0304hq317\",\"name\":{\"en\":\"Leibniz University Hannover\",\"de\":\"Technische Universität Hannover\",\"fr_CA\":\"\"}}]"
+						"value": "[{\"id\":1,\"authorId\":1,\"ror\":\"https:\/\/ror.org\/0213rcc28\",\"name\":{\"en\":\"Simon Fraser University\",\"de\":\"Simon Fraser University\",\"fr_CA\":\"Simon Fraser University\"}},{\"id\":2,\"authorId\":1,\"ror\":\"https:\/\/ror.org\/02e2c7k09\",\"name\":{\"en\":\"Delft University of Technology\",\"de\":\"\",\"fr_CA\":\"\"}},{\"id\":3,\"authorId\":1,\"ror\":\"\",\"name\":{\"en\":\"German National Library of Science and Technology\",\"de\":\"Technische Informationsbibliothek (TIB)\",\"fr_CA\":\"\"}},{\"id\":4,\"authorId\":1,\"ror\":\"https:\/\/ror.org\/0304hq317\",\"name\":{\"en\":\"Leibniz University Hannover\",\"de\":\"Technische Universit\u00e4t Hannover\",\"fr_CA\":\"\"}}]"
 					},
 					{
 						"name": "givenName",
@@ -705,7 +1032,7 @@
 							},
 							{
 								"value": "CW",
-								"label": "Curaçao"
+								"label": "Cura\u00e7ao"
 							},
 							{
 								"value": "CY",
@@ -717,7 +1044,7 @@
 							},
 							{
 								"value": "CI",
-								"label": "Côte d'Ivoire"
+								"label": "C\u00f4te d'Ivoire"
 							},
 							{
 								"value": "DK",
@@ -1217,11 +1544,11 @@
 							},
 							{
 								"value": "RE",
-								"label": "Réunion"
+								"label": "R\u00e9union"
 							},
 							{
 								"value": "BL",
-								"label": "Saint Barthélemy"
+								"label": "Saint Barth\u00e9lemy"
 							},
 							{
 								"value": "SH",
@@ -1401,7 +1728,7 @@
 							},
 							{
 								"value": "TR",
-								"label": "Türkiye"
+								"label": "T\u00fcrkiye"
 							},
 							{
 								"value": "UG",
@@ -1477,7 +1804,7 @@
 							},
 							{
 								"value": "AX",
-								"label": "Åland Islands"
+								"label": "\u00c5land Islands"
 							}
 						],
 						"size": "normal"
@@ -1501,7 +1828,7 @@
 						"name": "orcid",
 						"component": "field-orcid",
 						"label": "ORCID iD",
-						"tooltip": "ORCID is an independent non-profit organization that provides a persistent identifier – an ORCID iD – that distinguishes you from other researchers and a mechanism for linking your research outputs and activities to your iD. ORCID is integrated into many systems used by publishers, funders, institutions, and other research-related services. Learn more at <a href=\"https://orcid.org\">orcid.org</a>.",
+						"tooltip": "ORCID is an independent non-profit organization that provides a persistent identifier \u2013 an ORCID iD \u2013 that distinguishes you from other researchers and a mechanism for linking your research outputs and activities to your iD. ORCID is integrated into many systems used by publishers, funders, institutions, and other research-related services. Learn more at <a href=\"https:\/\/orcid.org\">orcid.org<\/a>.",
 						"groupId": "default",
 						"isRequired": false,
 						"isMultilingual": false,
@@ -1622,7 +1949,7 @@
 		"citations": {
 			"id": "citations",
 			"method": "PUT",
-			"action": "http://localhost/ojs350-multiple-author-affiliations-gy/index.php/publicknowledge/api/v1/submissions/1/publications/2",
+			"action": "http:\/\/localhost\/ojs350-multiple-author-affiliations-gy\/index.php\/publicknowledge\/api\/v1\/submissions\/1\/publications\/2",
 			"fields": [
 				{
 					"name": "citationsRaw",
@@ -1661,7 +1988,7 @@
 		"publicationLicense": {
 			"id": "publicationLicense",
 			"method": "PUT",
-			"action": "http://localhost/ojs350-multiple-author-affiliations-gy/index.php/publicknowledge/api/v1/submissions/1/publications/2",
+			"action": "http:\/\/localhost\/ojs350-multiple-author-affiliations-gy\/index.php\/publicknowledge\/api\/v1\/submissions\/1\/publications\/2",
 			"fields": [
 				{
 					"name": "copyrightHolder",
@@ -1749,7 +2076,7 @@
 		"titleAbstract": {
 			"id": "titleAbstract",
 			"method": "PUT",
-			"action": "http://localhost/ojs350-multiple-author-affiliations-gy/index.php/publicknowledge/api/v1/submissions/1/publications/2",
+			"action": "http:\/\/localhost\/ojs350-multiple-author-affiliations-gy\/index.php\/publicknowledge\/api\/v1\/submissions\/1\/publications\/2",
 			"fields": [
 				{
 					"name": "prefix",
@@ -1815,14 +2142,14 @@
 					"isMultilingual": true,
 					"isInert": false,
 					"value": {
-						"en": "<p>The signaling theory suggests that dividends signal future prospects of a firm. However, recent empirical evidence from the US and the Uk does not offer a conclusive evidence on this issue. There are conflicting policy implications among financial economists so much that there is no practical dividend policy guidance to management, existing and potential investors in shareholding. Since corporate investment, financing and distribution decisions are a continuous function of management, the dividend decisions seem to rely on intuitive evaluation.</p>",
+						"en": "<p>The signaling theory suggests that dividends signal future prospects of a firm. However, recent empirical evidence from the US and the Uk does not offer a conclusive evidence on this issue. There are conflicting policy implications among financial economists so much that there is no practical dividend policy guidance to management, existing and potential investors in shareholding. Since corporate investment, financing and distribution decisions are a continuous function of management, the dividend decisions seem to rely on intuitive evaluation.<\/p>",
 						"fr_CA": ""
 					},
 					"plugins": "paste,link,noneditable",
 					"size": "large",
 					"toolbar": "bold italic superscript subscript | link",
 					"wordLimit": 500,
-					"wordCountLabel": "Word Count: {$count}/{$limit}"
+					"wordCountLabel": "Word Count: {$count}\/{$limit}"
 				}
 			],
 			"groups": [
@@ -1859,7 +2186,7 @@
 		"metadata": {
 			"id": "metadata",
 			"method": "PUT",
-			"action": "http://localhost/ojs350-multiple-author-affiliations-gy/index.php/publicknowledge/api/v1/submissions/1/publications/2",
+			"action": "http:\/\/localhost\/ojs350-multiple-author-affiliations-gy\/index.php\/publicknowledge\/api\/v1\/submissions\/1\/publications\/2",
 			"fields": [
 				{
 					"name": "keywords",
@@ -1877,7 +2204,7 @@
 						],
 						"fr_CA": ""
 					},
-					"apiUrl": "http://localhost/ojs350-multiple-author-affiliations-gy/index.php/publicknowledge/api/v1/vocabs?vocab=submissionKeyword&submissionId=1",
+					"apiUrl": "http:\/\/localhost\/ojs350-multiple-author-affiliations-gy\/index.php\/publicknowledge\/api\/v1\/vocabs?vocab=submissionKeyword&submissionId=1",
 					"deselectLabel": "Remove {$item}",
 					"getParams": {},
 					"selectedLabel": "Selected:",
@@ -2041,7 +2368,7 @@
 		"issueEntry": {
 			"id": "issueEntry",
 			"method": "PUT",
-			"action": "http://localhost/ojs350-multiple-author-affiliations-gy/index.php/publicknowledge/api/v1/submissions/1/publications/2",
+			"action": "http:\/\/localhost\/ojs350-multiple-author-affiliations-gy\/index.php\/publicknowledge\/api\/v1\/submissions\/1\/publications\/2",
 			"fields": [
 				{
 					"name": "issueId",
@@ -2077,10 +2404,10 @@
 					"size": "normal",
 					"publicationStatus": 1,
 					"assignLabel": "Assign to Issue",
-					"assignedNoticeBase": "This has been assigned to <a href=\"http://localhost/ojs350-multiple-author-affiliations-gy/index.php/publicknowledge/en/issue/view/__issueId__\">{$issueName}</a> but it has not been scheduled for publication.",
+					"assignedNoticeBase": "This has been assigned to <a href=\"http:\/\/localhost\/ojs350-multiple-author-affiliations-gy\/index.php\/publicknowledge\/en\/issue\/view\/__issueId__\">{$issueName}<\/a> but it has not been scheduled for publication.",
 					"changeIssueLabel": "Change Issue",
-					"publishedNoticeBase": "Published in <a href=\"http://localhost/ojs350-multiple-author-affiliations-gy/index.php/publicknowledge/en/issue/view/__issueId__\">{$issueName}</a>.",
-					"scheduledNoticeBase": "Scheduled for publication in <a href=\"http://localhost/ojs350-multiple-author-affiliations-gy/index.php/publicknowledge/en/issue/view/__issueId__\">{$issueName}</a>.",
+					"publishedNoticeBase": "Published in <a href=\"http:\/\/localhost\/ojs350-multiple-author-affiliations-gy\/index.php\/publicknowledge\/en\/issue\/view\/__issueId__\">{$issueName}<\/a>.",
+					"scheduledNoticeBase": "Scheduled for publication in <a href=\"http:\/\/localhost\/ojs350-multiple-author-affiliations-gy\/index.php\/publicknowledge\/en\/issue\/view\/__issueId__\">{$issueName}<\/a>.",
 					"unscheduledNotice": "This has not been scheduled for publication in an issue.",
 					"unscheduleLabel": "Unschedule"
 				},
@@ -2168,14 +2495,14 @@
 						"dropzoneDictCancelUploadConfirmation": "Are you sure you want to cancel this upload?",
 						"dropzoneDictRemoveFile": "Remove file",
 						"dropzoneDictMaxFilesExceeded": "You can not upload any more files.",
-						"url": "http://localhost/ojs350-multiple-author-affiliations-gy/index.php/publicknowledge/api/v1/temporaryFiles",
+						"url": "http:\/\/localhost\/ojs350-multiple-author-affiliations-gy\/index.php\/publicknowledge\/api\/v1\/temporaryFiles",
 						"maxFilesize": 2,
 						"timeout": 30000,
-						"acceptedFiles": "image/*"
+						"acceptedFiles": "image\/*"
 					},
 					"uploadFileLabel": "Upload File",
 					"restoreLabel": "Restore Original",
-					"baseUrl": "http://localhost/ojs350-multiple-author-affiliations-gy/public/journals/1",
+					"baseUrl": "http:\/\/localhost\/ojs350-multiple-author-affiliations-gy\/public\/journals\/1",
 					"thumbnailDescription": "Preview of the currently selected image.",
 					"altTextLabel": "Alternate text",
 					"altTextDescription": "Describe this image for visitors viewing the site in a text-only browser or with assistive devices. Example: \"Our editor speaking at the PKP conference.\""
@@ -2263,25 +2590,20 @@
 			"title": "JATS XML",
 			"id": "jats",
 			"canEditPublication": true,
-			"publicationApiUrlFormat": "http://localhost/ojs350-multiple-author-affiliations-gy/index.php/publicknowledge/api/v1/submissions/1/publications/{$publicationId}/jats",
+			"publicationApiUrlFormat": "http:\/\/localhost\/ojs350-multiple-author-affiliations-gy\/index.php\/publicknowledge\/api\/v1\/submissions\/1\/publications\/{$publicationId}\/jats",
 			"fileStage": 21,
-			"downloadDefaultJatsFileName": "jats-2-20241008-065251.xml"
+			"downloadDefaultJatsFileName": "jats-2-20241008-095002.xml"
 		}
 	},
 	"currentPublication": {
-		"_href": "http://localhost/ojs350-multiple-author-affiliations-gy/index.php/publicknowledge/api/v1/submissions/1/publications/1",
+		"_href": "http:\/\/localhost\/ojs350-multiple-author-affiliations-gy\/index.php\/publicknowledge\/api\/v1\/submissions\/1\/publications\/1",
 		"abstract": {
-			"en": "<p>The signaling theory suggests that dividends signal future prospects of a firm. However, recent empirical evidence from the US and the Uk does not offer a conclusive evidence on this issue. There are conflicting policy implications among financial economists so much that there is no practical dividend policy guidance to management, existing and potential investors in shareholding. Since corporate investment, financing and distribution decisions are a continuous function of management, the dividend decisions seem to rely on intuitive evaluation.</p>",
+			"en": "<p>The signaling theory suggests that dividends signal future prospects of a firm. However, recent empirical evidence from the US and the Uk does not offer a conclusive evidence on this issue. There are conflicting policy implications among financial economists so much that there is no practical dividend policy guidance to management, existing and potential investors in shareholding. Since corporate investment, financing and distribution decisions are a continuous function of management, the dividend decisions seem to rely on intuitive evaluation.<\/p>",
 			"fr_CA": ""
 		},
 		"accessStatus": 0,
 		"authors": [
 			{
-				"affiliation": {
-					"en": "University of Cape Town",
-					"fr_CA": ""
-				},
-				"affiliations": null,
 				"country": "ZA",
 				"email": "amwandenga@mailinator.com",
 				"familyName": {
@@ -2319,11 +2641,6 @@
 				}
 			},
 			{
-				"affiliation": {
-					"en": "",
-					"fr_CA": ""
-				},
-				"affiliations": null,
 				"country": "BB",
 				"email": "notanemailamansour@mailinator.com",
 				"familyName": {
@@ -2361,11 +2678,6 @@
 				}
 			},
 			{
-				"affiliation": {
-					"en": "",
-					"fr_CA": ""
-				},
-				"affiliations": null,
 				"country": "ZA",
 				"email": "nriouf@mailinator.com",
 				"familyName": {
@@ -2440,7 +2752,7 @@
 			{
 				"doiObject": null,
 				"file": {
-					"_href": "http://localhost/ojs350-multiple-author-affiliations-gy/index.php/publicknowledge/api/v1/submissions/1/files/12",
+					"_href": "http:\/\/localhost\/ojs350-multiple-author-affiliations-gy\/index.php\/publicknowledge\/api\/v1\/submissions\/1\/files\/12",
 					"assocId": 1,
 					"assocType": 521,
 					"caption": null,
@@ -2470,12 +2782,12 @@
 					"id": 12,
 					"language": null,
 					"locale": "en",
-					"mimetype": "application/pdf",
+					"mimetype": "application\/pdf",
 					"name": {
 						"en": "article.pdf",
 						"fr_CA": ""
 					},
-					"path": "journals/1/articles/1/66b99c452c40c.pdf",
+					"path": "journals\/1\/articles\/1\/66b99c452c40c.pdf",
 					"publisher": {
 						"en": "",
 						"fr_CA": ""
@@ -2499,7 +2811,7 @@
 					"updatedAt": "2024-08-12 05:23:17",
 					"uploaderUserId": 3,
 					"uploaderUserName": "dbarnes",
-					"url": "http://localhost/ojs350-multiple-author-affiliations-gy/index.php/publicknowledge/$$$call$$$/api/file/file-api/download-file?submissionFileId=12&submissionId=1&stageId=5",
+					"url": "http:\/\/localhost\/ojs350-multiple-author-affiliations-gy\/index.php\/publicknowledge\/$$$call$$$\/api\/file\/file-api\/download-file?submissionFileId=12&submissionId=1&stageId=5",
 					"viewable": null
 				},
 				"id": 1,
@@ -2510,7 +2822,7 @@
 				"publicationId": 1,
 				"seq": 0,
 				"submissionFileId": 12,
-				"urlPublished": "http://localhost/ojs350-multiple-author-affiliations-gy/index.php/publicknowledge/en/article/view/mwandenga-signalling-theory/version/1/1",
+				"urlPublished": "http:\/\/localhost\/ojs350-multiple-author-affiliations-gy\/index.php\/publicknowledge\/en\/article\/view\/mwandenga-signalling-theory\/version\/1\/1",
 				"urlRemote": null
 			}
 		],
@@ -2567,11 +2879,11 @@
 			"fr_CA": ""
 		},
 		"urlPath": "mwandenga-signalling-theory",
-		"urlPublished": "http://localhost/ojs350-multiple-author-affiliations-gy/index.php/publicknowledge/en/article/view/mwandenga-signalling-theory/version/1",
+		"urlPublished": "http:\/\/localhost\/ojs350-multiple-author-affiliations-gy\/index.php\/publicknowledge\/en\/article\/view\/mwandenga-signalling-theory\/version\/1",
 		"version": 1
 	},
-	"decisionUrl": "http://localhost/ojs350-multiple-author-affiliations-gy/index.php/publicknowledge/en/decision/record/1?decision=__decision__&reviewRoundId=__reviewRoundId__",
-	"editorialHistoryUrl": "http://localhost/ojs350-multiple-author-affiliations-gy/index.php/publicknowledge/$$$call$$$/information-center/submission-information-center/view-information-center?submissionId=1",
+	"decisionUrl": "http:\/\/localhost\/ojs350-multiple-author-affiliations-gy\/index.php\/publicknowledge\/en\/decision\/record\/1?decision=__decision__&reviewRoundId=__reviewRoundId__",
+	"editorialHistoryUrl": "http:\/\/localhost\/ojs350-multiple-author-affiliations-gy\/index.php\/publicknowledge\/$$$call$$$\/information-center\/submission-information-center\/view-information-center?submissionId=1",
 	"publicationFormIds": [
 		"citations",
 		"publicationLicense",
@@ -2596,12 +2908,12 @@
 	],
 	"publicationTabsLabel": "Publication details for version {$version}",
 	"publishLabel": "Publish",
-	"publishUrl": "http://localhost/ojs350-multiple-author-affiliations-gy/index.php/publicknowledge/$$$call$$$/modals/publish/publish/publish?submissionId=1&publicationId=__publicationId__",
-	"representationsGridUrl": "http://localhost/ojs350-multiple-author-affiliations-gy/index.php/publicknowledge/$$$call$$$/grid/article-galleys/article-galley-grid/fetch-grid?submissionId=1&publicationId=__publicationId__",
+	"publishUrl": "http:\/\/localhost\/ojs350-multiple-author-affiliations-gy\/index.php\/publicknowledge\/$$$call$$$\/modals\/publish\/publish\/publish?submissionId=1&publicationId=__publicationId__",
+	"representationsGridUrl": "http:\/\/localhost\/ojs350-multiple-author-affiliations-gy\/index.php\/publicknowledge\/$$$call$$$\/grid\/article-galleys\/article-galley-grid\/fetch-grid?submissionId=1&publicationId=__publicationId__",
 	"schedulePublicationLabel": "Schedule For Publication",
 	"statusLabel": "Status:",
 	"submission": {
-		"_href": "http://localhost/ojs350-multiple-author-affiliations-gy/index.php/publicknowledge/api/v1/submissions/1",
+		"_href": "http:\/\/localhost\/ojs350-multiple-author-affiliations-gy\/index.php\/publicknowledge\/api\/v1\/submissions\/1",
 		"contextId": 1,
 		"currentPublicationId": 1,
 		"dateLastActivity": "2024-08-12 05:24:37",
@@ -2619,16 +2931,16 @@
 		"status": 3,
 		"statusLabel": "Published",
 		"submissionProgress": "",
-		"urlAuthorWorkflow": "http://localhost/ojs350-multiple-author-affiliations-gy/index.php/publicknowledge/en/authorDashboard/submission/1",
-		"urlEditorialWorkflow": "http://localhost/ojs350-multiple-author-affiliations-gy/index.php/publicknowledge/en/workflow/access/1",
-		"urlPublished": "http://localhost/ojs350-multiple-author-affiliations-gy/index.php/publicknowledge/en/article/view/mwandenga-signalling-theory",
-		"urlSubmissionWizard": "http://localhost/ojs350-multiple-author-affiliations-gy/index.php/publicknowledge/en/submission?id=1",
-		"urlWorkflow": "http://localhost/ojs350-multiple-author-affiliations-gy/index.php/publicknowledge/en/workflow/access/1"
+		"urlAuthorWorkflow": "http:\/\/localhost\/ojs350-multiple-author-affiliations-gy\/index.php\/publicknowledge\/en\/authorDashboard\/submission\/1",
+		"urlEditorialWorkflow": "http:\/\/localhost\/ojs350-multiple-author-affiliations-gy\/index.php\/publicknowledge\/en\/workflow\/access\/1",
+		"urlPublished": "http:\/\/localhost\/ojs350-multiple-author-affiliations-gy\/index.php\/publicknowledge\/en\/article\/view\/mwandenga-signalling-theory",
+		"urlSubmissionWizard": "http:\/\/localhost\/ojs350-multiple-author-affiliations-gy\/index.php\/publicknowledge\/en\/submission?id=1",
+		"urlWorkflow": "http:\/\/localhost\/ojs350-multiple-author-affiliations-gy\/index.php\/publicknowledge\/en\/workflow\/access\/1"
 	},
-	"submissionFileApiUrl": "http://localhost/ojs350-multiple-author-affiliations-gy/index.php/publicknowledge/api/v1/submissions/1/files",
-	"submissionApiUrl": "http://localhost/ojs350-multiple-author-affiliations-gy/index.php/publicknowledge/api/v1/submissions/1",
+	"submissionFileApiUrl": "http:\/\/localhost\/ojs350-multiple-author-affiliations-gy\/index.php\/publicknowledge\/api\/v1\/submissions\/1\/files",
+	"submissionApiUrl": "http:\/\/localhost\/ojs350-multiple-author-affiliations-gy\/index.php\/publicknowledge\/api\/v1\/submissions\/1",
 	"submissionLibraryLabel": "Submission Library",
-	"submissionLibraryUrl": "http://localhost/ojs350-multiple-author-affiliations-gy/index.php/publicknowledge/$$$call$$$/modals/document-library/document-library/document-library?submissionId=1",
+	"submissionLibraryUrl": "http:\/\/localhost\/ojs350-multiple-author-affiliations-gy\/index.php\/publicknowledge\/$$$call$$$\/modals\/document-library\/document-library\/document-library?submissionId=1",
 	"submissionSupportedLocales": [
 		"en",
 		"fr_CA"
@@ -2642,19 +2954,14 @@
 	"versionConfirmTitle": "Create New Version",
 	"versionConfirmMessage": "Are you sure you want to create a new version?",
 	"workingPublication": {
-		"_href": "http://localhost/ojs350-multiple-author-affiliations-gy/index.php/publicknowledge/api/v1/submissions/1/publications/2",
+		"_href": "http:\/\/localhost\/ojs350-multiple-author-affiliations-gy\/index.php\/publicknowledge\/api\/v1\/submissions\/1\/publications\/2",
 		"abstract": {
-			"en": "<p>The signaling theory suggests that dividends signal future prospects of a firm. However, recent empirical evidence from the US and the Uk does not offer a conclusive evidence on this issue. There are conflicting policy implications among financial economists so much that there is no practical dividend policy guidance to management, existing and potential investors in shareholding. Since corporate investment, financing and distribution decisions are a continuous function of management, the dividend decisions seem to rely on intuitive evaluation.</p>",
+			"en": "<p>The signaling theory suggests that dividends signal future prospects of a firm. However, recent empirical evidence from the US and the Uk does not offer a conclusive evidence on this issue. There are conflicting policy implications among financial economists so much that there is no practical dividend policy guidance to management, existing and potential investors in shareholding. Since corporate investment, financing and distribution decisions are a continuous function of management, the dividend decisions seem to rely on intuitive evaluation.<\/p>",
 			"fr_CA": ""
 		},
 		"accessStatus": 0,
 		"authors": [
 			{
-				"affiliation": {
-					"en": "University of Cape Town",
-					"fr_CA": ""
-				},
-				"affiliations": null,
 				"country": "ZA",
 				"email": "amwandenga@mailinator.com",
 				"familyName": {
@@ -2692,11 +2999,6 @@
 				}
 			},
 			{
-				"affiliation": {
-					"en": "",
-					"fr_CA": ""
-				},
-				"affiliations": null,
 				"country": "BB",
 				"email": "notanemailamansour@mailinator.com",
 				"familyName": {
@@ -2734,11 +3036,6 @@
 				}
 			},
 			{
-				"affiliation": {
-					"en": "",
-					"fr_CA": ""
-				},
-				"affiliations": null,
 				"country": "ZA",
 				"email": "nriouf@mailinator.com",
 				"familyName": {
@@ -2813,7 +3110,7 @@
 			{
 				"doiObject": null,
 				"file": {
-					"_href": "http://localhost/ojs350-multiple-author-affiliations-gy/index.php/publicknowledge/api/v1/submissions/1/files/12",
+					"_href": "http:\/\/localhost\/ojs350-multiple-author-affiliations-gy\/index.php\/publicknowledge\/api\/v1\/submissions\/1\/files\/12",
 					"assocId": 1,
 					"assocType": 521,
 					"caption": null,
@@ -2843,12 +3140,12 @@
 					"id": 12,
 					"language": null,
 					"locale": "en",
-					"mimetype": "application/pdf",
+					"mimetype": "application\/pdf",
 					"name": {
 						"en": "article.pdf",
 						"fr_CA": ""
 					},
-					"path": "journals/1/articles/1/66b99c452c40c.pdf",
+					"path": "journals\/1\/articles\/1\/66b99c452c40c.pdf",
 					"publisher": {
 						"en": "",
 						"fr_CA": ""
@@ -2872,7 +3169,7 @@
 					"updatedAt": "2024-08-12 05:23:17",
 					"uploaderUserId": 3,
 					"uploaderUserName": "dbarnes",
-					"url": "http://localhost/ojs350-multiple-author-affiliations-gy/index.php/publicknowledge/$$$call$$$/api/file/file-api/download-file?submissionFileId=12&submissionId=1&stageId=5",
+					"url": "http:\/\/localhost\/ojs350-multiple-author-affiliations-gy\/index.php\/publicknowledge\/$$$call$$$\/api\/file\/file-api\/download-file?submissionFileId=12&submissionId=1&stageId=5",
 					"viewable": null
 				},
 				"id": 2,
@@ -2883,7 +3180,7 @@
 				"publicationId": 2,
 				"seq": 0,
 				"submissionFileId": 12,
-				"urlPublished": "http://localhost/ojs350-multiple-author-affiliations-gy/index.php/publicknowledge/en/article/view/mwandenga-signalling-theory/version/2/pdf",
+				"urlPublished": "http:\/\/localhost\/ojs350-multiple-author-affiliations-gy\/index.php\/publicknowledge\/en\/article\/view\/mwandenga-signalling-theory\/version\/2\/pdf",
 				"urlRemote": null
 			}
 		],
@@ -2940,11 +3237,11 @@
 			"fr_CA": ""
 		},
 		"urlPath": "mwandenga",
-		"urlPublished": "http://localhost/ojs350-multiple-author-affiliations-gy/index.php/publicknowledge/en/article/view/mwandenga-signalling-theory/version/2",
+		"urlPublished": "http:\/\/localhost\/ojs350-multiple-author-affiliations-gy\/index.php\/publicknowledge\/en\/article\/view\/mwandenga-signalling-theory\/version\/2",
 		"version": 2
 	},
-	"assignToIssueUrl": "http://localhost/ojs350-multiple-author-affiliations-gy/index.php/publicknowledge/$$$call$$$/modals/publish/assign-to-issue/assign?submissionId=1&publicationId=__publicationId__",
-	"issueApiUrl": "http://localhost/ojs350-multiple-author-affiliations-gy/index.php/publicknowledge/api/v1/issues/__issueId__",
+	"assignToIssueUrl": "http:\/\/localhost\/ojs350-multiple-author-affiliations-gy\/index.php\/publicknowledge\/$$$call$$$\/modals\/publish\/assign-to-issue\/assign?submissionId=1&publicationId=__publicationId__",
+	"issueApiUrl": "http:\/\/localhost\/ojs350-multiple-author-affiliations-gy\/index.php\/publicknowledge\/api\/v1\/issues\/__issueId__",
 	"sectionWordLimits": {
 		"1": 500,
 		"2": 0
