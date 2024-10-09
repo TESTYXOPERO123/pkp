@@ -175,12 +175,25 @@ class Repository
     /**
      * Save affiliations.
      *
-     * @param Affiliation[] $affiliations
+     * @param array|Affiliation[] $affiliations
      *
      * @return void
      */
     public function saveAffiliations(array $affiliations): void
     {
-        $this->dao->updateOrInsert($affiliations);
+        foreach ($affiliations as $affiliation) {
+
+            if (!($affiliation instanceof Affiliation)) {
+
+                if (empty($affiliation['_data'])) continue;
+
+                $newAffiliation = $this->newDataObject();
+                $newAffiliation->setAllData($affiliation['_data']);
+
+                $affiliation = $newAffiliation;
+            }
+
+            $this->dao->updateOrInsert($affiliation);
+        }
     }
 }
