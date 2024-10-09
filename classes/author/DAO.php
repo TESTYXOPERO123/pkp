@@ -22,7 +22,6 @@ use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\LazyCollection;
-use PKP\affiliation\Affiliation;
 use PKP\core\EntityDAO;
 use PKP\facades\Repo;
 use PKP\services\PKPSchemaService;
@@ -86,7 +85,7 @@ class DAO extends EntityDAO
             ->join('publications as p', 'a.publication_id', '=', 'p.publication_id')
             ->join('submissions as s', 'p.submission_id', '=', 's.submission_id')
             ->where('a.author_id', '=', $id)
-            ->when($publicationId !== null, fn(Builder $query) => $query->where('a.publication_id', '=', $publicationId))
+            ->when($publicationId !== null, fn (Builder $query) => $query->where('a.publication_id', '=', $publicationId))
             ->select(['a.*', 's.locale AS submission_locale'])
             ->first();
         return $row ? $this->fromRow($row) : null;
@@ -102,7 +101,7 @@ class DAO extends EntityDAO
     {
         return DB::table($this->table)
             ->where($this->primaryKeyColumn, '=', $id)
-            ->when($publicationId !== null, fn(Builder $query) => $query->where($this->getParentColumn(), $publicationId))
+            ->when($publicationId !== null, fn (Builder $query) => $query->where($this->getParentColumn(), $publicationId))
             ->exists();
     }
 
