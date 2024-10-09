@@ -54,8 +54,8 @@ class ContributorForm extends FormComponent
             ->filterByRoleIds([Role::ROLE_ID_AUTHOR])
             ->filterByContextIds([$context->getId()])
             ->getMany()
-            ->map(fn(UserGroup $authorUserGroup) => [
-                'value' => (int)$authorUserGroup->getId(),
+            ->map(fn (UserGroup $authorUserGroup) => [
+                'value' => (int) $authorUserGroup->getId(),
                 'label' => $authorUserGroup->getLocalizedName(),
             ]);
 
@@ -111,6 +111,7 @@ class ContributorForm extends FormComponent
             ]), [FIELD_POSITION_AFTER, 'url']);
         }
 
+
         if ($context->getSetting('requireAuthorCompetingInterests')) {
             $this->addField(new FieldRichTextarea('competingInterests', [
                 'label' => __('author.competingInterests'),
@@ -120,11 +121,6 @@ class ContributorForm extends FormComponent
         }
         $this->addField(new FieldRichTextarea('biography', [
             'label' => __('user.biography'),
-            'isMultilingual' => true,
-        ]));
-
-        $this->addField(new FieldText('affiliation', [
-            'label' => __('user.affiliation'),
             'isMultilingual' => true,
         ]));
 
