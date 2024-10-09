@@ -8,7 +8,7 @@
  *
  * @class Repository
  *
- * @brief A repository to find and manage rors.
+ * @brief A repository to find and manage affiliations.
  */
 
 namespace PKP\affiliation;
@@ -41,7 +41,9 @@ class Repository
         $this->schemaService = $schemaService;
     }
 
-    /** @copydoc DAO::newDataObject() */
+    /**
+     * @copydoc DAO::newDataObject()
+     */
     public function newDataObject(array $params = []): Affiliation
     {
         $object = $this->dao->newDataObject();
@@ -51,19 +53,25 @@ class Repository
         return $object;
     }
 
-    /** @copydoc DAO::exists() */
+    /**
+     * @copydoc DAO::exists()
+     */
     public function exists(int $id, ?int $contextId = null): bool
     {
         return $this->dao->exists($id, $contextId);
     }
 
-    /** @copydoc DAO::get() */
+    /**
+     * @copydoc DAO::get()
+     */
     public function get(int $id, ?int $contextId = null): ?Affiliation
     {
         return $this->dao->get($id, $contextId);
     }
 
-    /** @copydoc DAO::getCollector() */
+    /**
+     * @copydoc DAO::getCollector()
+     */
     public function getCollector(): Collector
     {
         return App::make(Collector::class);
@@ -71,7 +79,7 @@ class Repository
 
     /**
      * Get an instance of the map class for mapping
-     * rors to their schema
+     * affiliations to their schema
      */
     public function getSchemaMap(): maps\Schema
     {
@@ -123,7 +131,9 @@ class Repository
         return $errors;
     }
 
-    /** @copydoc DAO::insert() */
+    /**
+     * @copydoc DAO::insert()
+     */
     public function add(Affiliation $row): int
     {
         $id = $this->dao->insert($row);
@@ -131,16 +141,20 @@ class Repository
         return $id;
     }
 
-    /** @copydoc DAO::update() */
+    /**
+     * @copydoc DAO::update()
+     */
     public function edit(Affiliation $row, array $params): void
     {
-        $newRor = clone $row;
-        $newRor->setAllData(array_merge($newRor->_data, $params));
-        Hook::call('Affiliation::edit', [$newRor, $row, $params]);
-        $this->dao->update($newRor);
+        $newRow = clone $row;
+        $newRow->setAllData(array_merge($newRow->_data, $params));
+        Hook::call('Affiliation::edit', [$newRow, $row, $params]);
+        $this->dao->update($newRow);
     }
 
-    /** @copydoc DAO::delete() */
+    /**
+     * @copydoc DAO::delete()
+     */
     public function delete(Affiliation $row): void
     {
         Hook::call('Affiliation::delete::before', [$row]);
@@ -149,12 +163,12 @@ class Repository
     }
 
     /**
-     * Delete a collection of rors
+     * Delete a collection of affiliations
      */
     public function deleteMany(Collector $collector): void
     {
-        foreach ($collector->getMany() as $ror) {
-            $this->delete($ror);
+        foreach ($collector->getMany() as $row) {
+            $this->delete($row);
         }
     }
 
@@ -194,6 +208,24 @@ class Repository
             }
 
             $this->dao->updateOrInsert($affiliation);
+        }
+    }
+
+    /**
+     * Delete an author's affiliations
+     *
+     * @param int $authorId
+     *
+     * @return void
+     */
+    public function deleteByAuthorId(int $authorId): void
+    {
+        $affiliations = $this->getCollector()
+            ->filterByAuthorIds([$authorId])
+            ->getMany();
+
+        foreach ($affiliations as $affiliation) {
+            $this->dao->delete($affiliation);
         }
     }
 }

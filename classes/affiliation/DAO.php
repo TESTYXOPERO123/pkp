@@ -69,7 +69,7 @@ class DAO extends EntityDAO
     }
 
     /**
-     * Get the number of RORs matching the configured query
+     * Get the number of Affiliation's matching the configured query
      */
     public function getCount(Collector $query): int
     {
@@ -87,12 +87,12 @@ class DAO extends EntityDAO
     {
         return $query
             ->getQueryBuilder()
-            ->select('r.' . $this->primaryKeyColumn)
-            ->pluck('r.' . $this->primaryKeyColumn);
+            ->select('a.' . $this->primaryKeyColumn)
+            ->pluck('a.' . $this->primaryKeyColumn);
     }
 
     /**
-     * Get a collection of rors matching the configured query
+     * Get a collection of affiliations matching the configured query
      *
      * @return LazyCollection<int,T>
      */

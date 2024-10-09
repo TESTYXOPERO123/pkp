@@ -274,10 +274,6 @@ class DAO extends EntityDAO
      */
     protected function deleteAffiliations(int $authorId): void
     {
-        $affiliations = Repo::affiliation()->getAffiliations($authorId);
-
-        foreach ($affiliations as $affiliation) {
-            Repo::affiliation()->delete($affiliation);
-        }
+        Repo::affiliation()->deleteByAuthorId($authorId);
     }
 }
