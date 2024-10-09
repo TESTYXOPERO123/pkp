@@ -41,6 +41,9 @@ msgstr "All translations available"
 msgid "user.affiliations.translationSome"
 msgstr "{$translated} of {$total} languages completed"
 
+msgid "user.affiliations.searchPhraseLabel"
+msgstr "Type the institute name"
+
 msgid "user.authorization.accessDenied"
 msgstr "Access denied."
 
