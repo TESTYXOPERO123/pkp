@@ -2,8 +2,8 @@
 /**
  * @file classes/author/Repository.php
  *
- * Copyright (c) 2014-2024 Simon Fraser University
- * Copyright (c) 2000-2024 John Willinsky
+ * Copyright (c) 2014-2020 Simon Fraser University
+ * Copyright (c) 2000-2020 John Willinsky
  * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
  *
  * @class Repository
@@ -18,7 +18,6 @@ use APP\author\DAO;
 use APP\core\Request;
 use APP\facades\Repo;
 use APP\submission\Submission;
-use Illuminate\Support\LazyCollection;
 use PKP\context\Context;
 use PKP\plugins\Hook;
 use PKP\services\PKPSchemaService;
@@ -271,30 +270,5 @@ class Repository
 
             $seq++;
         }
-    }
-
-    /**
-     * Get all affiliations for a given author.
-     *
-     * @param int $authorId
-     *
-     * @return LazyCollection
-     */
-    public function retrieveAffiliations(int $authorId): LazyCollection
-    {
-        return Repo::affiliation()->getAffiliations($authorId);
-    }
-
-    /**
-     * Save affiliations.
-     *
-     * @param Author $author
-     *
-     * @return void
-     */
-    public function saveAffiliations(Author $author): void
-    {
-        Repo::affiliation()
-            ->saveAffiliations($author->getData('affiliations'));
     }
 }
