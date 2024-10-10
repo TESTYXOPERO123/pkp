@@ -71,12 +71,6 @@ class ContributorForm extends FormComponent
             return strcmp($a['label'], $b['label']);
         });
 
-        $this->addField(new FieldAffiliations('affiliations', [
-            'label' => __('user.affiliation'),
-            'description' => __('user.affiliations.description'),
-            'isMultilingual' => false,
-        ]));
-
         $this->addField(new FieldText('givenName', [
             'label' => __('user.givenName'),
             'isMultilingual' => true,
@@ -122,6 +116,12 @@ class ContributorForm extends FormComponent
         $this->addField(new FieldRichTextarea('biography', [
             'label' => __('user.biography'),
             'isMultilingual' => true,
+        ]));
+
+        $this->addField(new FieldAffiliations('affiliations', [
+            'label' => __('user.affiliation'),
+            'description' => __('user.affiliations.description'),
+            'isMultilingual' => false,
         ]));
 
         if ($authorUserGroupsOptions->count() > 1) {
