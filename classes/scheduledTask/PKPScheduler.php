@@ -32,7 +32,7 @@ abstract class PKPScheduler
 {
     /**
      * Constructor
-     * 
+     *
      * @param Schedule $schedule The core illuminate Schedule that is responsible to run schedule tasks
      */
     public function __construct(protected Schedule $schedule)
@@ -41,7 +41,7 @@ abstract class PKPScheduler
 
     /**
      * Add a new schedule task into the core illuminate Schedule
-     * 
+     *
      * This method allow dynamic injection of schedule tasks at run time. One
      * particular use is allow plugin to add own schedule tasks.
      */
@@ -65,21 +65,21 @@ abstract class PKPScheduler
      * Register core schedule tasks
      */
     public function registerSchedules(): void
-    {   
+    {
         $this
             ->schedule
             ->call(fn () => (new StatisticsReport)->execute())
             ->daily()
             ->name(StatisticsReport::class)
             ->withoutOverlapping();
-            
+
         $this
             ->schedule
             ->call(fn () => (new RemoveUnvalidatedExpiredUsers)->execute())
             ->daily()
             ->name(RemoveUnvalidatedExpiredUsers::class)
             ->withoutOverlapping();
-        
+
         $this
             ->schedule
             ->call(fn () => (new UpdateIPGeoDB)->execute())
@@ -100,19 +100,12 @@ abstract class PKPScheduler
             ->daily()
             ->name(RemoveFailedJobs::class)
             ->withoutOverlapping();
-        
+
         $this
             ->schedule
             ->call(fn () => (new RemoveExpiredInvitations)->execute())
             ->daily()
             ->name(RemoveExpiredInvitations::class)
-            ->withoutOverlapping();
-
-        $this
-            ->schedule
-            ->call(fn () => (new UpdateRorRegistryDataset)->execute())
-            ->twiceMonthly()
-            ->name(UpdateRorRegistryDataset::class)
             ->withoutOverlapping();
 
         // We only load all plugins and register their scheduled tasks when running under the CLI
