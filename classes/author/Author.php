@@ -280,6 +280,56 @@ class Author extends Identity
     }
 
     /**
+     * Get the localized affiliations as an array.
+     *
+     * @param string|null $preferredLocale
+     *
+     * @return array
+     */
+    public function getLocalizedAffiliations(?string $preferredLocale = null): array
+    {
+        $value = [];
+
+        $affiliations = $this->getAffiliations();
+        foreach ($this->getLocalePrecedence($preferredLocale) as $locale) {
+            foreach ($affiliations as $affiliation) {
+                $name = $affiliation->getData('name');
+                if(!empty($name[$locale])){
+                    $value[] = $name[$locale];
+                }
+            }
+        }
+
+        return $value;
+    }
+
+    /**
+     * Get the localized affiliations as an array.
+     *
+     * @param string|null $preferredLocale
+     * @param string|null $separator
+     *
+     * @return string
+     */
+    public function getLocalizedAffiliationsAsString(?string $preferredLocale = null, ?string $separator = ','): string
+    {
+        $value = '';
+
+        $affiliations = $this->getAffiliations();
+
+        foreach ($this->getLocalePrecedence($preferredLocale) as $locale) {
+            foreach ($affiliations as $affiliation) {
+                $name = $affiliation->getData('name');
+                if(!empty($name[$locale])){
+                    $value .= $separator . $name[$locale];
+                }
+            }
+        }
+
+        return trim($value, $separator);
+    }
+
+    /**
      * todo: remove getAffiliation, setAffiliation and getLocalizedAffiliation
      */
 
