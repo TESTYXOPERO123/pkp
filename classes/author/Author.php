@@ -329,10 +329,7 @@ class Author extends Identity
         return trim($value, $separator);
     }
 
-    /**
-     * todo: remove getAffiliation, setAffiliation and getLocalizedAffiliation
-     */
-
+    //fixme: multiple-author-affiliations
     /**
      * Get affiliation (position, institution, etc.).
      *
