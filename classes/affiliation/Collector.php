@@ -35,6 +35,9 @@ class Collector implements CollectorInterface
     /** @var int[]|null */
     public ?array $authorIds = null;
 
+    /** Get affiliations with a name */
+    public ?string $name = null;
+
     public ?string $searchPhrase = null;
 
     public function __construct(DAO $dao)
@@ -71,6 +74,19 @@ class Collector implements CollectorInterface
     public function filterByAuthorIds(?array $authorIds): self
     {
         $this->authorIds = $authorIds;
+        return $this;
+    }
+
+    /**
+     * Filter by affiliation name.
+     *
+     * @param string|null $name
+     *
+     * @return $this
+     */
+    public function filterByName(?string $name): self
+    {
+        $this->name = $name;
         return $this;
     }
 
@@ -121,6 +137,15 @@ class Collector implements CollectorInterface
         if (!is_null($this->authorIds)) {
             $qb->whereIn('a.author_id', $this->authorIds);
         }
+
+        $qb->when($this->name !== null, function (Builder $qb) {
+            $qb->whereIn('a.author_affiliation_id', function (Builder $qb) {
+                $qb->select('author_affiliation_id')
+                    ->from($this->dao->settingsTable)
+                    ->where('setting_name', '=', 'name')
+                    ->where('setting_value', $this->name);
+            });
+        });
 
         // Add app-specific query statements
         Hook::call('Affiliation::Collector', [&$qb, $this]);
