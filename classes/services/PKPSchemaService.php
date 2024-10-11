@@ -48,6 +48,7 @@ class PKPSchemaService
     public const SCHEMA_SUBMISSION_FILE = 'submissionFile';
     public const SCHEMA_USER = 'user';
     public const SCHEMA_USER_GROUP = 'userGroup';
+    public const SCHEMA_USER_PRIVATE_NOTE = 'userPrivateNote';
     public const SCHEMA_EVENT_LOG = 'eventLog';
     public const SCHEMA_EMAIL_LOG = 'emailLog';
 
@@ -694,6 +695,7 @@ if (!PKP_STRICT_MODE) {
         'SCHEMA_SUBMISSION_FILE',
         'SCHEMA_USER',
         'SCHEMA_USER_GROUP',
+        'SCHEMA_USER_PRIVATE_NOTE',
     ] as $constantName) {
         if (!defined($constantName)) {
             define($constantName, constant('PKPSchemaService::' . $constantName));
