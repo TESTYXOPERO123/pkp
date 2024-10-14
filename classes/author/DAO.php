@@ -262,6 +262,7 @@ class DAO extends EntityDAO
      */
     public function saveAffiliations(Author $author): void
     {
+        //fixme: does not save is affiliations list is empty
         Repo::affiliation()->saveAffiliations($author->getData('affiliations'));
     }
 
