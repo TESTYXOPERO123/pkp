@@ -555,11 +555,6 @@ class Schema extends \PKP\core\maps\Schema
                 'isDecidingEditorAssigned' => false,
                 'isCurrentUserDecidingEditor' => false,
             ];
-
-            // Only for the review stages
-            if (in_array($stageId, [WORKFLOW_STAGE_ID_EXTERNAL_REVIEW, WORKFLOW_STAGE_ID_INTERNAL_REVIEW])) {
-                $stages[$stageId]['currentUserRecommendation'] = true;
-            }
         }
 
         $recommendations = [];
@@ -613,7 +608,7 @@ class Schema extends \PKP\core\maps\Schema
                     continue;
                 }
 
-                $stages[$groupStage->stageId]['roles'] = [
+                $stages[$groupStage->stageId]['currentUserAssignedRoles'] = [
                     $userGroup->getRoleId(),
                 ];
 
@@ -746,7 +741,7 @@ class Schema extends \PKP\core\maps\Schema
             }
         }
 
-        return $stages;
+        return array_values($stages);
     }
 
     /**
