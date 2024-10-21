@@ -22,6 +22,9 @@ class FieldAffiliations extends Field
     /** @copydoc Field::$component */
     public $component = 'field-affiliations';
 
+    /** @var array A default for this field when no value is specified. */
+    public $default = [];
+
     /**
      * @copydoc Field::getConfig()
      */
@@ -31,6 +34,7 @@ class FieldAffiliations extends Field
 
         $submissionContext = PKPApplication::get()->getRequest()->getContext();
 
+        $config['value'] = $this->value ?? $this->default ?? null;
         $config['currentLocale'] = $submissionContext->getPrimaryLocale();
         $config['supportedLocales'] = $submissionContext->getSupportedSubmissionLocales();
 
