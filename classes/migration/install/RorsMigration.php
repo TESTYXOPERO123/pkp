@@ -17,6 +17,7 @@ namespace PKP\migration\install;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use PKP\migration\Migration;
+use PKP\task\UpdateRorRegistryDataset;
 
 class RorsMigration extends Migration
 {
@@ -50,6 +51,10 @@ class RorsMigration extends Migration
             $table->foreign('ror_id')
                 ->references('ror_id')->on('rors')->cascadeOnDelete();
         });
+
+        // update the tables with latest data set dump from Ror.org
+        $updateRorRegistryDataset = new UpdateRorRegistryDataset();
+        $updateRorRegistryDataset->execute();
     }
 
     /**

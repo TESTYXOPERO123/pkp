@@ -17,6 +17,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema as Schema;
 use PKP\install\DowngradeNotSupportedException;
 use PKP\migration\Migration;
+use PKP\task\UpdateRorRegistryDataset;
 
 class I7135_CreateNewRorRegistryCacheTables extends Migration
 {
@@ -50,6 +51,10 @@ class I7135_CreateNewRorRegistryCacheTables extends Migration
             $table->foreign('ror_id')
                 ->references('ror_id')->on('rors')->cascadeOnDelete();
         });
+
+        // update the tables with latest data set dump from Ror.org
+        $updateRorRegistryDataset = new UpdateRorRegistryDataset();
+        $updateRorRegistryDataset->execute();
     }
 
     /**
