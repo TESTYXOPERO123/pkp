@@ -35,17 +35,32 @@ msgstr "Institution"
 msgid "user.affiliations.translation"
 msgstr "Translation"
 
-msgid "user.affiliations.translationAll"
+msgid "user.affiliations.translationEditActionLabel"
+msgstr "Edit institution name"
+
+msgid "user.affiliations.translationDeleteActionLabel"
+msgstr "Remove institution"
+
+msgid "user.affiliations.translationActionsAriaLabel"
+msgstr "Click to edit or delete"
+
+msgid "user.affiliations.translationsAllAvailable"
 msgstr "All translations available"
 
-msgid "user.affiliations.translationSome"
+msgid "user.affiliations.translationsSomeAvailable"
 msgstr "{$translated} of {$total} languages completed"
 
-msgid "user.affiliations.translationLabel"
+msgid "user.affiliations.typeTranslationNameInLanguageLabel"
 msgstr "Type the institute name in {$language}"
 
+msgid "user.affiliations.translationNameInLanguage"
+msgstr "Institute name in {$language}"
+
+msgid "user.affiliations.deleteInstitutionConfirmation"
+msgstr "Are you sure you want to delete institution \"{$institution}\"?"
+
 msgid "user.affiliations.searchPhraseLabel"
-msgstr "Type the institute name"
+msgstr "Type the institute name {$language}"
 
 msgid "user.authorization.accessDenied"
 msgstr "Access denied."
