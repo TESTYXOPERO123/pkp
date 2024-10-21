@@ -262,8 +262,20 @@ class DAO extends EntityDAO
      */
     public function saveAffiliations(Author $author): void
     {
-        //fixme: does not save is affiliations list is empty
-        Repo::affiliation()->saveAffiliations($author->getData('affiliations'));
+        $affiliations = $author->getData('affiliations');
+
+        if(empty($affiliations)) {
+            Repo::affiliation()->deleteByAuthorId($author->getId());
+            return;
+        }
+
+        for($i = 0; $i < count($affiliations); $i++) {
+            if(empty($affiliations[$i]['_data']['authorId'])) {
+                $affiliations[$i]['_data']['authorId'] = $author->getId();
+            }
+        }
+
+        Repo::affiliation()->saveAffiliations($affiliations);
     }
 
     /**

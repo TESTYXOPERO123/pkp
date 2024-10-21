@@ -19,6 +19,7 @@ namespace PKP\affiliation;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\LazyCollection;
 use PKP\core\EntityDAO;
 use PKP\core\traits\EntityWithParent;
@@ -104,7 +105,7 @@ class DAO extends EntityDAO
 
         return LazyCollection::make(function () use ($rows) {
             foreach ($rows as $row) {
-                yield $row->author_affiliation_id => $this->fromRow($row);
+                yield $this->fromRow($row);
             }
         });
     }
@@ -139,6 +140,20 @@ class DAO extends EntityDAO
     public function delete(Affiliation $affiliation): void
     {
         parent::_delete($affiliation);
+    }
+
+    /**
+     * Delete affiliations for a given author_id.
+     *
+     * @param int $authorId
+     *
+     * @return void
+     */
+    public function deleteByAuthorId(int $authorId): void
+    {
+        DB::table($this->table)
+            ->Where($this->getParentColumn(), '=', $authorId)
+            ->delete();
     }
 
     /**

@@ -15,6 +15,8 @@
 
 namespace PKP\components\forms;
 
+use PKP\core\PKPApplication;
+
 class FieldAffiliations extends Field
 {
     /** @copydoc Field::$component */
@@ -26,6 +28,12 @@ class FieldAffiliations extends Field
     public function getConfig()
     {
         $config = parent::getConfig();
+
+        $submissionContext = PKPApplication::get()->getRequest()->getContext();
+
+        $config['currentLocale'] = $submissionContext->getPrimaryLocale();
+        $config['supportedLocales'] = $submissionContext->getSupportedSubmissionLocales();
+
         return $config;
     }
 }
