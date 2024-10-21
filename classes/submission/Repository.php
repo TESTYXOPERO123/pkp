@@ -25,6 +25,7 @@ use APP\submission\Submission;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Enumerable;
 use Illuminate\Support\LazyCollection;
+use PKP\config\Config;
 use PKP\context\Context;
 use PKP\core\Core;
 use PKP\db\DAORegistry;
@@ -41,7 +42,6 @@ use PKP\submission\reviewAssignment\Collector as ReviewCollector;
 use PKP\submissionFile\SubmissionFile;
 use PKP\user\User;
 use PKP\validation\ValidatorFactory;
-use PKP\config\Config;
 
 abstract class Repository
 {
@@ -929,7 +929,7 @@ abstract class Repository
                 case DashboardView::TYPE_REVIEWS_SUBMITTED:
                     $collector = Repo::submission()->getCollector()
                         ->filterByContextIds([$context->getId()])
-                        ->filterByAwaitingReviews(true)
+                        ->filterByReviewsSubmitted(true)
                         ->filterByStatus([PKPSubmission::STATUS_QUEUED]);
                     return new DashboardView(
                         $key,

@@ -557,6 +557,8 @@ class Schema extends \PKP\core\maps\Schema
             ];
         }
 
+        $stages['unstaged']['canCurrentUserChangeMetadata'] = false;
+
         $recommendations = [];
 
         // Determine stage assignment related data
@@ -616,9 +618,17 @@ class Schema extends \PKP\core\maps\Schema
                     $stages[$groupStage->stageId]['isCurrentUserDecidingEditor'] = true;
                 }
 
+                // Check if current user can edit publication
+                if (
+                    $stages[$groupStage->stageId]['isActiveStage'] &&
+                    in_array($userGroup->getRoleId(), [Role::ROLE_ID_MANAGER, Role::ROLE_ID_SUB_EDITOR])
+                ) {
+
+                }
+
                 // Identify if the current user gave recommendation
                 if (
-                    isset($editorAssigned) && // this user is assigned as an editor
+                    in_array($userGroup->getRoleId(), [Role::ROLE_ID_MANAGER, Role::ROLE_ID_SUB_EDITOR]) && // this user is assigned as an editor
                     !isset($isDecidingEditorAssigned) && // this user only can give recommendations, isn't a deciding editor
                     in_array($groupStage->stageId, [WORKFLOW_STAGE_ID_EXTERNAL_REVIEW, WORKFLOW_STAGE_ID_INTERNAL_REVIEW]) &&
                     isset($decisions) && $decisions->isNotEmpty() // only for submissions list
@@ -651,7 +661,10 @@ class Schema extends \PKP\core\maps\Schema
 
                 // if the user is assigned several times in the editorial role, and
                 // one of the assignments have recommendOnly option set, consider it here
-                if (isset($editorAssigned) && $stageAssignment->recommendOnly) {
+                if (
+                    in_array($userGroup->getRoleId(), [Role::ROLE_ID_MANAGER, Role::ROLE_ID_SUB_EDITOR]) &&
+                    $stageAssignment->recommendOnly
+                ) {
                     $stages[$groupStage->stageId]['currentUserCanRecommendOnly'] = true;
                 }
             }
