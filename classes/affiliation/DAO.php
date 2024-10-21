@@ -70,6 +70,20 @@ class DAO extends EntityDAO
     }
 
     /**
+     * Check if an affiliation exists.
+     *
+     * @param int $id
+     *
+     * @return bool
+     */
+    public function exists(int $id): bool
+    {
+        return DB::table($this->table)
+            ->where($this->primaryKeyColumn, '=', $id)
+            ->exists();
+    }
+
+    /**
      * Get the number of Affiliation's matching the configured query
      */
     public function getCount(Collector $query): int
@@ -143,7 +157,7 @@ class DAO extends EntityDAO
     }
 
     /**
-     * Delete affiliations for a given author_id.
+     * Delete an author's affiliations.
      *
      * @param int $authorId
      *

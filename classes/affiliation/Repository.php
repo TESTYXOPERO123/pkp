@@ -179,7 +179,7 @@ class Repository
      *
      * @return LazyCollection
      */
-    public function getAffiliations(int $authorId): LazyCollection
+    public function getByAuthorId(int $authorId): LazyCollection
     {
         return $this->getCollector()
             ->filterByAuthorIds([$authorId])
@@ -190,12 +190,46 @@ class Repository
      * Save affiliations.
      *
      * @param array|Affiliation[] $affiliations
+     * @param int $authorId
      *
      * @return void
      */
-    public function saveAffiliations(array $affiliations): void
+    public function saveAffiliations(array $affiliations, int $authorId): void
     {
-        foreach ($affiliations as $affiliation) {
+        // delete all affiliations if parameter $affiliations empty array
+        if(empty($affiliations)) {
+            $this->deleteByAuthorId($authorId);
+            return;
+        }
+
+        // delete affiliations not in param $affiliations
+        // do this before insert/update, otherwise inserted will be deleted
+        $currentAffiliations = $this->getByAuthorId($authorId);
+        foreach($currentAffiliations as $currentAffiliation){
+            $rowFound = false;
+            $currentAffiliationId = $currentAffiliation->getId();
+
+            foreach($affiliations as $affiliation) {
+                if ($affiliation instanceof Affiliation) {
+                    $affiliationId = (int)$affiliation->getId();
+                }
+                else{
+                    $affiliationId = (int)$affiliation['_data']['id'];
+                }
+
+                if($currentAffiliationId === $affiliationId) {
+                    $rowFound = true;
+                    break;
+                }
+            }
+
+            if(!$rowFound) {
+                 $this->dao->delete($currentAffiliation);
+            }
+        }
+
+        // insert, update
+        foreach($affiliations as $affiliation) {
 
             if (!($affiliation instanceof Affiliation)) {
 
@@ -207,12 +241,16 @@ class Repository
                 $affiliation = $newAffiliation;
             }
 
+            if(empty($affiliation->getData('authorId'))) {
+                $affiliation->setData('authorId', $authorId);
+            }
+
             $this->dao->updateOrInsert($affiliation);
         }
     }
 
     /**
-     * Delete an author's affiliations
+     * Delete an author's affiliations.
      *
      * @param int $authorId
      *
@@ -220,12 +258,6 @@ class Repository
      */
     public function deleteByAuthorId(int $authorId): void
     {
-        $affiliations = $this->getCollector()
-            ->filterByAuthorIds([$authorId])
-            ->getMany();
-
-        foreach ($affiliations as $affiliation) {
-            $this->dao->delete($affiliation);
-        }
+        $this->dao->deleteByAuthorId($authorId);
     }
 }
