@@ -116,11 +116,12 @@ class ContributorForm extends FormComponent
         $this->addField(new FieldRichTextarea('biography', [
             'label' => __('user.biography'),
             'isMultilingual' => true,
-        ]))
-            ->addField(new FieldText('affiliation', [
+        ]));
+
+        $this->addField(new FieldAffiliations('affiliations', [
                 'label' => __('user.affiliation'),
-                'isMultilingual' => true,
-                'size' => 'large',
+                'description' => __('user.affiliations.description'),
+                'isMultilingual' => false,
             ]));
 
         if ($authorUserGroupsOptions->count() > 1) {
