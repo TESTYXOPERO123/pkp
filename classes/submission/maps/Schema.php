@@ -111,6 +111,7 @@ class Schema extends \PKP\core\maps\Schema
      * @param Genre[] $genres The file genres in this context
      * @param ?Enumerable $reviewAssignments review assignments associated with a submission
      * @param ?Enumerable $stageAssignments stage assignments associated with a submission
+     * @param ?Enumerable $decisions decisions associated with a submission
      * @param bool|Collection<int> $anonymizeReviews List of review assignment IDs to anonymize
      */
     public function map(
@@ -119,12 +120,14 @@ class Schema extends \PKP\core\maps\Schema
         array $genres,
         ?Enumerable $reviewAssignments = null,
         ?Enumerable $stageAssignments = null,
+        ?Enumerable $decisions = null,
         bool|Collection $anonymizeReviews = false
     ): array {
         $this->userGroups = $userGroups;
         $this->genres = $genres;
         $this->reviewAssignments = $reviewAssignments ?? Repo::reviewAssignment()->getCollector()->filterBySubmissionIds([$item->getId()])->getMany()->remember();
         $this->stageAssignments = $stageAssignments ?? $this->getStageAssignmentsBySubmissions(collect([$item]), [Role::ROLE_ID_MANAGER, Role::ROLE_ID_SUB_EDITOR]);
+        $this->decisions = $decisions ?? Repo::decision()->getCollector()->filterBySubmissionIds([$item->getId()])->getMany()->remember();
 
         return $this->mapByProperties($this->getProps(), $item, $anonymizeReviews);
     }
@@ -170,13 +173,20 @@ class Schema extends \PKP\core\maps\Schema
         $this->collection = $collection;
         $this->userGroups = $userGroups;
         $this->genres = $genres;
-        $this->reviewAssignments = Repo::reviewAssignment()->getCollector()->filterBySubmissionIds($collection->keys()->toArray())->getMany()->remember();
+
+        $submissionIds = $collection->keys()->toArray();
+        $this->reviewAssignments = Repo::reviewAssignment()->getCollector()->filterBySubmissionIds($submissionIds)->getMany()->remember();
         $this->stageAssignments = $this->getStageAssignmentsBySubmissions($collection);
+        $this->decisions = Repo::decision()->getCollector()->filterBySubmissionIds($submissionIds)->getMany()->remember();
 
         $associatedReviewAssignments = $this->reviewAssignments->groupBy(fn (ReviewAssignment $reviewAssignment, int $key) =>
             $reviewAssignment->getData('submissionId'));
         $associatedStageAssignments = $this->stageAssignments->groupBy(fn (StageAssignment $stageAssignment, int $key) =>
             $stageAssignment->submissionId);
+        $associatedDecisions = $this->decisions->groupBy(
+            fn (Decision $decision, int $key) =>
+            $decision->getData('submissionId')
+        );
 
         return $collection->map(
             fn ($item) =>
@@ -186,6 +196,7 @@ class Schema extends \PKP\core\maps\Schema
                 $this->genres,
                 $associatedReviewAssignments->get($item->getId()),
                 $associatedStageAssignments->get($item->getId()),
+                $associatedDecisions->get($item->getId()),
                 $anonymizeReviews
             )
         );
