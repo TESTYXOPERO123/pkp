@@ -83,20 +83,35 @@ class SettingsBuilder extends Builder
             $settingName = Str::camel($settingName);
             
             if (!$modelWithGivenSettings->{$settingName} || is_array($modelWithGivenSettings->{$settingName})) {
+                
                 if ($this->isMultilingual($settingName)) {
                     $existingLocales = array_keys($modelWithGivenSettings->{$settingName} ?? []);
-                    
+                    $removeableLocales = array_diff($existingLocales, array_keys($settingValue));
+
                     foreach ($settingValue as $locale => $localizedValue) {
+                        // Will not add setting entry for locale that already exist 
+                        // as that will be handled by update
                         if (in_array($locale, $existingLocales)) {
                             continue;
                         }
 
+                        // Only add those new locale entries that newly added
                         $rows[] = [
                             $this->model->getKeyName() => $this->model->getKey(),
                             'locale' => $locale,
                             'setting_name' => $settingName,
                             'setting_value' => $localizedValue,
                         ];
+                    }
+
+                    // As the model multilingula attributed is gettting updated
+                    // remove any locale entry associated with setting name not present in the update data need to be removed
+                    if (!empty($removeableLocales)) {
+                        DB::table($this->model->getSettingsTable())
+                            ->where($this->model->getKeyName(), $this->model->getKey())
+                            ->where('setting_name', $settingName)
+                            ->whereIn('locale', $removeableLocales)
+                            ->delete();
                     }
                 } else {
                     $rows[] = [
@@ -116,7 +131,8 @@ class SettingsBuilder extends Builder
         $sql = $this->buildUpdateSql($settingValues, $us, $newQuery);
 
         // Build a query for update
-        $settingCount = DB::table($us)->whereIn($us . '.' . $primaryKey, $newQuery->select($primaryKey))
+        $settingCount = DB::table($us)
+            ->whereIn($us . '.' . $primaryKey, $newQuery->select($primaryKey))
             ->update([$us . '.setting_value' => DB::raw($sql)]);
 
         return ($count ?? 0) + $settingCount;
@@ -307,7 +323,9 @@ class SettingsBuilder extends Builder
 
             // Retract the row and fill it with data from a settings table
             $exactRow = $rows->pull($settingModelId);
-            if ($setting->locale) {
+
+            // Even for empty('') locale, the multilingual props need to be an array
+            if (isset($setting->locale)) {
                 $exactRow->{$setting->setting_name}[$setting->locale] = $setting->setting_value;
             } else {
                 $exactRow->{$setting->setting_name} = $setting->setting_value;
