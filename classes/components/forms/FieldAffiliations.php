@@ -33,10 +33,17 @@ class FieldAffiliations extends Field
         $config = parent::getConfig();
 
         $submissionContext = PKPApplication::get()->getRequest()->getContext();
+        $currentLocale = $submissionContext->getPrimaryLocale();
+        $supportedLocales = $submissionContext->getSupportedSubmissionLocales();
+
+        // sort supported locales, with current locale as first element
+        $dict = array_flip([$currentLocale]);
+        $positions = array_map(function ($elem) use ($dict) { return $dict[$elem] ?? INF; }, $supportedLocales);
+        array_multisort($positions, $supportedLocales);
 
         $config['value'] = $this->value ?? $this->default ?? null;
-        $config['currentLocale'] = $submissionContext->getPrimaryLocale();
-        $config['supportedLocales'] = $submissionContext->getSupportedSubmissionLocales();
+        $config['currentLocale'] = $currentLocale;
+        $config['supportedLocales'] = $supportedLocales;
 
         return $config;
     }
