@@ -119,10 +119,10 @@ class ContributorForm extends FormComponent
         ]));
 
         $this->addField(new FieldAffiliations('affiliations', [
-                'label' => __('user.affiliation'),
-                'description' => __('user.affiliations.description'),
-                'isMultilingual' => false,
-            ]));
+            'label' => __('user.affiliations'),
+            'description' => __('user.affiliations.description'),
+            'isMultilingual' => false,
+        ]));
 
         if ($authorUserGroupsOptions->count() > 1) {
             $this->addField(new FieldOptions('userGroupId', [
