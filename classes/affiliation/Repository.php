@@ -214,7 +214,7 @@ class Repository
                     $affiliationId = (int)$affiliation->getId();
                 }
                 else{
-                    $affiliationId = (int)$affiliation['_data']['id'];
+                    $affiliationId = (int)$affiliation['id'];
                 }
 
                 if($currentAffiliationId === $affiliationId) {
@@ -233,10 +233,10 @@ class Repository
 
             if (!($affiliation instanceof Affiliation)) {
 
-                if (empty($affiliation['_data'])) continue;
+                if (empty($affiliation)) continue;
 
                 $newAffiliation = $this->newDataObject();
-                $newAffiliation->setAllData($affiliation['_data']);
+                $newAffiliation->setAllData($affiliation);
 
                 $affiliation = $newAffiliation;
             }
