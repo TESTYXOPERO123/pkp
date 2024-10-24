@@ -56,8 +56,11 @@ msgstr "Type the institute name in {$language}"
 msgid "user.affiliations.translationNameInLanguage"
 msgstr "Institute name in {$language}"
 
-msgid "user.affiliations.deleteInstitutionConfirmation"
-msgstr "Are you sure you want to delete institution \"{$institution}\"?"
+msgid "user.affiliations.deleteModal.title"
+msgstr "Are you sure?"
+
+msgid "user.affiliations.deleteModal.message"
+msgstr "The institution <strong>{$institution}</strong> will be deleted."
 
 msgid "user.affiliations.searchPhraseLabel"
 msgstr "Type the institute name in {$language}"
