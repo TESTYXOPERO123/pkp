@@ -128,7 +128,7 @@ class PKPRorController extends PKPBaseController
                 case 'offset':
                     $collector->offset((int) $val);
                     break;
-                case 'search':
+                case 'searchPhrase':
                     $collector->filterBySearchPhrase($val);
                     break;
             }
