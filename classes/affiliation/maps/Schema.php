@@ -23,7 +23,7 @@ class Schema extends \PKP\core\maps\Schema
     public Enumerable $collection;
 
     /** @copydoc \PKP\core\maps\Schema::$schema */
-    public string $schema = PKPSchemaService::SCHEMA_ROR;
+    public string $schema = PKPSchemaService::SCHEMA_AFFILIATION;
 
     /**
      * Map a affiliation
