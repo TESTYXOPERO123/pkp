@@ -2,7 +2,6 @@
   "title": "Affiliation",
   "description": "Affiliation is an institution with which an author is associated.",
   "required": [
-    "displayLocale",
     "name"
   ],
   "properties": {
