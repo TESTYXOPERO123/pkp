@@ -36,6 +36,12 @@ class FieldAffiliations extends Field
         $currentLocale = $submissionContext->getPrimaryLocale();
         $supportedLocales = $submissionContext->getSupportedSubmissionLocales();
 
+        // locale display names
+        $localeDisplayNames = [];
+        foreach ($supportedLocales as $locale) {
+            $localeDisplayNames[$locale] = locale_get_display_name($locale, $currentLocale);
+        }
+
         // sort supported locales, with current locale as first element
         $dict = array_flip([$currentLocale]);
         $positions = array_map(function ($elem) use ($dict) { return $dict[$elem] ?? INF; }, $supportedLocales);
@@ -44,6 +50,7 @@ class FieldAffiliations extends Field
         $config['value'] = $this->value ?? $this->default ?? null;
         $config['currentLocale'] = $currentLocale;
         $config['supportedLocales'] = $supportedLocales;
+        $config['localeDisplayNames'] = $localeDisplayNames;
 
         return $config;
     }
