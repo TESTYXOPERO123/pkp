@@ -197,8 +197,6 @@ class DAO extends EntityDAO
             ->where('primary_contact_id', $author->getId())
             ->update(['primary_contact_id' => null]);
 
-        $this->deleteAffiliations($author->getId());
-
         parent::_delete($author);
     }
 

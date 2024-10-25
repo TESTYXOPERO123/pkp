@@ -19,6 +19,7 @@ namespace PKP\author;
 
 use APP\facades\Repo;
 use Illuminate\Support\LazyCollection;
+use PKP\affiliation\Affiliation;
 use PKP\facades\Locale;
 use PKP\identity\Identity;
 
@@ -279,6 +280,25 @@ class Author extends Identity
         $this->setData('affiliations', $affiliations);
     }
 
+    public function getLocalizedAffiliations(?string $preferredLocale = null): ?LazyCollection
+    {
+        $value = [];
+
+        $affiliations = $this->getAffiliations();
+        foreach ($affiliations as $affiliation) {
+            foreach ($this->getLocalePrecedence($preferredLocale) as $locale) {
+                $value[] = [
+                    "id" => $affiliation->getId(),
+                    "authorId" => $affiliation->getAuthorId(),
+                    "ror" => $affiliation->getRor(),
+                    "name" => $affiliation->getLocalizedName(),
+                ];
+            }
+        }
+
+        return new LazyCollection($value);
+    }
+
     /**
      * Get the localized affiliations as an array.
      *
@@ -286,11 +306,12 @@ class Author extends Identity
      *
      * @return array
      */
-    public function getLocalizedAffiliations(?string $preferredLocale = null): array
+    public function getLocalizedAffiliationNames(?string $preferredLocale = null): array
     {
         $value = [];
 
         $affiliations = $this->getAffiliations();
+
         foreach ($this->getLocalePrecedence($preferredLocale) as $locale) {
             foreach ($affiliations as $affiliation) {
                 $name = $affiliation->getData('name');
@@ -304,29 +325,19 @@ class Author extends Identity
     }
 
     /**
-     * Get the localized affiliations as an array.
+     * Get the localized affiliations as a string.
      *
      * @param string|null $preferredLocale
      * @param string|null $separator
      *
      * @return string
      */
-    public function getLocalizedAffiliationsAsString(?string $preferredLocale = null, ?string $separator = ','): string
+    public function getLocalizedAffiliationNamesAsString(?string $preferredLocale = null, ?string $separator = ', '): string
     {
-        $value = '';
-
-        $affiliations = $this->getAffiliations();
-
-        foreach ($this->getLocalePrecedence($preferredLocale) as $locale) {
-            foreach ($affiliations as $affiliation) {
-                $name = $affiliation->getData('name');
-                if(!empty($name[$locale])){
-                    $value .= $separator . $name[$locale];
-                }
-            }
-        }
-
-        return trim($value, $separator);
+        return implode(
+            $separator,
+            $this->getLocalizedAffiliationNames($preferredLocale)
+        );
     }
 
     //fixme: multiple-author-affiliations

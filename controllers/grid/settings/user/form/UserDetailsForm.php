@@ -183,7 +183,7 @@ class UserDetailsForm extends UserForm
                 'givenName' => $author->getGivenName(null), // Localized
                 'familyName' => $author->getFamilyName(null), // Localized
                 //fixme: multiple-author-affiliations
-                'affiliations' => $author->getAffiliations(),
+                'affiliation' => $author->getAffiliation(null), // Localized
                 'preferredPublicName' => $author->getPreferredPublicName(null), // Localized
                 'email' => $author->getEmail(),
                 'userUrl' => $author->getUrl(),

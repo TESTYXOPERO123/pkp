@@ -128,7 +128,7 @@ class PKPAuthorForm extends Form
                 'familyName' => $author->getFamilyName(null),
                 'preferredPublicName' => $author->getPreferredPublicName(null),
                 //fixme: multiple-author-affiliations
-                'affiliations' => $author->getAffiliations(),
+                'affiliation' => $author->getAffiliation(null),
                 'country' => $author->getCountry(),
                 'email' => $author->getEmail(),
                 'userUrl' => $author->getUrl(),
@@ -185,7 +185,8 @@ class PKPAuthorForm extends Form
             'givenName',
             'familyName',
             'preferredPublicName',
-            'affiliations', //fixme: multiple-author-affiliations
+            //fixme: multiple-author-affiliations
+            'affiliation',
             'country',
             'email',
             'userUrl',
@@ -227,7 +228,7 @@ class PKPAuthorForm extends Form
         $author->setFamilyName($this->getData('familyName'), null);
         $author->setPreferredPublicName($this->getData('preferredPublicName'), null);
         //fixme: multiple-author-affiliations
-        $author->setAffiliations($this->getData('affiliations'));
+        $author->setAffiliation($this->getData('affiliation'), null); // localized
         $author->setCountry($this->getData('country'));
         $author->setEmail($this->getData('email'));
         $author->setUrl($this->getData('userUrl'));
