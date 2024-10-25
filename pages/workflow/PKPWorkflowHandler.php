@@ -289,6 +289,9 @@ abstract class PKPWorkflowHandler extends Handler
 
         $authorItems = [];
         foreach ($latestPublication->getData('authors') as $contributor) {
+            $contributor->setAffiliations(
+                Repo::affiliation()->getMappedToSchema($contributor->getAffiliations())
+            );
             $authorItems[] = Repo::author()->getSchemaMap()->map($contributor);
         }
 

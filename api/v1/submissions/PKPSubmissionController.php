@@ -3,8 +3,8 @@
 /**
  * @file api/v1/submissions/PKPSubmissionController.php
  *
- * Copyright (c) 2023 Simon Fraser University
- * Copyright (c) 2023 John Willinsky
+ * Copyright (c) 2023-2024 Simon Fraser University
+ * Copyright (c) 2023-2024 John Willinsky
  * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
  *
  * @class PKPSubmissionController
@@ -1475,11 +1475,9 @@ class PKPSubmissionController extends PKPBaseController
             ], Response::HTTP_NOT_FOUND);
         }
 
-        $affiliations = [];
-        foreach($author->getAffiliations() as $affiliation) {
-            $affiliations[] = Repo::affiliation()->getSchemaMap()->map($affiliation);
-        }
-        $author->setAffiliations(new LazyCollection($affiliations));
+        $author->setAffiliations(
+            Repo::affiliation()->getMappedToSchema($author->getAffiliations())
+        );
 
         return response()->json(
             Repo::author()->getSchemaMap()->map($author),
@@ -1511,13 +1509,11 @@ class PKPSubmissionController extends PKPBaseController
             ->filterByPublicationIds([$publication->getId()]);
         $authors = $collector->getMany();
 
-        $affiliations = [];
-        foreach($authors as $author){
-            foreach($author->getAffiliations() as $affiliation) {
-                $affiliations[] = Repo::affiliation()->getSchemaMap()->map($affiliation);
-            }
-            $author->setAffiliations(new LazyCollection($affiliations));
-        }
+        $authors->each(function ($author) {
+            $author->setAffiliations(
+                Repo::affiliation()->getMappedToSchema($author->getAffiliations())
+            );
+        });
 
         return response()->json([
             'itemsMax' => $collector->getCount(),
@@ -1575,6 +1571,10 @@ class PKPSubmissionController extends PKPBaseController
         $newId = Repo::author()->add($author);
         $author = Repo::author()->get($newId);
 
+        $author->setAffiliations(
+            Repo::affiliation()->getMappedToSchema($author->getAffiliations())
+        );
+
         return response()->json(
             Repo::author()->getSchemaMap()->map($author),
             Response::HTTP_OK
@@ -1623,6 +1623,10 @@ class PKPSubmissionController extends PKPBaseController
                 'error' => __('api.404.resourceNotFound'),
             ], Response::HTTP_NOT_FOUND);
         }
+
+        $author->setAffiliations(
+            Repo::affiliation()->getMappedToSchema($author->getAffiliations())
+        );
 
         $output = Repo::author()->getSchemaMap()->map($author);
 
@@ -1698,6 +1702,10 @@ class PKPSubmissionController extends PKPBaseController
 
         Repo::author()->edit($author, $params);
         $author = Repo::author()->get($author->getId());
+
+        $author->setAffiliations(
+            Repo::affiliation()->getMappedToSchema($author->getAffiliations())
+        );
 
         return response()->json(
             Repo::author()->getSchemaMap()->map($author),
