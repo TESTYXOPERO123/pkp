@@ -246,4 +246,21 @@ class Repository
     {
         $this->dao->deleteByAuthorId($authorId);
     }
+
+    /**
+     * Get affiliations mapped to schema.
+     *
+     * @param LazyCollection $affiliations
+     *
+     * @return LazyCollection
+     */
+    public function getMappedToSchema(LazyCollection $affiliations): LazyCollection
+    {
+        $mappedAffiliations = [];
+        foreach ($affiliations as $key => $affiliation) {
+            $mappedAffiliations[] = $this->getSchemaMap()->map($affiliation);
+        }
+
+        return new LazyCollection($mappedAffiliations);
+    }
 }
