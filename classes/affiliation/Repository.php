@@ -2,8 +2,8 @@
 /**
  * @file classes/affiliation/Repository.php
  *
- * Copyright (c) 2014-2024 Simon Fraser University
- * Copyright (c) 2000-2024 John Willinsky
+ * Copyright (c) 2024 Simon Fraser University
+ * Copyright (c) 2024 John Willinsky
  * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
  *
  * @class Repository
@@ -41,9 +41,7 @@ class Repository
         $this->schemaService = $schemaService;
     }
 
-    /**
-     * @copydoc DAO::newDataObject()
-     */
+    /** @copydoc DAO::newDataObject() */
     public function newDataObject(array $params = []): Affiliation
     {
         $object = $this->dao->newDataObject();
@@ -53,33 +51,26 @@ class Repository
         return $object;
     }
 
-    /**
-     * @copydoc DAO::exists()
-     */
+    /** @copydoc DAO::exists() */
     public function exists(int $id, ?int $contextId = null): bool
     {
         return $this->dao->exists($id, $contextId);
     }
 
-    /**
-     * @copydoc DAO::get()
-     */
+    /** @copydoc DAO::get() */
     public function get(int $id, ?int $contextId = null): ?Affiliation
     {
         return $this->dao->get($id, $contextId);
     }
 
-    /**
-     * @copydoc DAO::getCollector()
-     */
+    /** @copydoc DAO::getCollector() */
     public function getCollector(): Collector
     {
         return App::make(Collector::class);
     }
 
     /**
-     * Get an instance of the map class for mapping
-     * affiliations to their schema
+     * Get an instance of the map class for mapping affiliations to their schema.
      */
     public function getSchemaMap(): maps\Schema
     {
@@ -131,9 +122,7 @@ class Repository
         return $errors;
     }
 
-    /**
-     * @copydoc DAO::insert()
-     */
+    /** @copydoc DAO::insert() */
     public function add(Affiliation $row): int
     {
         $id = $this->dao->insert($row);
@@ -141,9 +130,7 @@ class Repository
         return $id;
     }
 
-    /**
-     * @copydoc DAO::update()
-     */
+    /** @copydoc DAO::update() */
     public function edit(Affiliation $row, array $params): void
     {
         $newRow = clone $row;
@@ -197,7 +184,7 @@ class Repository
     public function saveAffiliations(array $affiliations, int $authorId): void
     {
         // delete all affiliations if parameter $affiliations empty array
-        if(empty($affiliations)) {
+        if (empty($affiliations)) {
             $this->deleteByAuthorId($authorId);
             return;
         }
@@ -205,31 +192,30 @@ class Repository
         // delete affiliations not in param $affiliations
         // do this before insert/update, otherwise inserted will be deleted
         $currentAffiliations = $this->getByAuthorId($authorId);
-        foreach($currentAffiliations as $currentAffiliation){
+        foreach ($currentAffiliations as $currentAffiliation) {
             $rowFound = false;
             $currentAffiliationId = $currentAffiliation->getId();
 
-            foreach($affiliations as $affiliation) {
+            foreach ($affiliations as $affiliation) {
                 if ($affiliation instanceof Affiliation) {
                     $affiliationId = (int)$affiliation->getId();
-                }
-                else{
+                } else {
                     $affiliationId = (int)$affiliation['id'];
                 }
 
-                if($currentAffiliationId === $affiliationId) {
+                if ($currentAffiliationId === $affiliationId) {
                     $rowFound = true;
                     break;
                 }
             }
 
-            if(!$rowFound) {
-                 $this->dao->delete($currentAffiliation);
+            if (!$rowFound) {
+                $this->dao->delete($currentAffiliation);
             }
         }
 
         // insert, update
-        foreach($affiliations as $affiliation) {
+        foreach ($affiliations as $affiliation) {
 
             if (!($affiliation instanceof Affiliation)) {
 
@@ -241,7 +227,7 @@ class Repository
                 $affiliation = $newAffiliation;
             }
 
-            if(empty($affiliation->getData('authorId'))) {
+            if (empty($affiliation->getData('authorId'))) {
                 $affiliation->setData('authorId', $authorId);
             }
 
