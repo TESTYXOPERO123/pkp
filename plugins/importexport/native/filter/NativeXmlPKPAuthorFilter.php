@@ -111,8 +111,8 @@ class NativeXmlPKPAuthorFilter extends NativeImportFilter
                         if (empty($locale)) {
                             $locale = $publication->getData('locale');
                         }
-                        //fixme: multiple-author-affiliations
-                        $author->setAffiliation($n->textContent, $locale);
+                        //todo: multiple-author-affiliations
+//                        $author->setAffiliation($n->textContent, $locale);
                         break;
                     case 'country': $author->setCountry($n->textContent);
                         break;

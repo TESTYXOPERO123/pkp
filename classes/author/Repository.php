@@ -207,13 +207,12 @@ class Repository
      *
      * @hook Author::newAuthorFromUser [[$author, $user]]
      */
-    public function newAuthorFromUser(User $user): Author
+    public function newAuthorFromUser(User $user, string $locale): Author
     {
         $author = Repo::author()->newDataObject();
         $author->setGivenName($user->getGivenName(null), null);
         $author->setFamilyName($user->getFamilyName(null), null);
-        //fixme: multiple-author-affiliations
-        $author->setAffiliation($user->getAffiliation(null), null);
+        $author->setAffiliations(Repo::affiliation()->migrateAffiliation($user->getAffiliation(null), $locale));
         $author->setCountry($user->getCountry());
         $author->setEmail($user->getEmail());
         $author->setUrl($user->getUrl());

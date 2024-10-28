@@ -280,6 +280,13 @@ class Author extends Identity
         $this->setData('affiliations', $affiliations);
     }
 
+    /**
+     * Get localized affiliations.
+     *
+     * @param string|null $preferredLocale
+     *
+     * @return LazyCollection|null
+     */
     public function getLocalizedAffiliations(?string $preferredLocale = null): ?LazyCollection
     {
         $value = [];
@@ -312,10 +319,10 @@ class Author extends Identity
 
         $affiliations = $this->getAffiliations();
 
-        foreach ($this->getLocalePrecedence($preferredLocale) as $locale) {
-            foreach ($affiliations as $affiliation) {
+        foreach ($affiliations as $affiliation) {
+            foreach ($this->getLocalePrecedence($preferredLocale) as $locale) {
                 $name = $affiliation->getData('name');
-                if(!empty($name[$locale])){
+                if (!empty($name[$locale])) {
                     $value[] = $name[$locale];
                 }
             }
@@ -338,37 +345,5 @@ class Author extends Identity
             $separator,
             $this->getLocalizedAffiliationNames($preferredLocale)
         );
-    }
-
-    //fixme: multiple-author-affiliations
-    /**
-     * Get affiliation (position, institution, etc.).
-     *
-     * @param string $locale
-     *
-     * @return string|array
-     */
-    public function getAffiliation($locale)
-    {
-        return $this->getData('affiliation', $locale);
-    }
-
-    /**
-     * Set affiliation.
-     *
-     * @param string $affiliation
-     * @param string $locale
-     */
-    public function setAffiliation($affiliation, $locale)
-    {
-        $this->setData('affiliation', $affiliation, $locale);
-    }
-
-    /**
-     * Get the localized affiliation
-     */
-    public function getLocalizedAffiliation()
-    {
-        return $this->getLocalizedData('affiliation');
     }
 }

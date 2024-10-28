@@ -16,6 +16,7 @@ namespace PKP\affiliation;
 use APP\core\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\LazyCollection;
+use PKP\facades\Repo;
 use PKP\plugins\Hook;
 use PKP\services\PKPSchemaService;
 use PKP\validation\ValidatorFactory;
@@ -262,5 +263,43 @@ class Repository
         }
 
         return new LazyCollection($mappedAffiliations);
+    }
+
+    /**
+     * Migrates affiliation.
+     *
+     * @param string $affiliationName
+     * @param string $locale
+     *
+     * @return LazyCollection
+     */
+    public function migrateAffiliation(string $affiliationName, string $locale): LazyCollection
+    {
+        $affiliation = Repo::affiliation()->newDataObject();
+        $params = [];
+
+        $rors = Repo::ror()->getCollector()->filterByName($affiliationName);
+        foreach ($rors as $ror) {
+            $ror = Repo::ror()->get($ror->ror_id);
+            $params = [
+                "id" => null,
+                "authorId" => null,
+                "ror" => $ror->_data['ror'],
+                "name" => $ror->_data['name']
+            ];
+        }
+
+        $params = [
+            "id" => null,
+            "authorId" => null,
+            "ror" => null,
+            "name" => [
+                $locale => $affiliation
+            ]
+        ];
+
+        $affiliation->setAllData($params);
+
+        return new LazyCollection($affiliation);
     }
 }
