@@ -281,6 +281,30 @@ class Author extends Identity
     }
 
     /**
+     * Set affiliations for a given name.
+     *
+     * @param string $affiliationName
+     * @param string $locale
+     *
+     * @return void
+     */
+    public function setAffiliationsFromString(string $affiliationName, string $locale): void
+    {
+        $this->setData(
+            'affiliations',
+            new LazyCollection(
+                Repo::affiliation()->newDataObject([
+                        "id" => null,
+                        "authorId" => $this->getId(),
+                        "ror" => null,
+                        "name" => [$locale => $affiliationName,],
+                    ]
+                )
+            )
+        );
+    }
+
+    /**
      * Get localized affiliations.
      *
      * @param string|null $preferredLocale
