@@ -103,6 +103,13 @@ class Schema extends \PKP\core\maps\Schema
                 case 'hasVerifiedOrcid':
                     $output[$prop] = $item->hasVerifiedOrcid();
                     break;
+                case 'affiliations':
+                    $data = [];
+                    foreach ($item->getAffiliations() as $key => $affiliation) {
+                        $data[] = Repo::affiliation()->getSchemaMap()->map($affiliation);
+                    }
+                    $output[$prop] = new LazyCollection($data);
+                    break;
                 default:
                     $output[$prop] = $item->getData($prop);
                     break;

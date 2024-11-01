@@ -32,7 +32,6 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Enumerable;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\LazyCollection;
 use PKP\components\forms\FormComponent;
 use PKP\components\forms\publication\PKPCitationsForm;
 use PKP\components\forms\publication\PKPMetadataForm;
@@ -1475,10 +1474,6 @@ class PKPSubmissionController extends PKPBaseController
             ], Response::HTTP_NOT_FOUND);
         }
 
-        $author->setAffiliations(
-            Repo::affiliation()->getMappedToSchema($author->getAffiliations())
-        );
-
         return response()->json(
             Repo::author()->getSchemaMap()->map($author),
             Response::HTTP_OK
@@ -1508,12 +1503,6 @@ class PKPSubmissionController extends PKPBaseController
         $collector = Repo::author()->getCollector()
             ->filterByPublicationIds([$publication->getId()]);
         $authors = $collector->getMany();
-
-        $authors->each(function ($author) {
-            $author->setAffiliations(
-                Repo::affiliation()->getMappedToSchema($author->getAffiliations())
-            );
-        });
 
         return response()->json([
             'itemsMax' => $collector->getCount(),
@@ -1571,10 +1560,6 @@ class PKPSubmissionController extends PKPBaseController
         $newId = Repo::author()->add($author);
         $author = Repo::author()->get($newId);
 
-        $author->setAffiliations(
-            Repo::affiliation()->getMappedToSchema($author->getAffiliations())
-        );
-
         return response()->json(
             Repo::author()->getSchemaMap()->map($author),
             Response::HTTP_OK
@@ -1623,10 +1608,6 @@ class PKPSubmissionController extends PKPBaseController
                 'error' => __('api.404.resourceNotFound'),
             ], Response::HTTP_NOT_FOUND);
         }
-
-        $author->setAffiliations(
-            Repo::affiliation()->getMappedToSchema($author->getAffiliations())
-        );
 
         $output = Repo::author()->getSchemaMap()->map($author);
 
@@ -1702,10 +1683,6 @@ class PKPSubmissionController extends PKPBaseController
 
         Repo::author()->edit($author, $params);
         $author = Repo::author()->get($author->getId());
-
-        $author->setAffiliations(
-            Repo::affiliation()->getMappedToSchema($author->getAffiliations())
-        );
 
         return response()->json(
             Repo::author()->getSchemaMap()->map($author),

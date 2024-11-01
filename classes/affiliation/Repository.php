@@ -249,23 +249,6 @@ class Repository
     }
 
     /**
-     * Get affiliations mapped to schema.
-     *
-     * @param LazyCollection $affiliations
-     *
-     * @return LazyCollection
-     */
-    public function getMappedToSchema(LazyCollection $affiliations): LazyCollection
-    {
-        $mappedAffiliations = [];
-        foreach ($affiliations as $key => $affiliation) {
-            $mappedAffiliations[] = $this->getSchemaMap()->map($affiliation);
-        }
-
-        return new LazyCollection($mappedAffiliations);
-    }
-
-    /**
      * Migrates affiliation.
      *
      * @param string $affiliationName
