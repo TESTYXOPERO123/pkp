@@ -7,7 +7,7 @@
   "properties": {
     "id": {
       "type": "integer",
-      "description": "The unique id of ror in the database.",
+      "description": "The unique id of affiliation in the database.",
       "readOnly": true,
       "apiSummary": true
     },
