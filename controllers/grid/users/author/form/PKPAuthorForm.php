@@ -3,8 +3,8 @@
 /**
  * @file controllers/grid/users/author/form/PKPAuthorForm.php
  *
- * Copyright (c) 2014-2021 Simon Fraser University
- * Copyright (c) 2003-2021 John Willinsky
+ * Copyright (c) 2014-2024 Simon Fraser University
+ * Copyright (c) 2003-2024 John Willinsky
  * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
  *
  * @class PKPAuthorForm
@@ -122,8 +122,6 @@ class PKPAuthorForm extends Form
         $author = $this->getAuthor();
 
         if ($author) {
-            \PKP\_helpers\LogHelper::logInfo($author);
-
             $this->_data = [
                 'authorId' => $author->getId(),
                 'givenName' => $author->getGivenName(null),
