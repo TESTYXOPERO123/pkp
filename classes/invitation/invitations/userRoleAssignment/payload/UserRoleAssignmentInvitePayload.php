@@ -14,14 +14,15 @@
 
 namespace PKP\invitation\invitations\userRoleAssignment\payload;
 
+use DAORegistry;
 use Illuminate\Validation\Rule;
 use PKP\invitation\core\enums\ValidationContext;
 use PKP\invitation\core\InvitePayload;
 use PKP\invitation\invitations\userRoleAssignment\rules\AddUserGroupRule;
 use PKP\invitation\invitations\userRoleAssignment\rules\AllowedKeysRule;
 use PKP\invitation\invitations\userRoleAssignment\rules\NotNullIfPresent;
+use PKP\invitation\invitations\userRoleAssignment\rules\PrimaryLocaleRequired;
 use PKP\invitation\invitations\userRoleAssignment\rules\ProhibitedIncludingNull;
-use PKP\invitation\invitations\userRoleAssignment\rules\RemoveUserGroupRule;
 use PKP\invitation\invitations\userRoleAssignment\rules\UserGroupExistsRule;
 use PKP\invitation\invitations\userRoleAssignment\rules\UsernameExistsRule;
 use PKP\invitation\invitations\userRoleAssignment\UserRoleAssignmentInvite;
@@ -39,20 +40,21 @@ class UserRoleAssignmentInvitePayload extends InvitePayload
         public ?string $emailSubject = null,
         public ?string $emailBody = null,
         public ?array $userGroupsToAdd = null,
-        public ?array $userGroupsToRemove = null,
         public ?bool $passwordHashed = null,
         public ?string $sendEmailAddress = null,
     ) 
     {
         parent::__construct(get_object_vars($this));
-
-
     }
 
     public function getValidationRules(UserRoleAssignmentInvite $invitation, ValidationContext $validationContext = ValidationContext::VALIDATION_CONTEXT_DEFAULT): array
     {
         $context = $invitation->getContext();
         $allowedLocales = $context->getSupportedFormLocales();
+        $primaryLocale = $context->getPrimaryLocale();
+
+        $siteDao = DAORegistry::getDAO('SiteDAO');
+        $site = $siteDao->getSite();
 
         $validationRules = [
             'givenName' => [
@@ -63,23 +65,29 @@ class UserRoleAssignmentInvitePayload extends InvitePayload
                 Rule::requiredIf($validationContext === ValidationContext::VALIDATION_CONTEXT_FINALIZE),
                 'sometimes',
                 'array',
-                new AllowedKeysRule($allowedLocales), // Apply the custom rule
+                new AllowedKeysRule($allowedLocales),
             ],
             'givenName.*' => [
+                'nullable', // Make optional for other locales
                 'string',
                 'max:255',
+            ],
+            "givenName.{$primaryLocale}" => [
+                'sometimes',
+                Rule::requiredIf($validationContext === ValidationContext::VALIDATION_CONTEXT_FINALIZE),
+                Rule::requiredIf($validationContext === ValidationContext::VALIDATION_CONTEXT_REFINE),
             ],
             'familyName' => [
                 'bail',
                 Rule::excludeIf(!is_null($invitation->getUserId()) && $validationContext === ValidationContext::VALIDATION_CONTEXT_FINALIZE),
                 new ProhibitedIncludingNull(!is_null($invitation->getUserId())),
-                Rule::when(in_array($validationContext, [ValidationContext::VALIDATION_CONTEXT_INVITE]), ['nullable']),
-                Rule::requiredIf($validationContext === ValidationContext::VALIDATION_CONTEXT_FINALIZE),
+                Rule::when(in_array($validationContext, [ValidationContext::VALIDATION_CONTEXT_INVITE, ValidationContext::VALIDATION_CONTEXT_FINALIZE]), ['nullable']),
                 'sometimes',
                 'array',
-                new AllowedKeysRule($allowedLocales), // Apply the custom rule
+                new AllowedKeysRule($allowedLocales),
             ],
             'familyName.*' => [
+                'nullable', // Make optional for all locales
                 'string',
                 'max:255',
             ],
@@ -87,13 +95,13 @@ class UserRoleAssignmentInvitePayload extends InvitePayload
                 'bail',
                 Rule::excludeIf(!is_null($invitation->getUserId()) && $validationContext === ValidationContext::VALIDATION_CONTEXT_FINALIZE),
                 new ProhibitedIncludingNull(!is_null($invitation->getUserId())),
-                Rule::when(in_array($validationContext, [ValidationContext::VALIDATION_CONTEXT_INVITE]), ['nullable']),
-                Rule::requiredIf($validationContext === ValidationContext::VALIDATION_CONTEXT_FINALIZE),
+                Rule::when(in_array($validationContext, [ValidationContext::VALIDATION_CONTEXT_INVITE, ValidationContext::VALIDATION_CONTEXT_FINALIZE]), ['nullable']),
                 'sometimes',
                 'array',
-                new AllowedKeysRule($allowedLocales), // Apply the custom rule
+                new AllowedKeysRule($allowedLocales),
             ],
             'affiliation.*' => [
+                'nullable', // Make optional for all locales
                 'string',
                 'max:255',
             ],
@@ -103,6 +111,8 @@ class UserRoleAssignmentInvitePayload extends InvitePayload
                 new ProhibitedIncludingNull(!is_null($invitation->getUserId())),
                 Rule::when(in_array($validationContext, [ValidationContext::VALIDATION_CONTEXT_INVITE]), ['nullable']),
                 Rule::requiredIf($validationContext === ValidationContext::VALIDATION_CONTEXT_FINALIZE),
+                'sometimes', // Applies the rule only if userCountry exists in the request
+                Rule::requiredIf($validationContext === ValidationContext::VALIDATION_CONTEXT_REFINE),
                 'string',
                 'max:255',
             ],
@@ -126,6 +136,7 @@ class UserRoleAssignmentInvitePayload extends InvitePayload
                 new NotNullIfPresent(),
                 'required_with:username',
                 'max:255',
+                'min:' . $site->getMinPasswordLength(),
             ],
             'userGroupsToAdd' => [
                 Rule::requiredIf($validationContext === ValidationContext::VALIDATION_CONTEXT_INVITE),
@@ -145,24 +156,6 @@ class UserRoleAssignmentInvitePayload extends InvitePayload
                 new AddUserGroupRule($invitation),
             ],
             'userGroupsToAdd.*.masthead' => 'required|bool',
-            'userGroupsToAdd.*.dateStart' => 'required|date|after_or_equal:today',
-            'userGroupsToRemove' => [
-                'sometimes',
-                'bail',
-                new ProhibitedIncludingNull(is_null($invitation->getUserId())),
-                Rule::when(in_array($validationContext, [ValidationContext::VALIDATION_CONTEXT_INVITE, ValidationContext::VALIDATION_CONTEXT_FINALIZE]), ['nullable']),
-            ],
-            'userGroupsToRemove.*' => [
-                'array',
-                new AllowedKeysRule(['userGroupId']),
-            ],
-            'userGroupsToRemove.*.userGroupId' => [
-                'distinct',
-                'required',
-                'integer',
-                new UserGroupExistsRule(),
-                new RemoveUserGroupRule($invitation),
-            ],
             'userOrcid' => [
                 Rule::when(in_array($validationContext, [ValidationContext::VALIDATION_CONTEXT_INVITE, ValidationContext::VALIDATION_CONTEXT_FINALIZE]), ['nullable']),
                 'orcid'
