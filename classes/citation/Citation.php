@@ -1,4 +1,9 @@
 <?php
+
+/**
+ * @defgroup citation Citation
+ */
+
 /**
  * @file classes/citation/Citation.php
  *
@@ -9,8 +14,6 @@
  * @class Citation
  *
  * @ingroup citation
- *
- * @defgroup citation Citation
  *
  * @brief Class representing a citation (bibliographic reference)
  */
@@ -33,7 +36,7 @@ class Citation extends DataObject
     }
 
     /**
-     * Get publication id
+     * Get publication id.
      */
     public function getPublicationId()
     {
@@ -41,9 +44,7 @@ class Citation extends DataObject
     }
 
     /**
-     * Get the rawCitation
-     *
-     * @return string
+     * Get the rawCitation.
      */
     public function getRawCitation(): string
     {
@@ -51,9 +52,7 @@ class Citation extends DataObject
     }
 
     /**
-     * Set the rawCitation
-     *
-     * @param string|null $rawCitation
+     * Set the rawCitation.
      */
     public function setRawCitation(string $rawCitation = null): void
     {
@@ -62,9 +61,7 @@ class Citation extends DataObject
     }
 
     /**
-     * Get the sequence number
-     *
-     * @return int
+     * Get the sequence number.
      */
     public function getSequence(): int
     {
@@ -72,9 +69,7 @@ class Citation extends DataObject
     }
 
     /**
-     * Set the sequence number
-     *
-     * @param int $seq
+     * Set the sequence number.
      */
     public function setSequence(int $seq): void
     {
@@ -82,9 +77,7 @@ class Citation extends DataObject
     }
 
     /**
-     * Replace URLs through HTML links, if the citation does not already contain HTML links
-     *
-     * @return string
+     * Replace URLs through HTML links, if the citation does not already contain HTML links.
      */
     public function getCitationWithLinks(): string
     {
@@ -104,11 +97,7 @@ class Citation extends DataObject
     }
 
     /**
-     * Take a citation string and clean/normalize it
-     *
-     * @param string $citationString
-     *
-     * @return string
+     * Take a citation string and clean/normalize it.
      */
     public function cleanCitationString(string $citationString = null): string
     {

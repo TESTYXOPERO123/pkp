@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file classes/citation/CitationListTokenizerFilter.php
  *
@@ -8,7 +9,7 @@
  *
  * @class CitationListTokenizerFilter
  *
- * @ingroup classes_citation
+ * @ingroup citation
  *
  * @brief Class that takes an unformatted list of citations
  *  and returns an array of raw citation strings.

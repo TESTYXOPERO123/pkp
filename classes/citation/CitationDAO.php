@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file classes/citation/CitationDAO.php
  *
@@ -242,7 +243,7 @@ class CitationDAO extends \PKP\db\DAO
     {
         $this->updateDataObjectSettings('citation_settings', $citation, ['citation_id' => $citation->getId()]);
     }
-    
+
     //todo: remove these after refactoring
     public function _newDataObject(){
         return $this->newDataObject();

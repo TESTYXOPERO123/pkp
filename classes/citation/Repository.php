@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file classes/citation/Repository.php
  *
@@ -7,6 +8,8 @@
  * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
  *
  * @class Repository
+ *
+ * @ingroup citation
  *
  * @brief A repository to find and manage citations.
  */

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file classes/citation/maps/Schema.php
  *
@@ -7,6 +8,8 @@
  * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
  *
  * @class Schema
+ *
+ * @ingroup citation
  *
  * @brief Map citations to the properties defined in the citation schema
  */

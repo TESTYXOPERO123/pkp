@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file classes/citation/DAO.php
  *
@@ -6,11 +7,9 @@
  * Copyright (c) 2024 John Willinsky
  * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
  *
- * @class \PKP\citation\DAO
+ * @class DAO
  *
  * @ingroup citation
- *
- * @see Citation
  *
  * @brief Read and write citation cache to the database.
  */

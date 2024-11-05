@@ -19,7 +19,6 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Enumerable;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\LazyCollection;
-use PKP\citation\CitationDAO;
 use PKP\core\EntityDAO;
 use PKP\core\traits\EntityWithParent;
 use PKP\services\PKPSchemaService;
@@ -69,7 +68,7 @@ class DAO extends EntityDAO
         SubmissionSubjectDAO $submissionSubjectDao,
         SubmissionDisciplineDAO $submissionDisciplineDao,
         SubmissionAgencyDAO $submissionAgencyDao,
-        CitationDAO $citationDao = null,
+        $citationDao = null,
         PKPSchemaService $schemaService
     ) {
         parent::__construct($schemaService);
