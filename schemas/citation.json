@@ -2,19 +2,16 @@
 	"title": "Citation",
 	"description": "Affiliation is an institution with which an author is associated.",
 	"required": [
-		"title"
+		"title",
+		"publicationId"
 	],
 	"properties": {
 		"id": {
 			"type": "integer",
-			"description": "The unique id of ror in the database.",
-			"readOnly": true,
 			"apiSummary": true
 		},
 		"publicationId": {
 			"type": "integer",
-			"description": "The publication to which this citation is associated with.",
-			"writeDisabledInApi": true,
 			"apiSummary": true
 		},
 		"doi": {
@@ -33,8 +30,7 @@
 			"multilingual": false,
 			"apiSummary": true,
 			"validation": [
-				"nullable",
-				"no_new_line"
+				"nullable"
 			]
 		},
 		"url": {
@@ -43,8 +39,17 @@
 			"multilingual": false,
 			"apiSummary": true,
 			"validation": [
+				"nullable"
+			]
+		},
+		"urldate": {
+			"type": "string",
+			"description": "Access date to the url",
+			"multilingual": false,
+			"apiSummary": true,
+			"validation": [
 				"nullable",
-				"no_new_line"
+				"date_format:Y-m-d"
 			]
 		},
 		"date": {
@@ -76,6 +81,62 @@
 				"nullable"
 			]
 		},
+		"pages": {
+			"type": "array",
+			"description": "The number of pages of the work/article, e.g. 4, 46-53",
+			"multilingual": false,
+			"apiSummary": true,
+			"items": {
+				"type": "string"
+			}
+		},
+		"title": {
+			"type": "string",
+			"description": "The title of this work.",
+			"multilingual": false,
+			"apiSummary": true,
+			"validation": [
+				"nullable",
+				"no_new_line"
+			]
+		},
+		"titleaddon": {
+			"type": "string",
+			"description": "An addon to the title of this work.",
+			"multilingual": false,
+			"apiSummary": true,
+			"validation": [
+				"nullable",
+				"no_new_line"
+			]
+		},
+		"subtitle": {
+			"type": "string",
+			"description": "The subtitle of this work.",
+			"multilingual": false,
+			"apiSummary": true,
+			"validation": [
+				"nullable",
+				"no_new_line"
+			]
+		},
+		"shorttitle": {
+			"type": "string",
+			"description": "The abridged or short title of this work.",
+			"multilingual": false,
+			"apiSummary": true,
+			"validation": [
+				"nullable",
+				"no_new_line"
+			]
+		},
+		"abstract": {
+			"type": "string",
+			"description": "Abstract of this work",
+			"multilingual": false,
+			"apiSummary": true,
+			"validation": []
+		},
 		"issue": {
 			"type": "string",
 			"description": "Issue",
@@ -85,160 +146,135 @@
 				"nullable"
 			]
 		},
-		"pages": [
-			[
-				[
-					{
-						"text": "1",
-						"type": "string"
-					}
-				]
-			],
-			[
-				[
-					{
-						"text": "2",
-						"type": "string"
-					}
-				]
-			],
-			[
-				[
-					{
-						"text": "3",
-						"type": "string"
-					}
-				],
-				[
-					{
-						"text": "4",
-						"type": "string"
-					}
-				]
-			]
-		],
-		"title": {
+		"issuetitle": {
 			"type": "string",
-			"description": "The title without a prefix or subtitle. This may include inline HTML tags, such as `<i>` and `<b>`.",
-			"multilingual": true,
+			"description": "The title of the issue.",
+			"multilingual": false,
 			"apiSummary": true,
 			"validation": [
 				"nullable",
 				"no_new_line"
 			]
 		},
-		"author": [
-			{
-				"given": [
-					{
-						"text": "firstname",
-						"type": "string"
-					}
-				],
-				"family": [
-					{
-						"text": "lastname",
-						"type": "string"
-					}
-				],
-				"prefix": [
-					{
-						"text": "prefix",
-						"type": "string"
-					}
-				],
-				"suffix": [
-					{
-						"text": "suffix",
-						"type": "string"
-					}
-				],
-				"useprefix": false
-			},
-			{
-				"given": [
-					{
-						"text": "firstname",
-						"type": "string"
-					}
-				],
-				"family": [
-					{
-						"text": "lastname",
-						"type": "string"
-					}
-				],
-				"prefix": [
-					{
-						"text": "prefix",
-						"type": "string"
-					}
-				],
-				"suffix": [
-					{
-						"text": "suffix",
-						"type": "string"
-					}
-				],
-				"useprefix": false
-			},
-			{
-				"given": [
-					{
-						"text": "firstname",
-						"type": "string"
-					}
-				],
-				"family": [
-					{
-						"text": "lastname",
-						"type": "string"
-					}
-				],
-				"prefix": [
-					{
-						"text": "prefix",
-						"type": "string"
-					}
-				],
-				"suffix": [
-					{
-						"text": "suffix",
-						"type": "string"
-					}
-				],
-				"useprefix": false
+		"issuesubtitle": {
+			"type": "string",
+			"description": "The subtitle of the issue.",
+			"multilingual": false,
+			"apiSummary": true,
+			"validation": [
+				"nullable",
+				"no_new_line"
+			]
+		},
+		"journaltitle": {
+			"type": "string",
+			"description": "The title of the journal.",
+			"multilingual": false,
+			"apiSummary": true,
+			"validation": [
+				"nullable",
+				"no_new_line"
+			]
+		},
+		"journalsubtitle": {
+			"type": "string",
+			"description": "The subtitle of the journal.",
+			"multilingual": false,
+			"apiSummary": true,
+			"validation": [
+				"nullable",
+				"no_new_line"
+			]
+		},
+		"author": {
+			"type": "array",
+			"description": "List of authors.",
+			"multilingual": false,
+			"apiSummary": true,
+			"items": {
+				"type": "object",
+				"$ref": "#/definitions/Author"
 			}
-		],
-		"editor": [
-			{
-				"given": [
-					{
-						"text": "firstname",
-						"type": "string"
-					}
-				],
-				"family": [
-					{
-						"text": " lastname",
-						"type": "string"
-					}
-				],
-				"prefix": [
-					{
-						"text": "prefix",
-						"type": "string"
-					}
-				],
-				"suffix": [
-					{
-						"text": "suffix",
-						"type": "string"
-					}
-				],
-				"useprefix": false
+		},
+		"editor": {
+			"type": "array",
+			"description": "List of editors.",
+			"multilingual": false,
+			"apiSummary": true,
+			"items": {
+				"type": "object",
+				"$ref": "#/definitions/Author"
 			}
-		],
+		},
+		"editora": {
+			"type": "array",
+			"description": "List of editors.",
+			"multilingual": false,
+			"apiSummary": true,
+			"items": {
+				"type": "object",
+				"$ref": "#/definitions/Author"
+			}
+		},
+		"editorb": {
+			"type": "array",
+			"description": "List of editors.",
+			"multilingual": false,
+			"apiSummary": true,
+			"items": {
+				"type": "object",
+				"$ref": "#/definitions/Author"
+			}
+		},
+		"editorc": {
+			"type": "array",
+			"description": "List of editors.",
+			"multilingual": false,
+			"apiSummary": true,
+			"items": {
+				"type": "object",
+				"$ref": "#/definitions/Author"
+			}
+		},
+		"commentator": {
+			"type": "array",
+			"description": "List of commentators.",
+			"multilingual": false,
+			"apiSummary": true,
+			"items": {
+				"type": "object",
+				"$ref": "#/definitions/Author"
+			}
+		},
+		"translator": {
+			"type": "array",
+			"description": "List of translators.",
+			"multilingual": false,
+			"apiSummary": true,
+			"items": {
+				"type": "object",
+				"$ref": "#/definitions/Author"
+			}
+		},
+		"annotator": {
+			"type": "array",
+			"description": "List of annotators.",
+			"multilingual": false,
+			"apiSummary": true,
+			"items": {
+				"type": "object",
+				"$ref": "#/definitions/Author"
+			}
+		},
+		"annotation": {
+			"type": "string",
+			"description": "The annotations of this work.",
+			"multilingual": false,
+			"apiSummary": true,
+			"validation": [
+				"nullable"
+			]
+		},
 		"eprint": {
 			"type": "string",
 			"description": "Electronic identifier of an online publication",
@@ -249,308 +285,148 @@
 				"no_new_line"
 			]
 		},
-		"langid": {
+		"language": {
 			"type": "string",
-			"description": "The locale of the publication",
-			"apiSummary": true,
-			"readOnly": true
-		},
-		"number": [
-			{
-				"text": "Number of the work in a series",
-				"type": "string"
-			}
-		],
-		"series": [
-			{
-				"text": "Name of series",
-				"type": "string"
-			}
-		],
-		"volume": [
-			{
-				"text": "Volume",
-				"type": "string"
-			}
-		],
-		"editora": [
-			{
-				"given": [
-					{
-						"text": "firstname",
-						"type": "string"
-					}
-				],
-				"family": [
-					{
-						"text": " lastname",
-						"type": "string"
-					}
-				],
-				"prefix": [
-					{
-						"text": "prefix",
-						"type": "string"
-					}
-				],
-				"suffix": [
-					{
-						"text": "suffix",
-						"type": "string"
-					}
-				],
-				"useprefix": false
-			}
-		],
-		"editorb": [
-			{
-				"given": [
-					{
-						"text": "firstname",
-						"type": "string"
-					}
-				],
-				"family": [
-					{
-						"text": " lastname",
-						"type": "string"
-					}
-				],
-				"prefix": [
-					{
-						"text": "prefix",
-						"type": "string"
-					}
-				],
-				"suffix": [
-					{
-						"text": "suffix",
-						"type": "string"
-					}
-				],
-				"useprefix": false
-			}
-		],
-		"editorc": [
-			{
-				"given": [
-					{
-						"text": "firstname",
-						"type": "string"
-					}
-				],
-				"family": [
-					{
-						"text": " lastname",
-						"type": "string"
-					}
-				],
-				"prefix": [
-					{
-						"text": "prefix",
-						"type": "string"
-					}
-				],
-				"suffix": [
-					{
-						"text": "suffix",
-						"type": "string"
-					}
-				],
-				"useprefix": false
-			}
-		],
-		"urldate": "2000-12-31",
-		"version": [
-			{
-				"text": "Version",
-				"type": "string"
-			}
-		],
-		"abstract": [
-			{
-				"text": "Abstract",
-				"type": "string"
-			}
-		],
-		"addendum": [
-			{
-				"text": "Addendum",
-				"type": "string"
-			}
-		],
-		"keywords": [
-			"Keyword1",
-			"Keyword2"
-		],
-		"language": [
-			"dutch"
-		],
-		"origdate": "2024-12-31",
-		"pubstate": "submitted",
-		"subtitle":	{
-			"type": "string",
-			"description": "The subtitle",
-			"multilingual": true,
+			"description": "The language of this work.",
+			"multilingual": false,
 			"apiSummary": true,
 			"validation": [
 				"nullable",
 				"no_new_line"
 			]
 		},
-		"annotator": [
-			{
-				"given": [
-					{
-						"text": "firstname",
-						"type": "string"
-					}
-				],
-				"family": [
-					{
-						"text": "lastname",
-						"type": "string"
-					}
-				],
-				"prefix": [
-					{
-						"text": "prefix",
-						"type": "string"
-					}
-				],
-				"suffix": [
-					{
-						"text": "suffix",
-						"type": "string"
-					}
-				],
-				"useprefix": false
-			}
-		],
-		"origtitle": [
-			{
-				"text": "Title of the original work",
+		"langid": {
+			"type": "string",
+			"description": "The language of bibliography / citation.",
+			"multilingual": false,
+			"apiSummary": true,
+			"validation": [
+				"nullable",
+				"no_new_line"
+			]
+		},
+		"number": {
+			"type": "string",
+			"description": "Number of the work in a series",
+			"multilingual": false,
+			"apiSummary": true,
+			"validation": [
+				"nullable",
+				"no_new_line"
+			]
+		},
+		"series": {
+			"type": "string",
+			"description": "Name of series",
+			"multilingual": false,
+			"apiSummary": true,
+			"validation": [
+				"nullable",
+				"no_new_line"
+			]
+		},
+		"volume": {
+			"type": "string",
+			"description": "Volume of the the work",
+			"multilingual": false,
+			"apiSummary": true,
+			"validation": [
+				"nullable",
+				"no_new_line"
+			]
+		},
+		"version": {
+			"type": "string",
+			"description": "Version of this work",
+			"multilingual": false,
+			"apiSummary": true,
+			"validation": [
+				"nullable",
+				"no_new_line"
+			]
+		},
+		"addendum": {
+			"type": "string",
+			"description": "Addendum to this work",
+			"multilingual": false,
+			"apiSummary": true,
+			"validation": []
+		},
+		"keywords": {
+			"type": "array",
+			"description": "Keywords",
+			"multilingual": false,
+			"apiSummary": true,
+			"items": {
 				"type": "string"
 			}
-		],
-		"annotation": [
-			{
-				"text": "Annotation",
-				"type": "string"
-			}
-		],
-		"eprinttype": [
-			{
-				"text": "Eprint identifier type",
-				"type": "string"
-			}
-		],
-		"issuetitle": [
-			{
-				"text": "Issue title",
-				"type": "string"
-			}
-		],
-		"pagination": "page",
-		"shorttitle": [
-			{
-				"text": "Abridged title",
-				"type": "string"
-			}
-		],
-		"titleaddon": [
-			{
-				"text": "Title addon",
-				"type": "string"
-			}
-		],
-		"translator": [
-			{
-				"given": [
-					{
-						"text": "firstname",
-						"type": "string"
-					}
-				],
-				"family": [
-					{
-						"text": "lastname",
-						"type": "string"
-					}
-				],
-				"prefix": [
-					{
-						"text": "prefix",
-						"type": "string"
-					}
-				],
-				"suffix": [
-					{
-						"text": "suffux",
-						"type": "string"
-					}
-				],
-				"useprefix": false
-			}
-		],
-		"commentator": [
-			{
-				"given": [
-					{
-						"text": "firstname",
-						"type": "string"
-					}
-				],
-				"family": [
-					{
-						"text": " lastname",
-						"type": "string"
-					}
-				],
-				"prefix": [
-					{
-						"text": "prefix",
-						"type": "string"
-					}
-				],
-				"suffix": [
-					{
-						"text": "suffix",
-						"type": "string"
-					}
-				],
-				"useprefix": false
-			}
-		],
-		"eprintclass": [
-			{
-				"text": "Additional information to an online publication",
-				"type": "string"
-			}
-		],
-		"journaltitle": [
-			{
-				"text": "Title of publication",
-				"type": "string"
-			}
-		],
-		"origlanguage": "dutch",
-		"issuesubtitle": [
-			{
-				"text": "Issue subtitle",
-				"type": "string"
-			}
-		],
-		"journalsubtitle": [
-			{
-				"text": "Subtitle of publication",
-				"type": "string"
-			}
-		]
+		},
+		"origdate": {
+			"type": "string",
+			"description": "Publication date of the original work.",
+			"multilingual": false,
+			"apiSummary": true,
+			"validation": [
+				"nullable",
+				"date_format:Y-m-d"
+			]
+		},
+		"origtitle": {
+			"type": "string",
+			"description": "The title of the original work.",
+			"multilingual": false,
+			"apiSummary": true,
+			"validation": [
+				"nullable",
+				"no_new_line"
+			]
+		},
+		"origlanguage": {
+			"type": "string",
+			"description": "The language of the original work.",
+			"multilingual": false,
+			"apiSummary": true,
+			"validation": [
+				"regex:/^([A-Za-z]{2,4})(?<sc>[_-]([A-Za-z]{4,5}|[0-9]{4}))?([_-]([A-Za-z]{2}|[0-9]{3}))?(@[a-z]{2,30}(?&sc)?)?$/"
+			]
+		},
+		"pubstate": {
+			"type": "string",
+			"description": "The state of this work, e.g. submitted.",
+			"multilingual": false,
+			"apiSummary": true,
+			"validation": [
+				"nullable",
+				"string:'submitted','inpreparation','forthcoming','inpress','prepublished'"
+			]
+		},
+		"eprinttype": {
+			"type": "string",
+			"description": "Eprint identifier type.",
+			"multilingual": false,
+			"apiSummary": true,
+			"validation": [
+				"nullable"
+			]
+		},
+		"pagination": {
+			"type": "string",
+			"description": "The pagination of this work.",
+			"multilingual": false,
+			"apiSummary": true,
+			"validation": [
+				"nullable",
+				"string:'page','column','section','paragraph','verse','line'"
+			]
+		},
+		"eprintclass": {
+			"type": "string",
+			"description": "Additional information to an online publication.",
+			"multilingual": false,
+			"apiSummary": true,
+			"validation": [
+				"nullable"
+			]
+		}
 	}
 }
-
-
-
-
-
