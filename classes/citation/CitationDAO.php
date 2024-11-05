@@ -3,8 +3,8 @@
 /**
  * @file classes/citation/CitationDAO.php
  *
- * Copyright (c) 2014-2021 Simon Fraser University
- * Copyright (c) 2000-2021 John Willinsky
+ * Copyright (c) 2014-2024 Simon Fraser University
+ * Copyright (c) 2000-2024 John Willinsky
  * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
  *
  * @class CitationDAO
@@ -57,7 +57,7 @@ class CitationDAO extends \PKP\db\DAO
             ]
         );
         $citation->setId($this->getInsertId());
-        $this->_updateObjectMetadata($citation);
+        $this->updateObjectMetadata($citation);
         return $citation->getId();
     }
 
@@ -75,7 +75,7 @@ class CitationDAO extends \PKP\db\DAO
             [$citationId]
         );
         $row = $result->current();
-        return $row ? $this->_fromRow((array) $row) : null;
+        return $row ? $this->fromRow((array) $row) : null;
     }
 
     /**
@@ -162,7 +162,7 @@ class CitationDAO extends \PKP\db\DAO
                 (int) $citation->getId()
             ]
         );
-        $this->_updateObjectMetadata($citation);
+        $this->updateObjectMetadata($citation);
     }
 
     /**
@@ -203,15 +203,12 @@ class CitationDAO extends \PKP\db\DAO
         return true;
     }
 
-    //
-    // Private helper methods
-    //
     /**
      * Construct a new citation object.
      *
      * @return Citation
      */
-    public function _newDataObject()
+    public function newDataObject()
     {
         return new Citation();
     }
@@ -224,9 +221,9 @@ class CitationDAO extends \PKP\db\DAO
      *
      * @return Citation
      */
-    public function _fromRow($row)
+    public function fromRow($row)
     {
-        $citation = $this->_newDataObject();
+        $citation = $this->newDataObject();
         $citation->setId((int)$row['citation_id']);
         $citation->setData('publicationId', (int)$row['publication_id']);
         $citation->setRawCitation($row['raw_citation']);
@@ -242,9 +239,20 @@ class CitationDAO extends \PKP\db\DAO
      *
      * @param Citation $citation
      */
-    public function _updateObjectMetadata($citation)
+    public function updateObjectMetadata($citation)
     {
         $this->updateDataObjectSettings('citation_settings', $citation, ['citation_id' => $citation->getId()]);
+    }
+
+    //todo: remove these after refactoring
+    public function _newDataObject(){
+        return $this->newDataObject();
+    }
+    public function _fromRow($row){
+        return $this->fromRow($row);
+    }
+    public function _updateObjectMetadata($citation){
+        return $this->updateObjectMetadata($citation);
     }
 }
 

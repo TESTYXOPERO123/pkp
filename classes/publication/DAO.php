@@ -2,8 +2,8 @@
 /**
  * @file classes/publication/DAO.php
  *
- * Copyright (c) 2014-2021 Simon Fraser University
- * Copyright (c) 2000-2021 John Willinsky
+ * Copyright (c) 2014-2024 Simon Fraser University
+ * Copyright (c) 2000-2024 John Willinsky
  * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
  *
  * @class DAO
@@ -19,7 +19,6 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Enumerable;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\LazyCollection;
-use PKP\citation\CitationDAO;
 use PKP\core\EntityDAO;
 use PKP\core\traits\EntityWithParent;
 use PKP\services\PKPSchemaService;
@@ -61,9 +60,6 @@ class DAO extends EntityDAO
     /** @var SubmissionAgencyDAO */
     public $submissionAgencyDao;
 
-    /** @var CitationDAO */
-    public $citationDao;
-
     /**
      * Constructor
      */
@@ -72,7 +68,7 @@ class DAO extends EntityDAO
         SubmissionSubjectDAO $submissionSubjectDao,
         SubmissionDisciplineDAO $submissionDisciplineDao,
         SubmissionAgencyDAO $submissionAgencyDao,
-        CitationDAO $citationDao,
+        $citationDao = null,
         PKPSchemaService $schemaService
     ) {
         parent::__construct($schemaService);
@@ -81,7 +77,6 @@ class DAO extends EntityDAO
         $this->submissionSubjectDao = $submissionSubjectDao;
         $this->submissionDisciplineDao = $submissionDisciplineDao;
         $this->submissionAgencyDao = $submissionAgencyDao;
-        $this->citationDao = $citationDao;
     }
 
     /**
@@ -476,17 +471,17 @@ class DAO extends EntityDAO
     /**
      * Save the citations
      */
-    protected function saveCitations(Publication $publication)
+    protected function saveCitations(Publication $publication): void
     {
-        $this->citationDao->importCitations($publication->getId(), $publication->getData('citationsRaw'));
+        Repo::citation()->importCitations($publication->getId(), $publication->getData('citationsRaw'));
     }
 
     /**
      * Delete the citations
      */
-    protected function deleteCitations(int $publicationId)
+    protected function deleteCitations(int $publicationId): void
     {
-        $this->citationDao->deleteByPublicationId($publicationId);
+        Repo::citation()->deleteByPublicationId($publicationId);
     }
 
     /**

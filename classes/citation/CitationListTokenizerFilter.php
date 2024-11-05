@@ -3,13 +3,13 @@
 /**
  * @file classes/citation/CitationListTokenizerFilter.php
  *
- * Copyright (c) 2014-2021 Simon Fraser University
- * Copyright (c) 2000-2021 John Willinsky
+ * Copyright (c) 2014-2024 Simon Fraser University
+ * Copyright (c) 2000-2024 John Willinsky
  * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
  *
  * @class CitationListTokenizerFilter
  *
- * @ingroup classes_citation
+ * @ingroup citation
  *
  * @brief Class that takes an unformatted list of citations
  *  and returns an array of raw citation strings.
