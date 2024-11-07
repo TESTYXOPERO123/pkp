@@ -36,7 +36,7 @@ class AffiliationsMigration extends Migration
 
         Schema::create('author_affiliation_settings', function (Blueprint $table) {
             $table->comment('More data about author affiliations');
-            $table->bigInteger('author_affiliation_setting_id')->autoIncrement();
+            $table->bigIncrements('author_affiliation_setting_id');
             $table->bigInteger('author_affiliation_id');
             $table->string('locale', 28)->default('');
             $table->string('setting_name', 255);

@@ -21,6 +21,22 @@ use PKP\core\DataObject;
 
 class Ror extends DataObject
 {
-    public const STATUS_ACTIVE = 1;
-    public const STATUS_INACTIVE = 0;
+    public const int STATUS_ACTIVE = 1;
+    public const int STATUS_INACTIVE = 0;
+
+    /**
+     * Return STATUS_ACTIVE = 1
+     */
+    public function getStatusActive(): int
+    {
+        return self::STATUS_ACTIVE;
+    }
+
+    /**
+     * Return STATUS_INACTIVE = 0
+     */
+    public function getStatusInActive(): int
+    {
+        return self::STATUS_INACTIVE;
+    }
 }

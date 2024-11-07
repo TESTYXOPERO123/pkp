@@ -1,6 +1,6 @@
 <?php
 /**
- * @file classes/migration/upgrade/v3_4_0/I7135_CreateNewRorRegistryCacheTables.php
+ * @file classes/migration/upgrade/v3_5_0/I7135_CreateNewRorRegistryCacheTables.php
  *
  * Copyright (c) 2024 Simon Fraser University
  * Copyright (c) 2024 John Willinsky
@@ -11,7 +11,7 @@
  * @brief Describe database table structures.
  */
 
-namespace PKP\migration\upgrade\v3_4_0;
+namespace PKP\migration\upgrade\v3_5_0;
 
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Database\Schema\Blueprint;
@@ -43,7 +43,7 @@ class I7135_CreateNewRorRegistryCacheTables extends Migration
 
         Schema::create('ror_settings', function (Blueprint $table) {
             $table->comment('More data about Ror registry dataset cache');
-            $table->bigInteger('ror_setting_id')->autoIncrement();
+            $table->bigIncrements('ror_setting_id');
             $table->bigInteger('ror_id');
             $table->string('locale', 28)->default('');
             $table->string('setting_name', 255);

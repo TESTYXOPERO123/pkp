@@ -1,6 +1,6 @@
 <?php
 /**
- * @file classes/migration/upgrade/v3_4_0/I7135_CreateAuthorAffiliationsTables.php
+ * @file classes/migration/upgrade/v3_5_0/I7135_CreateAuthorAffiliationsTables.php
  *
  * Copyright (c) 2024 Simon Fraser University
  * Copyright (c) 2024 John Willinsky
@@ -11,7 +11,7 @@
  * @brief Describe database table structures.
  */
 
-namespace PKP\migration\upgrade\v3_4_0;
+namespace PKP\migration\upgrade\v3_5_0;
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema as Schema;
@@ -37,7 +37,7 @@ class I7135_CreateAuthorAffiliationsTables extends Migration
 
         Schema::create('author_affiliation_settings', function (Blueprint $table) {
             $table->comment('More data about author affiliations');
-            $table->bigInteger('author_affiliation_setting_id')->autoIncrement();
+            $table->bigIncrements('author_affiliation_setting_id');
             $table->bigInteger('author_affiliation_id');
             $table->string('locale', 28)->default('');
             $table->string('setting_name', 255);

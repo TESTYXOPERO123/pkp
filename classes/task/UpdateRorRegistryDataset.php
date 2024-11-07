@@ -85,15 +85,13 @@ class UpdateRorRegistryDataset extends ScheduledTask
     private array $dataMapping = [
         'ror' => 0,
         'displayLocale' => 27,
+        'displayName' => 26,
         'isActive' => 29,
         'names' => 25
     ];
 
     /** @var string No language code available key in registry */
     private string $noLocale = 'no_lang_code';
-
-    /** @var string Mapping OJS for no language code available in registry */
-    private string $noLocaleMapping = 'en';
 
     /** @copydoc ScheduledTask::getName() */
     public function getName(): string
@@ -141,10 +139,10 @@ class UpdateRorRegistryDataset extends ScheduledTask
 
             // find csv file
             $iterator = new DirectoryIterator($pathZipDir);
-            foreach ($iterator as $fileinfo) {
-                if (!$fileinfo->isDot()) {
-                    if (str_contains($fileinfo->getFilename(), $this->csvNameContains)) {
-                        $pathCsv = $fileinfo->getPathname();
+            foreach ($iterator as $fileInfo) {
+                if (!$fileInfo->isDot()) {
+                    if (str_contains($fileInfo->getFilename(), $this->csvNameContains)) {
+                        $pathCsv = $fileInfo->getPathname();
                         break;
                     }
                 }
@@ -183,36 +181,41 @@ class UpdateRorRegistryDataset extends ScheduledTask
      */
     private function processRow(array $row): void
     {
-        $params = [];
-
         // ror < id
-        $params['ror'] = $row[$this->dataMapping['ror']];
+        $ror = $row[$this->dataMapping['ror']];;
 
         // display_locale : ror_display_lang
-        $params['displayLocale'] = str_replace(
-            $this->noLocale,
-            $this->noLocaleMapping,
-            $row[$this->dataMapping['displayLocale']]
-        );
+        $displayLocale = (!empty($row[$this->dataMapping['displayLocale']]))
+            ? $row[$this->dataMapping['displayLocale']]
+            : $this->noLocale;
 
         // is_active < status
-        $params['isActive'] = 0;
-        if (strtolower($row[$this->dataMapping['isActive']]) === 'active') {
-            $params['isActive'] = 1;
-        }
+        $isActive = (strtolower($row[$this->dataMapping['isActive']]) === 'active') ? 1 : 0;
 
         // locale, name < names.types.label
         // [["name"]["en"] => "label1"],["name"]["it"] => "label2"]] < "en: label1; it: label2"
-        if (!empty($row[$this->dataMapping['names']])) {
-            $names = array_map('trim', explode(';', $row[$this->dataMapping['names']]));
+        $namesIn = $row[$this->dataMapping['names']];
+        $namesOut = [];
+        if (!empty($namesIn)) {
+            $names = array_map('trim', explode(';', $namesIn));
             for ($i = 0; $i < count($names); $i++) {
                 $name = array_map('trim', explode(':', $names[$i]));
                 if (count($name) === 2) {
-                    $name[0] = str_replace($this->noLocale, $this->noLocaleMapping, $name[0]);
-                    $params['name'][$name[0]] = trim($name[1]);
+                    $namesOut[$name[0]] = trim($name[1]);
                 }
             }
         }
+
+        if(empty($namesOut[$displayLocale])) {
+            $namesOut[$displayLocale] = $row[$this->dataMapping['displayName']];
+        }
+
+        $params = [
+            'ror' => $ror,
+            'displayLocale' => $displayLocale,
+            'isActive' => $isActive,
+            'name' => $namesOut,
+        ];
 
         Repo::ror()->updateOrInsert(Repo::ror()->newDataObject($params));
     }
