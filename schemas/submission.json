@@ -131,6 +131,12 @@
 							"date|Y-m-d H:i:s"
 						]
 					},
+					"competingInterests": {
+						"type": "string",
+						"validation": [
+							"nullable"
+						]
+					},
 					"status": {
 						"type": "integer",
 						"readOnly": true
@@ -257,6 +263,21 @@
 							},
 							"closed": {
 								"type": "boolean"
+							}
+						}
+					},
+					"availableEditorialDecisions": {
+						"description": "The editorial decisions that are available for this stage.",
+						"type": "array",
+						"items": {
+							"type": "object",
+							"properties": {
+								"id": {
+									"type": "integer"
+								},
+								"label": {
+									"type": "string"
+								}
 							}
 						}
 					}

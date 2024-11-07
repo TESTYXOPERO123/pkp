@@ -14,10 +14,10 @@
 namespace PKP\user;
 
 use APP\core\Application;
-use Exception;
 use Carbon\Carbon;
-use Illuminate\Database\MySqlConnection;
+use Exception;
 use Illuminate\Database\MariaDbConnection;
+use Illuminate\Database\MySqlConnection;
 use Illuminate\Database\PostgresConnection;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Query\JoinClause;
@@ -48,7 +48,7 @@ class Collector implements CollectorInterface
 
     public const STATUS_ACTIVE = 'active';
     public const STATUS_DISABLED = 'disabled';
-    public const STATUS_ALL = null;
+    public const STATUS_ALL = 'all';
 
     public DAO $dao;
 
@@ -72,7 +72,7 @@ class Collector implements CollectorInterface
     public ?array $settings = null;
     public ?string $searchPhrase = null;
     public ?array $excludeSubmissionStage = null;
-    public ?array $excludeRoles = null;
+    public ?array $excludeUserGroupIds = null;
     public ?array $assignedTo = null;
     public ?int $reviewerRating = null;
     public ?int $reviewsCompleted = null;
@@ -274,12 +274,11 @@ class Collector implements CollectorInterface
     }
 
     /**
-     * Retrieve a set of users not assigned to the given roles
-     * (Replaces UserGroupDAO::getUsersNotInRole)
+     * Retrieve a set of users not assigned to the given user groups
      */
-    public function filterExcludeRoles(?array $excludedRoles): self
+    public function filterExcludeUserGroupIds(?array $excludeUserGroupIds): self
     {
-        $this->excludeRoles = $excludedRoles;
+        $this->excludeUserGroupIds = $excludeUserGroupIds;
         return $this;
     }
 
@@ -510,6 +509,10 @@ class Collector implements CollectorInterface
         }
 
         $currentDateTime = Core::getCurrentDate();
+        if ($this->status === self::STATUS_ALL) {
+            $this->userUserGroupStatus = UserUserGroupStatus::STATUS_ALL;
+        }
+
         $subQuery = DB::table('user_user_groups as uug')
             ->join('user_groups AS ug', 'uug.user_group_id', '=', 'ug.user_group_id')
             ->whereColumn('uug.user_id', '=', 'u.user_id')
@@ -563,10 +566,8 @@ class Collector implements CollectorInterface
 
         $query->whereExists($subQuery);
 
-        if ($this->excludeRoles != null) {
-            $excludeRolesSubQuery = clone $subQuery;
-            $excludeRolesSubQuery->whereIn('ug.role_id', $this->excludeRoles);
-            $query->whereNotExists($excludeRolesSubQuery);
+        if ($this->excludeUserGroupIds != null) {
+            $query->whereNotExists(fn (Builder $query) => $query->from('user_user_groups as xuug')->whereColumn('xuug.user_id', '=', 'u.user_id')->whereIn('xuug.user_group_id', $this->excludeUserGroupIds));
         }
 
         return $this;

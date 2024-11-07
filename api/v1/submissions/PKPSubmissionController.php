@@ -17,6 +17,7 @@
 
 namespace PKP\API\v1\submissions;
 
+use APP\author\Author;
 use APP\core\Application;
 use APP\facades\Repo;
 use APP\mail\variables\ContextEmailVariable;
@@ -37,6 +38,7 @@ use PKP\components\forms\publication\PKPMetadataForm;
 use PKP\components\forms\publication\PKPPublicationIdentifiersForm;
 use PKP\components\forms\publication\PKPPublicationLicenseForm;
 use PKP\components\forms\publication\TitleAbstractForm;
+use PKP\components\forms\submission\ChangeSubmissionLanguageMetadataForm;
 use PKP\context\Context;
 use PKP\core\Core;
 use PKP\core\PKPApplication;
@@ -65,6 +67,7 @@ use PKP\services\PKPSchemaService;
 use PKP\submission\GenreDAO;
 use PKP\submission\PKPSubmission;
 use PKP\submission\reviewAssignment\ReviewAssignment;
+use PKP\submissionFile\SubmissionFile;
 use PKP\userGroup\UserGroup;
 
 class PKPSubmissionController extends PKPBaseController
@@ -84,6 +87,7 @@ class PKPSubmissionController extends PKPBaseController
         'saveForLater',
         'submit',
         'delete',
+        'changeLocale',
         'getGalleys',
         'getDecisions',
         'getParticipants',
@@ -106,7 +110,8 @@ class PKPSubmissionController extends PKPBaseController
         'getPublicationMetadataForm',
         'getPublicationIdentifierForm',
         'getPublicationLicenseForm',
-        'getPublicationTitleAbstractForm'
+        'getPublicationTitleAbstractForm',
+        'getChangeLanguageMetadata'
     ];
 
     /** @var array Handlers that must be authorized to write to a publication */
@@ -116,6 +121,7 @@ class PKPSubmissionController extends PKPBaseController
         'deleteContributor',
         'editContributor',
         'saveContributorsOrder',
+        'changeLocale',
     ];
 
     /** @var array Handlers that must be authorized to access a submission's production stage */
@@ -196,13 +202,9 @@ class PKPSubmissionController extends PKPBaseController
             self::roleAuthorizer([
                 Role::ROLE_ID_MANAGER,
                 Role::ROLE_ID_SUB_EDITOR,
+                Role::ROLE_ID_ASSISTANT,
             ]),
         ])->group(function () {
-
-            Route::get('{submissionId}/decisions', $this->getDecisions(...))
-                ->name('submission.decisions.getMany')
-                ->whereNumber('submissionId');
-
             Route::get('{submissionId}/participants', $this->getParticipants(...))
                 ->name('submission.participants.getMany')
                 ->whereNumber('submissionId');
@@ -210,6 +212,18 @@ class PKPSubmissionController extends PKPBaseController
             Route::get('{submissionId}/participants/{stageId}', $this->getParticipants(...))
                 ->name('submission.participants.stage.getMany')
                 ->whereNumber(['submissionId', 'stageId']);
+        });
+
+        Route::middleware([
+            self::roleAuthorizer([
+                Role::ROLE_ID_MANAGER,
+                Role::ROLE_ID_SUB_EDITOR,
+            ]),
+        ])->group(function () {
+
+            Route::get('{submissionId}/decisions', $this->getDecisions(...))
+                ->name('submission.decisions.getMany')
+                ->whereNumber('submissionId');
 
             Route::post('{submissionId}/decisions', $this->addDecision(...))
                 ->name('submission.decision.add')
@@ -218,6 +232,10 @@ class PKPSubmissionController extends PKPBaseController
             Route::delete('{submissionId}', $this->delete(...))
                 ->name('submission.delete')
                 ->whereNumber('submissionId');
+
+            Route::put('{submissionId}/publications/{publicationId}/changeLocale', $this->changeLocale(...))
+                ->name('submission.publication.changeLocale')
+                ->whereNumber(['submissionId', 'publicationId']);
         });
 
         Route::middleware([
@@ -282,6 +300,7 @@ class PKPSubmissionController extends PKPBaseController
                 Route::get('metadata', $this->getPublicationMetadataForm(...))->name('submission.publication._components.metadata');
                 Route::get('reference', $this->getPublicationReferenceForm(...))->name('submission.publication._components.reference');
                 Route::get('titleAbstract', $this->getPublicationTitleAbstractForm(...))->name('submission.publication._components.titleAbstract');
+                Route::get('changeLanguageMetadata', $this->getChangeLanguageMetadata(...))->name('submission.publication._components.changeLanguageMetadata');
             })->whereNumber(['submissionId', 'publicationId']);
         });
 
@@ -363,6 +382,7 @@ class PKPSubmissionController extends PKPBaseController
                 'getPublicationIdentifierForm',
                 'getPublicationLicenseForm',
                 'getPublicationTitleAbstractForm',
+                'getChangeLanguageMetadata'
             ]
         )) {
             $this->addPolicy(new SubmissionCompletePolicy($request, $args));
@@ -868,6 +888,62 @@ class PKPSubmissionController extends PKPBaseController
     }
 
     /**
+     * Change submission language
+     */
+    public function changeLocale(Request $illuminateRequest): JsonResponse
+    {
+        $publication = Repo::publication()->get((int) $illuminateRequest->route('publicationId'));
+
+        if (!$publication) {
+            return response()->json([
+                'error' => __('api.404.resourceNotFound'),
+            ], Response::HTTP_NOT_FOUND);
+        }
+
+        $submission = $this->getAuthorizedContextObject(Application::ASSOC_TYPE_SUBMISSION);
+
+        if ($submission->getId() !== $publication->getData('submissionId')) {
+            return response()->json([
+                'error' => __('api.publications.403.submissionsDidNotMatch'),
+            ], Response::HTTP_FORBIDDEN);
+        }
+
+        $paramsSubmission = $this->convertStringsToSchema(PKPSchemaService::SCHEMA_SUBMISSION, $illuminateRequest->input());
+        $newLocale = $paramsSubmission['locale'] ?? null;
+
+        // Submission language can not be changed when there are more than one publication or a publication's status is published
+        if (!$newLocale || count($submission->getData('publications')) > 1 || $publication->getData('status') === PKPSubmission::STATUS_PUBLISHED) {
+            return response()->json(['error' => __('api.submission.403.cantChangeSubmissionLanguage')], Response::HTTP_FORBIDDEN);
+        }
+
+        // Convert a form field value to multilingual (if it is not) and merge rest values
+        collect(app()->get('schema')->getMultilingualProps(PKPSchemaService::SCHEMA_PUBLICATION))
+            ->each(
+                fn (string $prop) =>
+                $illuminateRequest->whenHas(
+                    $prop,
+                    fn ($value) =>
+                    $illuminateRequest->merge([
+                        $prop => array_merge(
+                            $publication->getData($prop) ?? [],
+                            (is_array($value) && array_key_exists($newLocale, $value)) ? $value : [$newLocale => $value]
+                        )
+                    ])
+                )
+            );
+
+        $responsePublication = $this->editPublication($illuminateRequest);
+
+        if ($responsePublication->status() !== 200) {
+            return $responsePublication;
+        }
+
+        $this->copyMultilingualData($submission, $newLocale);
+
+        return $this->edit($illuminateRequest);
+    }
+
+    /**
      * Get the decisions recorded on a submission
      */
     public function getDecisions(Request $illuminateRequest): JsonResponse
@@ -882,8 +958,19 @@ class PKPSubmissionController extends PKPBaseController
             ], Response::HTTP_NOT_FOUND);
         }
 
-        $decisionIterator = Repo::decision()->getCollector()
+        $decisionTypes = array_map('intval', paramToArray($illuminateRequest->input('decisionTypes') ?? []));
+        $editorIds = array_map('intval', paramToArray($illuminateRequest->input('editorIds') ?? []));
+        $reviewRoundId = $illuminateRequest->input('reviewRoundId') ? [(int)$illuminateRequest->input('reviewRoundId')] : null;
+        $stageId = $illuminateRequest->input('stageId') ? [(int)$illuminateRequest->input('stageId')] : null;
+
+        $collector = Repo::decision()->getCollector();
+        $decisionIterator = $collector
             ->filterBySubmissionIds([$submission->getId()])
+            ->filterByDecisionTypes(!empty($decisionTypes) ? $decisionTypes : null)
+            ->filterByEditorIds(!empty($editorIds) ? $editorIds : null)
+            ->filterByReviewRoundIds($reviewRoundId)
+            ->filterByStageIds($stageId)
+            ->orderBy($collector::ORDERBY_DATE_DECIDED, $collector::ORDER_DIR_DESC)
             ->getMany();
 
         $data = Repo::decision()
@@ -1878,10 +1965,42 @@ class PKPSubmissionController extends PKPBaseController
             return response()->json([ 'error' => $data['error'],], $data['status']);
         }
 
-        $locales = $this->getPublicationFormLocales($data['context'], $data['submission']);
+        $submission = $data['submission']; /** @var Submission $submission */
+        $locales = $this->getPublicationFormLocales($data['context'], $submission);
+        $submissionLocale = $submission->getData('locale');
         $titleAbstract = new TitleAbstractForm($data['publicationApiUrl'], $locales, $data['publication']);
 
-        return response()->json($titleAbstract->getConfig(), Response::HTTP_OK);
+        return response()->json($this->getLocalizedForm($titleAbstract, $submissionLocale, $locales), Response::HTTP_OK);
+    }
+
+    /**
+     * Get ChangeSubmissionLanguageMetadata Form component
+     */
+    protected function getChangeLanguageMetadata(Request $illuminateRequest): JsonResponse
+    {
+        $request = $this->getRequest();
+        $data = $this->getSubmissionAndPublicationData($illuminateRequest);
+
+        if (isset($data['error'])) {
+            return response()->json(['error' => $data['error']], $data['status']);
+        }
+
+        $context = $data['context']; /** @var Context $context*/
+        $submission = $data['submission']; /** @var Submission $submission */
+        $publication = $data['publication']; /** @var Publication $publication*/
+        $locales = $this->getPublicationFormLocales($context, $submission);
+
+        $changeSubmissionLanguageApiUrl = $request->getDispatcher()->url(
+            $request,
+            Application::ROUTE_API,
+            $context->getData('urlPath'),
+            "submissions/{$submission->getId()}/publications/{$publication->getId()}/changeLocale"
+        );
+
+        $changeSubmissionLanguageMetadataForm = new ChangeSubmissionLanguageMetadataForm($changeSubmissionLanguageApiUrl, $submission, $publication, $context);
+        $submissionLocale = $submission->getData('locale');
+
+        return response()->json($this->getLocalizedForm($changeSubmissionLanguageMetadataForm, $submissionLocale, $locales), Response::HTTP_OK);
     }
 
     /**
@@ -1986,4 +2105,41 @@ class PKPSubmissionController extends PKPBaseController
         ];
     }
 
+    /**
+     * Copy author, files, etc. multilingual fields from old to new changed language
+     */
+    protected function copyMultilingualData(Submission $submission, string $newLocale): void
+    {
+        $oldLocale = $submission->getData('locale');
+        $editProps = fn (Author|SubmissionFile $item, array $props): array => collect($props)
+            ->mapWithKeys(fn (string $prop): array => [$prop => ($data = $item->getData($prop)[$oldLocale] ?? null) ? [$newLocale => $data] : null])
+            ->filter()
+            ->toArray();
+
+        // Submission files
+        $fileProps = [
+            'name',
+        ];
+        Repo::submissionFile()
+            ->getCollector()
+            ->filterBySubmissionIds([$submission->getId()])
+            ->getMany()
+            ->each(fn (SubmissionFile $file) => Repo::submissionFile()->edit($file, $editProps($file, $fileProps)));
+
+        // Contributor
+        $contributorProps = [
+            'givenName',
+            'familyName',
+            'preferredPublicName',
+        ];
+        Repo::author()
+            ->getCollector()
+            ->filterByPublicationIds([$submission->getLatestPublication()->getId()])
+            ->getMany()
+            ->each(function (Author $contributor) use ($contributorProps, $editProps, $newLocale) {
+                if (!($contributor->getData('givenName')[$newLocale] ?? null)) {
+                    Repo::author()->edit($contributor, $editProps($contributor, $contributorProps));
+                }
+            });
+    }
 }

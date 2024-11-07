@@ -28,6 +28,7 @@ use APP\core\Request;
 use APP\facades\Repo;
 use APP\file\PublicFileManager;
 use APP\submission\Submission;
+use PKP\submission\DashboardView;
 use APP\template\TemplateManager;
 use Exception;
 use Illuminate\Support\Str;
@@ -577,6 +578,7 @@ class PKPTemplateManager extends Smarty
                 'priority' => self::STYLE_SEQUENCE_NORMAL,
                 'contexts' => ['frontend'],
                 'inline' => false,
+                'type' => 'text/javascript',
             ],
             $args
         );
@@ -586,6 +588,7 @@ class PKPTemplateManager extends Smarty
             $this->_javaScripts[$context][$args['priority']][$name] = [
                 'script' => $script,
                 'inline' => $args['inline'],
+                'type' => $args['type'],
             ];
         }
     }
@@ -748,7 +751,7 @@ class PKPTemplateManager extends Smarty
             'contextPath' => isset($context) ? $context->getPath() : '',
             'apiBasePath' => '/api/v1',
             'restfulUrlsEnabled' => Config::getVar('general', 'restful_urls') ? true : false,
-            'tinyMceContentCSS' => $this->_request->getBaseUrl() . '/plugins/generic/tinymce/styles/content.css',
+            'tinyMceContentCSS' => [$this->_request->getBaseUrl() . '/plugins/generic/tinymce/styles/content.css', $this->_request->getBaseUrl() . '/lib/pkp/styles/mailables/style.css'],
             'tinyMceOneLineContentCSS' => $this->_request->getBaseUrl() . '/plugins/generic/tinymce/styles/content_oneline.css',
         ];
 
@@ -986,26 +989,79 @@ class PKPTemplateManager extends Smarty
                     if (count(array_intersect([Role::ROLE_ID_MANAGER, Role::ROLE_ID_SITE_ADMIN, Role::ROLE_ID_SUB_EDITOR, Role::ROLE_ID_ASSISTANT, Role::ROLE_ID_REVIEWER, Role::ROLE_ID_AUTHOR], $userRoles))) {
                         if(Config::getVar('features', 'enable_new_submission_listing')) {
                             if (count(array_intersect([Role::ROLE_ID_MANAGER, Role::ROLE_ID_SITE_ADMIN, Role::ROLE_ID_SUB_EDITOR, Role::ROLE_ID_ASSISTANT], $userRoles))) {
+                                $dashboardViews = Repo::submission()->getDashboardViews($request->getContext(), $request->getUser(), [Role::ROLE_ID_MANAGER, Role::ROLE_ID_SITE_ADMIN, Role::ROLE_ID_SUB_EDITOR, Role::ROLE_ID_ASSISTANT]);
+                                $requestedPage = $router->getRequestedPage($request);
+                                $requestedOp = $router->getRequestedOp($request);
+                                $requestedViewId = $request->getUserVar('currentViewId') ?? $dashboardViews->keys()->first();
+
+                                $viewsData = $dashboardViews->map(function (DashboardView $dashboardView) use ($router, $request,$requestedOp, $requestedPage, $requestedViewId) { 
+                                    $data = $dashboardView->getData();
+                                    return [
+                                        'id' => $data['id'],
+                                        'name' => $data['name'],
+                                        'isCurrent' => $requestedPage === 'dashboard' && $requestedOp === 'editorial' && $requestedViewId === $data['id'],
+                                        'url' => $router->url($request, null, 'dashboard', 'editorial',null,['currentViewId'=>$data['id']]),
+                                        'badge' => ['slot' => '-']
+                                    ];
+                                });
+
+                                $viewsData['newSubmission'] = [
+                                    'name' => __('dashboard.startNewSubmission'), 
+                                    'url' => $router->url($request, null, 'submission')
+                                ];
+
                                 $menu['dashboards'] = [
                                     'name' => __('navigation.dashboards'),
-                                    'url' => $router->url($request, null, 'dashboard', 'editorial'),
-                                    'isCurrent' => $router->getRequestedPage($request) === 'dashboards',
                                     'icon' => 'Dashboard',
+                                    'submenu' => $viewsData
                                 ];
                             }
                             if(count(array_intersect([ Role::ROLE_ID_REVIEWER], $userRoles))) {
+                                $dashboardViews = Repo::submission()->getDashboardViews($request->getContext(), $request->getUser(), [Role::ROLE_ID_REVIEWER]);
+                                $requestedPage = $router->getRequestedPage($request);
+                                $requestedOp = $router->getRequestedOp($request);
+                                $requestedViewId = $request->getUserVar('currentViewId') ?? $dashboardViews->keys()->first();
+                                $viewsData = $dashboardViews->map(function (DashboardView $dashboardView) use ($router, $request,$requestedOp, $requestedPage, $requestedViewId) { 
+                                    $data = $dashboardView->getData();
+                                    return [
+                                        'id' => $data['id'],
+                                        'name' => $data['name'],
+                                        'isCurrent' => $requestedPage === 'dashboard' && $requestedOp === 'reviewAssignments' && $requestedViewId === $data['id'],
+                                        'url' => $router->url($request, null, 'dashboard', 'reviewAssignments',null,['currentViewId'=>$data['id']]),
+                                        'badge' => ['slot' => '-']
+                                    ];
+                                });
                                 $menu['reviewAssignments'] = [
                                     'name' => __('navigation.reviewAssignments'),
-                                    'url' => $router->url($request, null, 'dashboard', 'reviewAssignments'),
-                                    'isCurrent' => $router->getRequestedPage($request) === 'reviewAssignments',
+                                    'submenu' => $viewsData,
                                     'icon' => 'ReviewAssignments',
                                 ];
                             }
                             if(count(array_intersect([  Role::ROLE_ID_AUTHOR], $userRoles))) {
+                                $dashboardViews = Repo::submission()->getDashboardViews($request->getContext(), $request->getUser(), [Role::ROLE_ID_AUTHOR]);
+                                $requestedPage = $router->getRequestedPage($request);
+                                $requestedOp = $router->getRequestedOp($request);
+                                $requestedViewId = $request->getUserVar('currentViewId') ?? $dashboardViews->keys()->first();
+                                $viewsData = $dashboardViews->map(function (DashboardView $dashboardView) use ($router, $request,$requestedOp, $requestedPage, $requestedViewId) { 
+                                    $data = $dashboardView->getData();
+                                    return [
+                                        'id' => $data['id'],
+                                        'name' => $data['name'],
+                                        'isCurrent' => $requestedPage === 'dashboard' && $requestedOp === 'mySubmissions' && $requestedViewId === $data['id'],
+                                        'url' => $router->url($request, null, 'dashboard', 'mySubmissions',null,['currentViewId'=>$data['id']]),
+                                        'badge' => ['slot' => '-']
+                                    ];
+                                });
+
+                                $viewsData['newSubmission'] = [
+                                    'name' => __('dashboard.startNewSubmission'), 
+                                    'url' => $router->url($request, null, 'submission')
+                                ];
+
+
                                 $menu['mySubmissions'] = [
                                     'name' => __('navigation.mySubmissions'),
-                                    'url' => $router->url($request, null, 'dashboard', 'mySubmissions'),
-                                    'isCurrent' => $router->getRequestedPage($request) === 'mySubmissions',
+                                    'submenu' => $viewsData,
                                     'icon' => 'MySubmissions',
                                 ];
                             }
@@ -1112,6 +1168,11 @@ class PKPTemplateManager extends Smarty
                                     'name' => __('manager.users'),
                                     'url' => $router->url($request, null, 'stats', 'users', ['users']),
                                     'isCurrent' => $router->getRequestedPage($request) === 'stats' && $router->getRequestedOp($request) === 'users',
+                                ],
+                                'counterR5' => [
+                                    'name' => __('manager.statistics.counterR5'),
+                                    'url' => $router->url($request, null, 'stats', 'counterR5', ['counterR5']),
+                                    'isCurrent' => $router->getRequestedPage($request) === 'stats' && $router->getRequestedOp($request) === 'counterR5',
                                 ]
                             ]
                         ];
@@ -1255,6 +1316,7 @@ class PKPTemplateManager extends Smarty
         $context = $request->getContext();
 
         $pageContext = [
+            'app' => Application::get()->getName(),
             'apiBaseUrl' => $dispatcher->url($request, PKPApplication::ROUTE_API, $context?->getPath() ?: Application::SITE_CONTEXT_PATH),
             'pageBaseUrl' => $dispatcher->url($request, PKPApplication::ROUTE_PAGE, $context?->getPath() ?: Application::SITE_CONTEXT_PATH) . '/',
             'legacyGridBaseUrl' => $dispatcher->url(
@@ -2137,12 +2199,12 @@ class PKPTemplateManager extends Smarty
         foreach ($scripts as $priorityList) {
             foreach ($priorityList as $name => $data) {
                 if ($data['inline']) {
-                    $output .= '<script type="text/javascript">' . $data['script'] . '</script>';
+                    $output .= '<script type="' . $data['type'] . '">' . $data['script'] . '</script>';
                 } else {
                     if ($appVersion && strpos($data['script'], '?') === false) {
                         $data['script'] .= '?v=' . $appVersion;
                     }
-                    $output .= '<script src="' . $data['script'] . '" type="text/javascript"></script>';
+                    $output .= '<script src="' . $data['script'] . '" type="' . $data['type'] . '"></script>';
                 }
             }
         }

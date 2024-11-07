@@ -20,7 +20,6 @@ use APP\core\Application;
 use APP\facades\Repo;
 use APP\handler\Handler;
 use APP\template\TemplateManager;
-use PKP\components\forms\dashboard\SubmissionFilters;
 use PKP\controllers\grid\users\reviewer\PKPReviewerGridHandler;
 use PKP\core\JSONMessage;
 use PKP\core\PKPApplication;
@@ -35,6 +34,7 @@ use PKP\submission\reviewRound\ReviewRound;
 use PKP\submissionFile\SubmissionFile;
 use PKP\components\forms\publication\ContributorForm;
 use PKP\plugins\PluginRegistry;
+
 use PKP\notification\Notification;
 
 define('SUBMISSIONS_LIST_ACTIVE', 'active');
@@ -50,7 +50,7 @@ enum DashboardPage: string
 }
 
 
-class DashboardHandlerNext extends Handler
+abstract class PKPDashboardHandlerNext extends Handler
 {
     /** @copydoc PKPHandler::_isBackendPage */
     public $_isBackendPage = true;
@@ -126,22 +126,7 @@ class DashboardHandlerNext extends Handler
 
         $userRoles = $this->getAuthorizedContextObject(Application::ASSOC_TYPE_USER_ROLES);
 
-        $sections = Repo::section()
-            ->getCollector()
-            ->filterByContextIds([$context->getId()])
-            ->getMany();
-
-        $categories = Repo::category()
-            ->getCollector()
-            ->filterByContextIds([$context->getId()])
-            ->getMany();
-
-        $filtersForm = new SubmissionFilters(
-            $context,
-            $userRoles,
-            $sections,
-            $categories
-        );
+        $filtersForm = $this->getSubmissionFiltersForm($userRoles, $context);
 
         // ContributorsForm
         $contributorForm = new ContributorForm(
@@ -151,8 +136,6 @@ class DashboardHandlerNext extends Handler
               $context
 
         );
-
-
 
         $selectRevisionDecisionForm = new \PKP\components\forms\decision\SelectRevisionDecisionForm();
         $selectRevisionRecommendationForm = new \PKP\components\forms\decision\SelectRevisionRecommendationForm();
@@ -167,8 +150,6 @@ class DashboardHandlerNext extends Handler
             }
         }
 
-        // OJS specific, might need to be adjusted for OMP/OPS
-        $paymentManager = Application::get()->getPaymentManager($context);
             
         $templateMgr->setState([
             'pageInitConfig' => [
@@ -177,25 +158,24 @@ class DashboardHandlerNext extends Handler
                 'dashboardPage' => $this->dashboardPage,
                 'countPerPage' => $this->perPage,
                 'filtersForm' => $filtersForm->getConfig(),
-                'contributorForm' => $contributorForm->getConfig(),
                 'views' => $this->getViews(),
                 'columns' => $this->getColumns(),
                 'publicationSettings' => [
                     'supportsCitations' => !!$context->getData('citations'),
                     'identifiersEnabled' => $identifiersEnabled,
-                    'submissionPaymentsEnabled' => $paymentManager->publicationEnabled()
+                ],
+                'componentForms' => [
+                    'contributorForm' => $contributorForm->getConfig(),
                 ]
             ]
         ]);
 
         $templateMgr->assign([
-            'pageComponent' => 'PageOJS',
+            'pageComponent' => 'Page',
             'pageTitle' => __('navigation.submissions'),
             'pageWidth' => TemplateManager::PAGE_WIDTH_FULL,
         ]);
 
-
-        class_exists(\APP\components\forms\publication\AssignToIssueForm::class); // Force define of FORM_ASSIGN_TO_ISSUE
 
         $templateMgr->setConstants([
             'STAGE_STATUS_SUBMISSION_UNASSIGNED' => Repo::submission()::STAGE_STATUS_SUBMISSION_UNASSIGNED,
@@ -243,6 +223,7 @@ class DashboardHandlerNext extends Handler
             'DECISION_EXTERNAL_REVIEW' => Decision::EXTERNAL_REVIEW,
             'DECISION_SKIP_EXTERNAL_REVIEW' => Decision::SKIP_EXTERNAL_REVIEW,
             'DECISION_INITIAL_DECLINE' => Decision::INITIAL_DECLINE,
+            'DECISION_REVERT_INITIAL_DECLINE' => Decision::REVERT_INITIAL_DECLINE,
             'DECISION_SEND_TO_PRODUCTION' => Decision::SEND_TO_PRODUCTION,
             'DECISION_BACK_FROM_COPYEDITING' => Decision::BACK_FROM_COPYEDITING,
             'DECISION_NEW_EXTERNAL_ROUND' => Decision::NEW_EXTERNAL_ROUND,
@@ -250,10 +231,8 @@ class DashboardHandlerNext extends Handler
 
             'DECISION_RECOMMEND_ACCEPT' => Decision::RECOMMEND_ACCEPT,
             'DECISION_RECOMMEND_DECLINE' => Decision::RECOMMEND_DECLINE,
-            'DECISION_RECOMMEND_ACCEPT' => Decision::RECOMMEND_ACCEPT,
             'DECISION_RECOMMEND_PENDING_REVISIONS' => Decision::RECOMMEND_PENDING_REVISIONS,
             'DECISION_RECOMMEND_RESUBMIT' => Decision::RECOMMEND_RESUBMIT,
-
 
             'SUBMISSION_FILE_SUBMISSION' => SubmissionFile::SUBMISSION_FILE_SUBMISSION,
             'SUBMISSION_FILE_REVIEW_FILE' => SubmissionFile::SUBMISSION_FILE_REVIEW_FILE,
@@ -264,7 +243,6 @@ class DashboardHandlerNext extends Handler
             'SUBMISSION_FILE_PRODUCTION_READY' => SubmissionFile::SUBMISSION_FILE_PRODUCTION_READY,
             'SUBMISSION_FILE_PROOF' => SubmissionFile::SUBMISSION_FILE_PROOF,
             'SUBMISSION_FILE_JATS' => SubmissionFile::SUBMISSION_FILE_JATS,
-            'FORM_ASSIGN_TO_ISSUE' => FORM_ASSIGN_TO_ISSUE,
             'FORM_PUBLISH' => PublishForm::FORM_PUBLISH,
 
             'REVIEWER_SELECT_ADVANCED_SEARCH' => PKPReviewerGridHandler::REVIEWER_SELECT_ADVANCED_SEARCH,
@@ -281,8 +259,13 @@ class DashboardHandlerNext extends Handler
 
             'NOTIFICATION_TYPE_VISIT_CATALOG' => Notification::NOTIFICATION_TYPE_VISIT_CATALOG,
             'NOTIFICATION_TYPE_ASSIGN_PRODUCTIONUSER' => Notification::NOTIFICATION_TYPE_ASSIGN_PRODUCTIONUSER,
-            'NOTIFICATION_TYPE_AWAITING_REPRESENTATIONS' => Notification::NOTIFICATION_TYPE_AWAITING_REPRESENTATIONS
+            'NOTIFICATION_TYPE_AWAITING_REPRESENTATIONS' => Notification::NOTIFICATION_TYPE_AWAITING_REPRESENTATIONS,
+        
+            // OMP specific constants
         ]);
+
+       $this->setupIndex($request);
+
 
         $templateMgr->display('dashboard/editors.tpl');
     }
@@ -414,4 +397,22 @@ class DashboardHandlerNext extends Handler
             }
         };
     }
+
+    /**
+     * Placeholder method to be overridden by apps in order to add
+     * app-specific data to the template
+     *
+     * @param Request $request
+     */
+    public function setupIndex($request)
+    {
+    }
+
+
+    /**
+     */
+    abstract protected function getSubmissionFiltersForm($userRoles, $context);
+
+
+
 }
