@@ -363,7 +363,7 @@ class Author extends Identity
      *
      * @return string
      */
-    public function getLocalizedAffiliationNamesAsString(?string $preferredLocale = null, ?string $separator = ', '): string
+    public function getLocalizedAffiliationNamesAsString(?string $preferredLocale = null, ?string $separator = '; '): string
     {
         return implode(
             $separator,
