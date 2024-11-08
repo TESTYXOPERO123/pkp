@@ -43,9 +43,9 @@ class I7135_CreateAuthorAffiliationsTables extends Migration
             $table->string('setting_name', 255);
             $table->mediumText('setting_value')->nullable();
 
-            $table->index(['author_affiliation_id'], 'author_affiliation_settings_author_affiliation_id');
+            $table->foreign('author_affiliation_id')
+                ->references('author_affiliation_id')->on('author_affiliations')->cascadeOnDelete();
             $table->unique(['author_affiliation_id', 'locale', 'setting_name'], 'author_affiliation_settings_unique');
-            $table->foreign('author_affiliation_id')->references('author_affiliation_id')->on('author_affiliations')->cascadeOnDelete();
         });
     }
 

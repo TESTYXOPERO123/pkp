@@ -48,7 +48,6 @@ class RorsMigration extends Migration
 
             $table->foreign('ror_id')
                 ->references('ror_id')->on('rors')->cascadeOnDelete();
-            $table->index(['ror_id'], 'ror_settings_ror_id');
             $table->unique(['ror_id', 'locale', 'setting_name'], 'ror_settings_unique');
         });
 
