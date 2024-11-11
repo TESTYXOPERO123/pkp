@@ -62,6 +62,22 @@ class Author extends Identity
     //
 
     /**
+     * Get ID of publication.
+     */
+    public function getPublicationId(): ?int
+    {
+        return $this->getData('publicationId');
+    }
+
+    /**
+     * Set ID of publication.
+     */
+    public function setPublicationId(int $publicationId): void
+    {
+        $this->setData('publicationId', $publicationId);
+    }
+
+    /**
      * Get ID of submission.
      *
      * @return int

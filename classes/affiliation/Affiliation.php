@@ -37,7 +37,9 @@ class Affiliation extends DataObject
         return $this->getData('ror');
     }
 
-    /** @copydoc DataObject::getLocalizedName() */
+    /**
+     * Get localized affiliation name.
+     */
     public function getLocalizedName(): mixed
     {
         return $this->getLocalizedData('name');
