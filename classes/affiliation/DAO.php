@@ -70,20 +70,6 @@ class DAO extends EntityDAO
     }
 
     /**
-     * Check if an affiliation exists.
-     *
-     * @param int $id
-     *
-     * @return bool
-     */
-    public function exists(int $id): bool
-    {
-        return DB::table($this->table)
-            ->where($this->primaryKeyColumn, '=', $id)
-            ->exists();
-    }
-
-    /**
      * Get the number of Affiliation's matching the configured query
      */
     public function getCount(Collector $query): int
@@ -95,8 +81,6 @@ class DAO extends EntityDAO
 
     /**
      * Get a list of ids matching the configured query
-     *
-     * @return Collection<int,int>
      */
     public function getIds(Collector $query): Collection
     {
@@ -108,8 +92,6 @@ class DAO extends EntityDAO
 
     /**
      * Get a collection of affiliations matching the configured query
-     *
-     * @return LazyCollection<int,T>
      */
     public function getMany(Collector $query): LazyCollection
     {
@@ -157,25 +139,17 @@ class DAO extends EntityDAO
     }
 
     /**
-     * Delete an author's affiliations.
-     *
-     * @param int $authorId
-     *
-     * @return void
+     * Delete author's affiliations.
      */
     public function deleteByAuthorId(int $authorId): void
     {
         DB::table($this->table)
-            ->Where($this->getParentColumn(), '=', $authorId)
+            ->where($this->getParentColumn(), '=', $authorId)
             ->delete();
     }
 
     /**
      * * Insert on duplicate update.
-     *
-     * @param Affiliation $affiliation
-     *
-     * @return void
      */
     public function updateOrInsert(Affiliation $affiliation): void
     {

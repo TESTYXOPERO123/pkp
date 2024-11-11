@@ -12,7 +12,7 @@
  *
  * @see DAO
  *
- * @brief Basic class describing a affiliation.
+ * @brief Basic class describing an affiliation.
  */
 
 namespace PKP\affiliation;
@@ -31,15 +31,13 @@ class Affiliation extends DataObject
 
     /**
      * Get the ROR
-     *
-     * @return string|null
      */
     public function getROR(): ?string
     {
         return $this->getData('ror');
     }
 
-    /** @copydoc DataObject::getLocalizedGivenName() */
+    /** @copydoc DataObject::getLocalizedName() */
     public function getLocalizedName(): mixed
     {
         return $this->getLocalizedData('name');

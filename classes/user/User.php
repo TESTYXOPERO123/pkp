@@ -514,23 +514,16 @@ class User extends Identity implements Authenticatable
 
     /**
      * Get affiliation (position, institution, etc.).
-     *
-     * @param string $locale
-     *
-     * @return string|array
      */
-    public function getAffiliation($locale)
+    public function getAffiliation(?string $locale): string|array
     {
         return $this->getData('affiliation', $locale);
     }
 
     /**
      * Set affiliation.
-     *
-     * @param string $affiliation
-     * @param string $locale
      */
-    public function setAffiliation($affiliation, $locale)
+    public function setAffiliation(array $affiliation, ?string $locale): void
     {
         $this->setData('affiliation', $affiliation, $locale);
     }
@@ -538,7 +531,7 @@ class User extends Identity implements Authenticatable
     /**
      * Get the localized affiliation
      */
-    public function getLocalizedAffiliation()
+    public function getLocalizedAffiliation(): ?string
     {
         return $this->getLocalizedData('affiliation');
     }

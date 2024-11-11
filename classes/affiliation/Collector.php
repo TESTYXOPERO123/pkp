@@ -8,7 +8,7 @@
  *
  * @class Collector
  *
- * @brief A helper class to configure a Query Builder to get a collection of rors
+ * @brief A helper class to configure a Query Builder to get a collection of affiliations
  */
 
 namespace PKP\affiliation;
@@ -25,7 +25,6 @@ use PKP\plugins\Hook;
  */
 class Collector implements CollectorInterface
 {
-    /** @var DAO */
     public DAO $dao;
 
     public ?int $count = null;
@@ -60,8 +59,6 @@ class Collector implements CollectorInterface
 
     /**
      * @copydoc DAO::getMany()
-     *
-     * @return LazyCollection<int,T>
      */
     public function getMany(): LazyCollection
     {
@@ -79,10 +76,6 @@ class Collector implements CollectorInterface
 
     /**
      * Filter by affiliation name.
-     *
-     * @param string|null $name
-     *
-     * @return $this
      */
     public function filterByName(?string $name): self
     {

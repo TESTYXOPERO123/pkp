@@ -98,7 +98,7 @@ class PKPRorController extends PKPBaseController
      */
     public function get(Request $illuminateRequest): JsonResponse
     {
-        if (!Repo::ror()->exists((int) $illuminateRequest->route('rorId'), $this->getRequest()->getContext()->getId())) {
+        if (!Repo::ror()->exists((int) $illuminateRequest->route('rorId'))) {
             return response()->json([
                 'error' => __('api.rors.404.rorNotFound')
             ], Response::HTTP_OK);

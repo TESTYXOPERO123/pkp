@@ -155,9 +155,8 @@ class DAO extends EntityDAO
 
         // Set the primary locale from the submission
         $author->setData('locale', $row->submission_locale);
-
         $author->setAffiliations(
-            $this->retrieveAffiliations($author->getId())
+            Repo::affiliation()->getByAuthorId($author->getId())
                 ->remember()
         );
 
@@ -173,7 +172,7 @@ class DAO extends EntityDAO
 
         $author->setData('id', $newAuthorId);
 
-        $this->saveAffiliations($author);
+        Repo::affiliation()->saveAffiliations($author);
 
         return $newAuthorId;
     }
@@ -183,7 +182,7 @@ class DAO extends EntityDAO
      */
     public function update(Author $author)
     {
-        $this->saveAffiliations($author);
+        Repo::affiliation()->saveAffiliations($author);
 
         parent::_update($author);
     }
@@ -237,44 +236,5 @@ class DAO extends EntityDAO
         foreach ($authorIds as $seq => $authorId) {
             DB::table('authors')->where('author_id', '=', $authorId)->update(['seq' => $seq]);
         }
-    }
-
-    /**
-     * Get affiliations for a given author from database.
-     *
-     * @param int $authorId
-     *
-     * @return LazyCollection
-     */
-    public function retrieveAffiliations(int $authorId): LazyCollection
-    {
-        return Repo::affiliation()->getByAuthorId($authorId);
-    }
-
-    /**
-     * Save affiliations to the database.
-     *
-     * @param Author $author
-     *
-     * @return void
-     */
-    public function saveAffiliations(Author $author): void
-    {
-        Repo::affiliation()
-            ->saveAffiliations(
-                $author->getData('affiliations'),
-                $author->getId());
-    }
-
-    /**
-     * Delete an author's affiliations
-     *
-     * @param int $authorId
-     *
-     * @return void
-     */
-    protected function deleteAffiliations(int $authorId): void
-    {
-        Repo::affiliation()->deleteByAuthorId($authorId);
     }
 }

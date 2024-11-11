@@ -15,6 +15,8 @@ namespace PKP\affiliation\maps;
 
 use Illuminate\Support\Enumerable;
 use PKP\affiliation\Affiliation;
+use PKP\facades\Repo;
+use APP\facades\Repo as AppRepo;
 use PKP\services\PKPSchemaService;
 
 class Schema extends \PKP\core\maps\Schema
@@ -36,7 +38,7 @@ class Schema extends \PKP\core\maps\Schema
     }
 
     /**
-     * Summarize a affiliation
+     * Summarize an affiliation
      *
      * Includes properties with the apiSummary flag in the affiliation schema.
      */
@@ -72,7 +74,7 @@ class Schema extends \PKP\core\maps\Schema
     }
 
     /**
-     * Map schema properties of a Affiliation to an assoc array
+     * Map schema properties of an Affiliation to an assoc array
      */
     protected function mapByProperties(array $props, Affiliation $item): array
     {
@@ -84,7 +86,13 @@ class Schema extends \PKP\core\maps\Schema
                     break;
             }
         }
-        $output = $this->schemaService->addMissingMultilingualValues($this->schema, $output, $this->context->getSupportedFormLocales());
+
+        $author = Repo::author()->get($item->getAuthorId());
+        $locales =
+            AppRepo::submission()->get(
+                AppRepo::publication()->get($author->getData('publicationId'))->getData('submissionId'))
+                ->getPublicationLanguages($this->context->getSupportedSubmissionMetadataLocales());
+        $output = $this->schemaService->addMissingMultilingualValues($this->schema, $output, $locales);
         ksort($output);
         return $this->withExtensions($output, $item);
     }

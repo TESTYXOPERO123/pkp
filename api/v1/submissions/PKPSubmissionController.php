@@ -666,7 +666,8 @@ class PKPSubmissionController extends PKPBaseController
 
         // Create an author record from the submitter's user account
         if ($submitAsUserGroup->getRoleId() === Role::ROLE_ID_AUTHOR) {
-            $author = Repo::author()->newAuthorFromUser($request->getUser(), $submission->getDefaultLocale());
+            $author = Repo::author()->newAuthorFromUser($request->getUser(),
+                $submission->getPublicationLanguages($context->getSupportedSubmissionMetadataLocales()));
             $author->setData('publicationId', $publication->getId());
             $author->setUserGroupId($submitAsUserGroup->getId());
             $authorId = Repo::author()->add($author);

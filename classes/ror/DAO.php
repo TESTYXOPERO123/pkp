@@ -32,8 +32,6 @@ use PKP\services\PKPSchemaService;
  */
 class DAO extends EntityDAO
 {
-    use EntityWithParent;
-
     /** @copydoc EntityDAO::$schema */
     public $schema = PKPSchemaService::SCHEMA_ROR;
 
@@ -55,19 +53,7 @@ class DAO extends EntityDAO
     ];
 
     /**
-     * Get the parent object ID column name
-     *
-     * @return string
-     */
-    public function getParentColumn(): string
-    {
-        return 'ror_id';
-    }
-
-    /**
      * Instantiate a new DataObject
-     *
-     * @return Ror
      */
     public function newDataObject(): Ror
     {
@@ -75,11 +61,28 @@ class DAO extends EntityDAO
     }
 
     /**
+     * Check if a ror exists.
+     */
+    public function exists(int $id): bool
+    {
+        return DB::table($this->table)
+            ->where($this->primaryKeyColumn, '=', $id)
+            ->exists();
+    }
+
+    /**
+     * Get an Ror
+     */
+    public function get(int $id): ?Ror
+    {
+        $row = DB::table($this->table)
+            ->where($this->primaryKeyColumn, $id)
+            ->first();
+        return $row ? $this->fromRow($row) : null;
+    }
+
+    /**
      * Get the number of RORs matching the configured query
-     *
-     * @param Collector $query
-     *
-     * @return int
      */
     public function getCount(Collector $query): int
     {
@@ -90,10 +93,6 @@ class DAO extends EntityDAO
 
     /**
      * Get a list of ids matching the configured query
-     *
-     * @param Collector $query
-     *
-     * @return Collection<int,int>
      */
     public function getIds(Collector $query): Collection
     {
@@ -105,10 +104,6 @@ class DAO extends EntityDAO
 
     /**
      * Get a collection of rors matching the configured query
-     *
-     * @param Collector $query
-     *
-     * @return LazyCollection<int,T>
      */
     public function getMany(Collector $query): LazyCollection
     {
@@ -123,15 +118,6 @@ class DAO extends EntityDAO
         });
     }
 
-    /** @copydoc EntityDAO::fromRow() */
-    public function fromRow(object $row): Ror
-    {
-        /** @var Ror $ror */
-        $ror = parent::fromRow($row);
-
-        return $ror;
-    }
-
     /** @copydoc EntityDAO::insert() */
     public function insert(Ror $ror): int
     {
@@ -141,10 +127,6 @@ class DAO extends EntityDAO
     /** @copydoc EntityDAO::update() */
     public function update(Ror $ror): void
     {
-        if (empty($ror->getId())) {
-            $ror->setId($this->getIdByRor($ror->getData('ror')));
-        }
-
         parent::_update($ror);
     }
 
@@ -156,10 +138,6 @@ class DAO extends EntityDAO
 
     /**
      * Get ror_id for given ror.
-     *
-     * @param string $ror
-     *
-     * @return int
      */
     public function getIdByRor(string $ror): int
     {
@@ -176,10 +154,6 @@ class DAO extends EntityDAO
 
     /**
      * Check if ror exists with given ror
-     *
-     * @param string $ror
-     *
-     * @return bool
      */
     public function existsByRor(string $ror): bool
     {
@@ -190,10 +164,6 @@ class DAO extends EntityDAO
 
     /**
      * Insert on duplicate update.
-     *
-     * @param Ror $ror
-     *
-     * @return void
      */
     public function updateOrInsert(Ror $ror): void
     {

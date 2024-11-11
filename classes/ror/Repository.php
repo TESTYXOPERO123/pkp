@@ -17,12 +17,10 @@ use APP\core\Request;
 use Illuminate\Support\Facades\App;
 use PKP\plugins\Hook;
 use PKP\services\PKPSchemaService;
-use PKP\validation\ValidatorFactory;
 
 class Repository
 {
-    /** @var DAO */
-    public $dao;
+    public DAO $dao;
 
     /** @var string $schemaMap The name of the class to map this entity to its schema */
     public $schemaMap = maps\Schema::class;
@@ -51,9 +49,9 @@ class Repository
     }
 
     /** @copydoc DAO::exists() */
-    public function exists(int $id, ?int $contextId = null): bool
+    public function exists(int $id): bool
     {
-        return $this->dao->exists($id, $contextId);
+        return $this->dao->exists($id);
     }
 
     /** @copydoc DAO::get() */
@@ -69,57 +67,11 @@ class Repository
     }
 
     /**
-     * Get an instance of the map class for mapping
-     * rors to their schema
+     * Get an instance of the map class for mapping rors to their schema.
      */
     public function getSchemaMap(): maps\Schema
     {
         return app('maps')->withExtensions($this->schemaMap);
-    }
-
-    /**
-     * Validate properties for a ror
-     *
-     * Perform validation checks on data used to add or edit a ror.
-     *
-     * @param Ror|null $object Ror being edited. Pass `null` if creating a new submission
-     * @param array $props A key/value array with the new data to validate
-     * @param array $allowedLocales The context's supported locales
-     * @param string $primaryLocale The context's primary locale
-     *
-     * @return array A key/value array with validation errors. Empty if no errors
-     *
-     * @hook Ror::validate [[&$errors, $object, $props, $allowedLocales, $primaryLocale]]
-     */
-    public function validate(?Ror $object, array $props, array $allowedLocales, string $primaryLocale): array
-    {
-        $errors = [];
-
-        $validator = ValidatorFactory::make(
-            $props,
-            $this->schemaService->getValidationRules($this->dao->schema, $allowedLocales)
-        );
-
-        // Check required fields if we're adding a ror
-        ValidatorFactory::required(
-            $validator,
-            $object,
-            $this->schemaService->getRequiredProps($this->dao->schema),
-            $this->schemaService->getMultilingualProps($this->dao->schema),
-            $allowedLocales,
-            $primaryLocale
-        );
-
-        // Check for input from disallowed locales
-        ValidatorFactory::allowedLocales($validator, $this->schemaService->getMultilingualProps($this->dao->schema), $allowedLocales);
-
-        if ($validator->fails()) {
-            $errors = $this->schemaService->formatValidationErrors($validator->errors());
-        }
-
-        Hook::call('Ror::validate', [&$errors, $object, $props, $allowedLocales, $primaryLocale]);
-
-        return $errors;
     }
 
     /** @copydoc DAO::insert() */
@@ -159,9 +111,6 @@ class Repository
 
     /**
      * Insert on duplicate update.
-     *
-     * @param Ror $ror
-     * @return void
      */
     public function updateOrInsert(Ror $ror): void
     {

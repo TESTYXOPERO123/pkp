@@ -24,7 +24,6 @@ use PKP\core\interfaces\CollectorInterface;
  */
 class Collector implements CollectorInterface
 {
-    /** @var DAO */
     public DAO $dao;
 
     /** Get rors with a search phrase */
@@ -42,24 +41,19 @@ class Collector implements CollectorInterface
         $this->dao = $dao;
     }
 
+    /** @copydoc: DAP: getCount() */
     public function getCount(): int
     {
         return $this->dao->getCount($this);
     }
 
-    /**
-     * @return Collection<int,int>
-     */
+    /** @copydoc DAO::getIds() */
     public function getIds(): Collection
     {
         return $this->dao->getIds($this);
     }
 
-    /**
-     * @copydoc DAO::getMany()
-     *
-     * @return LazyCollection<int,T>
-     */
+    /** @copydoc DAO::getMany() */
     public function getMany(): LazyCollection
     {
         return $this->dao->getMany($this);
@@ -67,10 +61,6 @@ class Collector implements CollectorInterface
 
     /**
      * Filter rors by those matching a search query
-     *
-     * @param string|null $searchPhrase
-     *
-     * @return $this
      */
     public function filterBySearchPhrase(?string $searchPhrase): self
     {
@@ -80,10 +70,6 @@ class Collector implements CollectorInterface
 
     /**
      * Filter by ror name.
-     *
-     * @param string|null $name
-     *
-     * @return $this
      */
     public function filterByName(?string $name): self
     {
@@ -110,9 +96,7 @@ class Collector implements CollectorInterface
         return $this;
     }
 
-    /**
-     * @copydoc CollectorInterface::getQueryBuilder()
-     */
+    /**@copydoc CollectorInterface::getQueryBuilder() */
     public function getQueryBuilder(): Builder
     {
         $qb = DB::table($this->dao->table . ' as r')->select('r.*');

@@ -16,6 +16,7 @@ namespace PKP\affiliation;
 use APP\core\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\LazyCollection;
+use PKP\author\Author;
 use PKP\facades\Repo;
 use PKP\plugins\Hook;
 use PKP\services\PKPSchemaService;
@@ -23,8 +24,7 @@ use PKP\validation\ValidatorFactory;
 
 class Repository
 {
-    /** @var DAO */
-    public $dao;
+    public DAO $dao;
 
     /** @var string $schemaMap The name of the class to map this entity to its schema */
     public $schemaMap = maps\Schema::class;
@@ -53,15 +53,15 @@ class Repository
     }
 
     /** @copydoc DAO::exists() */
-    public function exists(int $id, ?int $contextId = null): bool
+    public function exists(int $id, ?int $authorId = null): bool
     {
-        return $this->dao->exists($id, $contextId);
+        return $this->dao->exists($id, $authorId);
     }
 
     /** @copydoc DAO::get() */
-    public function get(int $id, ?int $contextId = null): ?Affiliation
+    public function get(int $id, ?int $authorId = null): ?Affiliation
     {
-        return $this->dao->get($id, $contextId);
+        return $this->dao->get($id, $authorId);
     }
 
     /** @copydoc DAO::getCollector() */
@@ -78,12 +78,13 @@ class Repository
         return app('maps')->withExtensions($this->schemaMap);
     }
 
+
     /**
-     * Validate properties for a affiliation
+     * Validate properties for an affiliation
      *
-     * Perform validation checks on data used to add or edit a affiliation.
+     * Perform validation checks on data used to add or edit an affiliation.
      *
-     * @param Affiliation|null $object Affiliation being edited. Pass `null` if creating a new submission
+     * @param Affiliation|null $affiliation Affiliation being edited. Pass `null` if creating a new affiliation
      * @param array $props A key/value array with the new data to validate
      * @param array $allowedLocales The context's supported locales
      * @param string $primaryLocale The context's primary locale
@@ -92,7 +93,7 @@ class Repository
      *
      * @hook Affiliation::validate [[&$errors, $object, $props, $allowedLocales, $primaryLocale]]
      */
-    public function validate(?Affiliation $object, array $props, array $allowedLocales, string $primaryLocale): array
+    public function validate(?Affiliation $affiliation, array $props, array $allowedLocales, string $primaryLocale): array
     {
         $errors = [];
 
@@ -101,10 +102,10 @@ class Repository
             $this->schemaService->getValidationRules($this->dao->schema, $allowedLocales)
         );
 
-        // Check required fields if we're adding a affiliation
+        // Check required fields if we're adding an affiliation
         ValidatorFactory::required(
             $validator,
-            $object,
+            $affiliation,
             $this->schemaService->getRequiredProps($this->dao->schema),
             $this->schemaService->getMultilingualProps($this->dao->schema),
             $allowedLocales,
@@ -118,36 +119,36 @@ class Repository
             $errors = $this->schemaService->formatValidationErrors($validator->errors());
         }
 
-        Hook::call('Affiliation::validate', [&$errors, $object, $props, $allowedLocales, $primaryLocale]);
+        Hook::call('Affiliation::validate', [&$errors, $affiliation, $props, $allowedLocales, $primaryLocale]);
 
         return $errors;
     }
 
     /** @copydoc DAO::insert() */
-    public function add(Affiliation $row): int
+    public function add(Affiliation $affiliation): int
     {
-        $id = $this->dao->insert($row);
-        Hook::call('Affiliation::add', [$row]);
+        $id = $this->dao->insert($affiliation);
+        Hook::call('Affiliation::add', [$affiliation]);
         return $id;
     }
 
     /** @copydoc DAO::update() */
-    public function edit(Affiliation $row, array $params): void
+    public function edit(Affiliation $affiliation, array $params): void
     {
-        $newRow = clone $row;
+        $newRow = clone $affiliation;
         $newRow->setAllData(array_merge($newRow->_data, $params));
-        Hook::call('Affiliation::edit', [$newRow, $row, $params]);
+        Hook::call('Affiliation::edit', [$newRow, $affiliation, $params]);
         $this->dao->update($newRow);
     }
 
     /**
      * @copydoc DAO::delete()
      */
-    public function delete(Affiliation $row): void
+    public function delete(Affiliation $affiliation): void
     {
-        Hook::call('Affiliation::delete::before', [$row]);
-        $this->dao->delete($row);
-        Hook::call('Affiliation::delete', [$row]);
+        Hook::call('Affiliation::delete::before', [$affiliation]);
+        $this->dao->delete($affiliation);
+        Hook::call('Affiliation::delete', [$affiliation]);
     }
 
     /**
@@ -162,10 +163,6 @@ class Repository
 
     /**
      * Get all affiliations for a given author.
-     *
-     * @param int $authorId
-     *
-     * @return LazyCollection
      */
     public function getByAuthorId(int $authorId): LazyCollection
     {
@@ -176,16 +173,14 @@ class Repository
 
     /**
      * Save affiliations.
-     *
-     * @param array|Affiliation[] $affiliations
-     * @param int $authorId
-     *
-     * @return void
      */
-    public function saveAffiliations(array $affiliations, int $authorId): void
+    public function saveAffiliations(Author $author): void
     {
+        $affiliations = $author->getAffiliations();
+        $authorId = $author->getId();
+
         // delete all affiliations if parameter $affiliations empty array
-        if (empty($affiliations)) {
+        if ($affiliations->isEmpty()) {
             $this->deleteByAuthorId($authorId);
             return;
         }
@@ -198,7 +193,7 @@ class Repository
             $currentAffiliationId = $currentAffiliation->getId();
 
             foreach ($affiliations as $affiliation) {
-                if ($affiliation instanceof Affiliation) {
+                if (is_a($affiliation, 'Affiliation')) {
                     $affiliationId = (int)$affiliation->getId();
                 } else {
                     $affiliationId = (int)$affiliation['id'];
@@ -237,11 +232,7 @@ class Repository
     }
 
     /**
-     * Delete an author's affiliations.
-     *
-     * @param int $authorId
-     *
-     * @return void
+     * Delete author's affiliations.
      */
     public function deleteByAuthorId(int $authorId): void
     {
@@ -250,36 +241,29 @@ class Repository
 
     /**
      * Migrates affiliation.
-     *
-     * @param string $affiliationName
-     * @param string $locale
-     *
-     * @return LazyCollection
      */
-    public function migrateAffiliation(string $affiliationName, string $locale): LazyCollection
+    public function migrateAffiliation(array $userAffiliation, array $allowedLocales): LazyCollection
     {
-        $affiliation = Repo::affiliation()->newDataObject();
-        $params = [];
-
-        $rors = Repo::ror()->getCollector()->filterByName($affiliationName);
-        foreach ($rors as $ror) {
-            $ror = Repo::ror()->get($ror->ror_id);
-            $params = [
-                "id" => null,
-                "authorId" => null,
-                "ror" => $ror->_data['ror'],
-                "name" => $ror->_data['name']
-            ];
-        }
-
+        $affiliation = $this->newDataObject();
         $params = [
             "id" => null,
             "authorId" => null,
             "ror" => null,
-            "name" => [
-                $locale => $affiliation
-            ]
+            "name" => array_intersect_key($userAffiliation, $allowedLocales)
         ];
+
+        foreach ($userAffiliation as $affiliationName) {
+            $ror = Repo::ror()->getCollector()->filterByName($affiliationName)->getMany()->first();
+            if($ror){
+                $params = [
+                    "id" => null,
+                    "authorId" => null,
+                    "ror" => $ror->_data['ror'],
+                    "name" => $ror->_data['name']
+                ];
+                break;
+            }
+        }
 
         $affiliation->setAllData($params);
 

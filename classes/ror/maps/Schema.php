@@ -84,7 +84,6 @@ class Schema extends \PKP\core\maps\Schema
                     break;
             }
         }
-        $output = $this->schemaService->addMissingMultilingualValues($this->schema, $output, $this->context->getSupportedFormLocales());
         ksort($output);
         return $this->withExtensions($output, $item);
     }
