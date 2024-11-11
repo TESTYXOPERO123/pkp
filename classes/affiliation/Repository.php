@@ -13,11 +13,13 @@
 
 namespace PKP\affiliation;
 
+use APP\author\Author;
 use APP\core\Request;
+use APP\facades\Repo;
+use APP\submission\Submission;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\LazyCollection;
-use PKP\author\Author;
-use PKP\facades\Repo;
+use PKP\context\Context;
 use PKP\plugins\Hook;
 use PKP\services\PKPSchemaService;
 use PKP\validation\ValidatorFactory;
@@ -78,48 +80,53 @@ class Repository
         return app('maps')->withExtensions($this->schemaMap);
     }
 
-
     /**
      * Validate properties for an affiliation
      *
      * Perform validation checks on data used to add or edit an affiliation.
      *
-     * @param Affiliation|null $affiliation Affiliation being edited. Pass `null` if creating a new affiliation
+     * @param Author|null $author Author being edited. Pass `null` if creating a new author
      * @param array $props A key/value array with the new data to validate
-     * @param array $allowedLocales The context's supported locales
-     * @param string $primaryLocale The context's primary locale
+     * @param Submission $submission The context's supported locales
+     * @param Context $context The context's primary locale
      *
      * @return array A key/value array with validation errors. Empty if no errors
      *
-     * @hook Affiliation::validate [[&$errors, $object, $props, $allowedLocales, $primaryLocale]]
+     * @hook Affiliation::validate [[&$errors, $object, $props, $submission, $context]]
      */
-    public function validate(?Affiliation $affiliation, array $props, array $allowedLocales, string $primaryLocale): array
+    public function validate(?Author $author, array $props, Submission $submission, Context $context): array
     {
-        $errors = [];
+        $schemaService = app()->get('schema');
+        $primaryLocale = $submission->getData('locale');
+        $allowedLocales = $submission->getPublicationLanguages($context->getSupportedSubmissionMetadataLocales());
 
         $validator = ValidatorFactory::make(
             $props,
-            $this->schemaService->getValidationRules($this->dao->schema, $allowedLocales)
-        );
-
-        // Check required fields if we're adding an affiliation
-        ValidatorFactory::required(
-            $validator,
-            $affiliation,
-            $this->schemaService->getRequiredProps($this->dao->schema),
-            $this->schemaService->getMultilingualProps($this->dao->schema),
-            $allowedLocales,
-            $primaryLocale
+            $schemaService->getValidationRules($this->dao->schema, $allowedLocales)
         );
 
         // Check for input from disallowed locales
-        ValidatorFactory::allowedLocales($validator, $this->schemaService->getMultilingualProps($this->dao->schema), $allowedLocales);
+        ValidatorFactory::allowedLocales(
+            $validator,
+            $this->schemaService->getMultilingualProps(PKPSchemaService::SCHEMA_AFFILIATION), $allowedLocales
+        );
 
-        if ($validator->fails()) {
-            $errors = $this->schemaService->formatValidationErrors($validator->errors());
+        // The authorId must exist and ror_id or one name must exist
+        $validator->after(function ($validator) use ($props) {
+            // do something useful
+        });
+
+        $errors = [];
+
+        $affiliations = (!empty($author)) ? $author->getAffiliations() : $props['affiliations'];
+        foreach($affiliations as $affiliation) {
+            if ($validator->fails()) {
+                $errors = $this->schemaService->formatValidationErrors($validator->errors());
+                break;
+            }
         }
 
-        Hook::call('Affiliation::validate', [&$errors, $affiliation, $props, $allowedLocales, $primaryLocale]);
+        Hook::call('Affiliation::validate',  [&$errors, $author, $props, $submission, $context]);
 
         return $errors;
     }

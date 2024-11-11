@@ -25,6 +25,9 @@ class FieldAffiliations extends Field
     /** @var array A default for this field when no value is specified. */
     public $default = [];
 
+    /** @var int Author ID associated with the ORCID */
+    public int $authorId = 0;
+
     /**
      * @copydoc Field::getConfig()
      */
@@ -51,6 +54,7 @@ class FieldAffiliations extends Field
         $config['currentLocale'] = $currentLocale;
         $config['supportedLocales'] = $supportedLocales;
         $config['localeDisplayNames'] = $localeDisplayNames;
+        $config['authorId'] = $this->authorId;
 
         return $config;
     }
