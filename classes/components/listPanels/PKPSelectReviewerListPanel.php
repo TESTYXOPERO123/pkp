@@ -15,8 +15,11 @@
 
 namespace PKP\components\listPanels;
 
+use APP\core\Application;
 use APP\facades\Repo;
+use APP\submission\Submission;
 use Illuminate\Support\Enumerable;
+use PKP\submission\reviewer\suggestion\ReviewerSuggestion;
 use PKP\user\Collector;
 
 class PKPSelectReviewerListPanel extends ListPanel
@@ -48,6 +51,9 @@ class PKPSelectReviewerListPanel extends ListPanel
     /** @var Enumerable List of users who completed a review in the last round */
     public Enumerable $lastRoundReviewers;
 
+    /** @var Submission The associated submission  */
+    public Submission $submission;
+
     /**
      * @copydoc ListPanel::set()
      */
@@ -63,6 +69,7 @@ class PKPSelectReviewerListPanel extends ListPanel
      */
     public function getConfig()
     {
+        $context = Application::get()->getRequest()->getContext();
         $config = parent::getConfig();
         $config['apiUrl'] = $this->apiUrl;
         $config['authorAffiliations'] = $this->authorAffiliations;
@@ -156,7 +163,13 @@ class PKPSelectReviewerListPanel extends ListPanel
         $config['selectReviewerLabel'] = __('editor.submission.selectReviewer');
         $config['warnOnAssignmentLabel'] = __('reviewer.list.warnOnAssign');
         $config['warnOnAssignmentUnlockLabel'] = __('reviewer.list.warnOnAssignUnlock');
+        $config['submission'] = $this->submission;
 
+        if ($context->getData('reviewerSuggestionEnabled')) {
+            $config['suggestionTitle'] = __('editor.submission.findAndSelectReviewerFromSuggestions');
+            $config['suggestions'] = $this->getReviewerSuggestions();
+        }
+        
         return $config;
     }
 
@@ -201,5 +214,19 @@ class PKPSelectReviewerListPanel extends ListPanel
             ->includeReviewerData()
             ->offset(null)
             ->limit($this->count);
+    }
+
+    /**
+     * Get the reviewer suggestions submission
+     */
+    protected function getReviewerSuggestions(): array
+    {
+        $map = Repo::submission()->getSchemaMap();
+        $suggestions = ReviewerSuggestion::query()
+            ->withSubmissionIds($this->submission->getId())
+            ->withApproved(false)
+            ->get();
+
+        return $map->summarizeReviewerSuggestion($suggestions);
     }
 }
