@@ -1561,8 +1561,16 @@ class PKPSubmissionController extends PKPBaseController
 
         $author = Repo::author()->newDataObject($params);
         $newId = Repo::author()->add($author);
+
         $author->setId($newId);
+        $params['id'] = $newId;
+        $errors = Repo::affiliation()->validate($author, $params, $submission, $submissionContext);
+        if (!empty($errors)) {
+            return response()->json($errors, Response::HTTP_BAD_REQUEST);
+        }
+
         Repo::affiliation()->saveAffiliations($author);
+
         $author = Repo::author()->get($newId);
 
         return response()->json(
@@ -1693,7 +1701,14 @@ class PKPSubmissionController extends PKPBaseController
         }
 
         Repo::author()->edit($author, $params);
+
+        $errors = Repo::affiliation()->validate($author, $params, $submission, $submissionContext);
+        if (!empty($errors)) {
+            return response()->json($errors, Response::HTTP_BAD_REQUEST);
+        }
+
         Repo::affiliation()->saveAffiliations($author);
+
         $author = Repo::author()->get($author->getId());
 
         return response()->json(
