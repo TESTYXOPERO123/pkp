@@ -96,13 +96,11 @@ class Repository
      */
     public function validate(?Author $author, array $props, Submission $submission, Context $context): array
     {
+        $errors = [];
+
         $affiliations = (empty($author)) ? $props['affiliations'] : $author->getAffiliations();
 
-        // Check if affiliations is empty
-        if (empty($affiliations)) return [];
-
         $schemaService = app()->get('schema');
-        $primaryLocale = $submission->getData('locale');
         $allowedLocales = $submission->getPublicationLanguages($context->getSupportedSubmissionMetadataLocales());
 
         // Check if author exists
@@ -114,44 +112,47 @@ class Repository
             if (isset($props['id']) && !$validator->errors()->get('id')) {
                 $author = Repo::author()->get($props['id']);
                 if (!$author) {
-                    $validator->errors()->add('authorId', __('author.authorNotFound'));
+                    $validator->errors()->add('affiliations-authorId', __('author.authorNotFound'));
                 }
             }
         });
+
         if ($validator->fails()) {
-            return $schemaService->formatValidationErrors($validator->errors());
+            $errors = $schemaService->formatValidationErrors($validator->errors());
         }
         unset($validator);
 
-        $errors = [];
+        if(empty($errors)) {
+            foreach ($affiliations as $affiliation) {
+            $affiliation['authorId'] = $props['id'];
 
-        foreach ($affiliations as $affiliation) {
-            $validator = ValidatorFactory::make(
-                $affiliation,
-                $schemaService->getValidationRules($this->dao->schema, $allowedLocales)
-            );
+                $validator = ValidatorFactory::make(
+                    $affiliation,
+                    $schemaService->getValidationRules($this->dao->schema, $allowedLocales)
+                );
 
-            // Check for input from disallowed locales
-            ValidatorFactory::allowedLocales(
-                $validator,
-                $this->schemaService->getMultilingualProps(PKPSchemaService::SCHEMA_AFFILIATION),
-                $allowedLocales
-            );
+                // Check for input from disallowed locales
+                ValidatorFactory::allowedLocales(
+                    $validator,
+                    $this->schemaService->getMultilingualProps(PKPSchemaService::SCHEMA_AFFILIATION),
+                    $allowedLocales
+                );
 
-            // The ror or one name must exist
-            $validator->after(function ($validator) use ($affiliation) {
-                if(empty($affiliation['ror']) && empty($affiliation['name'])) {
-                    $validator->errors()->add('affiliationId', __('author.affiliationRorAndNameEmpty'));
+                // The ror or one name must exist
+                $validator->after(function ($validator) use ($affiliation) {
+                    if (empty($affiliation['ror']) && empty($affiliation['name'])) {
+                        $validator->errors()->add('affiliations-affiliationId', __('author.affiliationRorAndNameEmpty'));
+                    }
+                });
+
+                if ($validator->fails()) {
+                    $errors = $this->schemaService->formatValidationErrors($validator->errors());
+                    break;
                 }
-            });
-
-            if ($validator->fails()) {
-                $errors = $this->schemaService->formatValidationErrors($validator->errors());
-                break;
             }
         }
 
-        // Hook::call('Affiliation::validate', [&$errors, $author, $props, $submission, $context]);
+        Hook::call('Affiliation::validate', [&$errors, $author, $props, $submission, $context]);
 
         return $errors;
     }

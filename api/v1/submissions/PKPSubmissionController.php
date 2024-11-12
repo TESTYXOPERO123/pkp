@@ -1562,13 +1562,11 @@ class PKPSubmissionController extends PKPBaseController
         $author = Repo::author()->newDataObject($params);
         $newId = Repo::author()->add($author);
 
-        $author->setId($newId);
         $params['id'] = $newId;
+        $author->setId($newId);
+        $author->setAffiliations($params['affiliations']);
         $errors = Repo::affiliation()->validate($author, $params, $submission, $submissionContext);
-        if (!empty($errors)) {
-            return response()->json($errors, Response::HTTP_BAD_REQUEST);
-        }
-
+        if (!empty($errors)) return response()->json($errors, Response::HTTP_BAD_REQUEST);
         Repo::affiliation()->saveAffiliations($author);
 
         $author = Repo::author()->get($newId);
@@ -1694,19 +1692,11 @@ class PKPSubmissionController extends PKPBaseController
             return response()->json($errors, Response::HTTP_BAD_REQUEST);
         }
 
-        $errors = Repo::affiliation()->validate($author, $params, $submission, $submissionContext);
-
-        if (!empty($errors)) {
-            return response()->json($errors, Response::HTTP_BAD_REQUEST);
-        }
-
         Repo::author()->edit($author, $params);
 
+        $author->setAffiliations($params['affiliations']);
         $errors = Repo::affiliation()->validate($author, $params, $submission, $submissionContext);
-        if (!empty($errors)) {
-            return response()->json($errors, Response::HTTP_BAD_REQUEST);
-        }
-
+        if (!empty($errors)) return response()->json($errors, Response::HTTP_BAD_REQUEST);
         Repo::affiliation()->saveAffiliations($author);
 
         $author = Repo::author()->get($author->getId());
