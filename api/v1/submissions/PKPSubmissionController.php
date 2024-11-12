@@ -671,6 +671,8 @@ class PKPSubmissionController extends PKPBaseController
             $author->setData('publicationId', $publication->getId());
             $author->setUserGroupId($submitAsUserGroup->getId());
             $authorId = Repo::author()->add($author);
+            $author->setId($authorId);
+            Repo::affiliation()->saveAffiliations($author);
             Repo::publication()->edit($publication, ['primaryContactId' => $authorId]);
         }
 
@@ -1559,6 +1561,8 @@ class PKPSubmissionController extends PKPBaseController
 
         $author = Repo::author()->newDataObject($params);
         $newId = Repo::author()->add($author);
+        $author->setId($newId);
+        Repo::affiliation()->saveAffiliations($author);
         $author = Repo::author()->get($newId);
 
         return response()->json(
@@ -1682,7 +1686,14 @@ class PKPSubmissionController extends PKPBaseController
             return response()->json($errors, Response::HTTP_BAD_REQUEST);
         }
 
+        $errors = Repo::affiliation()->validate($author, $params, $submission, $submissionContext);
+
+        if (!empty($errors)) {
+            return response()->json($errors, Response::HTTP_BAD_REQUEST);
+        }
+
         Repo::author()->edit($author, $params);
+        Repo::affiliation()->saveAffiliations($author);
         $author = Repo::author()->get($author->getId());
 
         return response()->json(
@@ -2140,6 +2151,7 @@ class PKPSubmissionController extends PKPBaseController
             ->each(function (Author $contributor) use ($contributorProps, $editProps, $newLocale) {
                 if (!($contributor->getData('givenName')[$newLocale] ?? null)) {
                     Repo::author()->edit($contributor, $editProps($contributor, $contributorProps));
+                    Repo::affiliation()->saveAffiliations($contributor);
                 }
             });
     }

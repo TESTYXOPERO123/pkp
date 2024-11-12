@@ -302,6 +302,7 @@ class OrcidManager
                 Repo::user()->edit($identity);
             } else {
                 Repo::author()->edit($identity);
+                Repo::affiliation()->saveAffiliations($identity);
             }
         }
     }

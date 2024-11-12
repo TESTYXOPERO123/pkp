@@ -96,37 +96,62 @@ class Repository
      */
     public function validate(?Author $author, array $props, Submission $submission, Context $context): array
     {
+        $affiliations = (empty($author)) ? $props['affiliations'] : $author->getAffiliations();
+
+        // Check if affiliations is empty
+        if (empty($affiliations)) return [];
+
         $schemaService = app()->get('schema');
         $primaryLocale = $submission->getData('locale');
         $allowedLocales = $submission->getPublicationLanguages($context->getSupportedSubmissionMetadataLocales());
 
+        // Check if author exists
         $validator = ValidatorFactory::make(
             $props,
-            $schemaService->getValidationRules($this->dao->schema, $allowedLocales)
+            $schemaService->getValidationRules(PKPSchemaService::SCHEMA_AUTHOR, $allowedLocales)
         );
-
-        // Check for input from disallowed locales
-        ValidatorFactory::allowedLocales(
-            $validator,
-            $this->schemaService->getMultilingualProps(PKPSchemaService::SCHEMA_AFFILIATION), $allowedLocales
-        );
-
-        // The authorId must exist and ror_id or one name must exist
         $validator->after(function ($validator) use ($props) {
-            // do something useful
+            if (isset($props['id']) && !$validator->errors()->get('id')) {
+                $author = Repo::author()->get($props['id']);
+                if (!$author) {
+                    $validator->errors()->add('authorId', __('author.authorNotFound'));
+                }
+            }
         });
+        if ($validator->fails()) {
+            return $schemaService->formatValidationErrors($validator->errors());
+        }
+        unset($validator);
 
         $errors = [];
 
-        $affiliations = (!empty($author)) ? $author->getAffiliations() : $props['affiliations'];
-        foreach($affiliations as $affiliation) {
+        foreach ($affiliations as $affiliation) {
+            $validator = ValidatorFactory::make(
+                $affiliation,
+                $schemaService->getValidationRules($this->dao->schema, $allowedLocales)
+            );
+
+            // Check for input from disallowed locales
+            ValidatorFactory::allowedLocales(
+                $validator,
+                $this->schemaService->getMultilingualProps(PKPSchemaService::SCHEMA_AFFILIATION),
+                $allowedLocales
+            );
+
+            // The ror or one name must exist
+            $validator->after(function ($validator) use ($affiliation) {
+                if(empty($affiliation['ror']) && empty($affiliation['name'])) {
+                    $validator->errors()->add('affiliationId', __('author.affiliationRorAndNameEmpty'));
+                }
+            });
+
             if ($validator->fails()) {
                 $errors = $this->schemaService->formatValidationErrors($validator->errors());
                 break;
             }
         }
 
-        Hook::call('Affiliation::validate',  [&$errors, $author, $props, $submission, $context]);
+        // Hook::call('Affiliation::validate', [&$errors, $author, $props, $submission, $context]);
 
         return $errors;
     }
@@ -188,11 +213,11 @@ class Repository
 
         // delete all affiliations if parameter $affiliations empty array
         if ($affiliations->isEmpty()) {
-            $this->deleteByAuthorId($authorId);
+            $this->dao->deleteByAuthorId($authorId);
             return;
         }
 
-        // delete affiliations not in param $affiliations
+        // deleted affiliations not in param $affiliations
         // do this before insert/update, otherwise inserted will be deleted
         $currentAffiliations = $this->getByAuthorId($authorId);
         foreach ($currentAffiliations as $currentAffiliation) {
@@ -220,7 +245,7 @@ class Repository
         // insert, update
         foreach ($affiliations as $affiliation) {
 
-            if (!($affiliation instanceof Affiliation)) {
+            if (!is_a($affiliation, 'Affiliation')) {
 
                 if (empty($affiliation)) continue;
 
@@ -239,14 +264,6 @@ class Repository
     }
 
     /**
-     * Delete author's affiliations.
-     */
-    public function deleteByAuthorId(int $authorId): void
-    {
-        $this->dao->deleteByAuthorId($authorId);
-    }
-
-    /**
      * Migrates affiliation.
      */
     public function migrateAffiliation(array $userAffiliation, array $allowedLocales): LazyCollection
@@ -261,7 +278,7 @@ class Repository
 
         foreach ($userAffiliation as $affiliationName) {
             $ror = Repo::ror()->getCollector()->filterByName($affiliationName)->getMany()->first();
-            if($ror){
+            if ($ror) {
                 $params = [
                     "id" => null,
                     "authorId" => null,
