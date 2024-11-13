@@ -65,6 +65,9 @@ msgstr "The institution <strong>{$institution}</strong> will be deleted."
 msgid "user.affiliations.searchPhraseLabel"
 msgstr "Type the institute name in {$language}"
 
+msgid "user.affiliations.searchPhraseNothingFound"
+msgstr "Your search phrase could not be found"
+
 msgid "user.authorization.accessDenied"
 msgstr "Access denied."
 

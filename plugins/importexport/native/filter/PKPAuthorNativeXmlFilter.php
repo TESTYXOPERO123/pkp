@@ -106,9 +106,21 @@ class PKPAuthorNativeXmlFilter extends NativeExportFilter
         // Add metadata
         $this->createLocalizedNodes($doc, $authorNode, 'givenname', $author->getGivenName(null));
         $this->createLocalizedNodes($doc, $authorNode, 'familyname', $author->getFamilyName(null));
-
-        $this->createLocalizedNodes($doc, $authorNode, 'affiliations', $author->getAffiliations()->all());
-
+        $affiliations = $author->getAffiliations();
+        foreach($affiliations as $affiliation) {
+            if(empty($affiliation->getData('ror') && !empty($affiliation->getData('name')))) {
+                $this->createLocalizedNodes($doc, $authorNode, 'affiliation', $affiliation->getData('name'));
+            }
+        }
+        foreach($affiliations as $affiliation) {
+            if(!empty($affiliation->getData('ror'))) {
+                $rorAffiliationNode = $doc->createElementNS($deployment->getNamespace(), 'rorAffiliation');
+                $rorAffiliationRor = $doc->createElementNS($deployment->getNamespace(), 'ror', $affiliation->getData('ror'));
+                $rorAffiliationNode->appendChild($rorAffiliationRor);
+                $this->createLocalizedNodes($doc, $rorAffiliationNode, 'name', $affiliation->getData('name'));
+                $authorNode->appendChild($rorAffiliationNode);
+            }
+        }
         $this->createOptionalNode($doc, $authorNode, 'country', $author->getCountry());
         $authorNode->appendChild($doc->createElementNS($deployment->getNamespace(), 'email', htmlspecialchars($author->getEmail(), ENT_COMPAT, 'UTF-8')));
         $this->createOptionalNode($doc, $authorNode, 'url', $author->getUrl());
