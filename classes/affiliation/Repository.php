@@ -18,7 +18,6 @@ use APP\core\Request;
 use APP\facades\Repo;
 use APP\submission\Submission;
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\LazyCollection;
 use PKP\context\Context;
 use PKP\plugins\Hook;
 use PKP\services\PKPSchemaService;
@@ -197,11 +196,13 @@ class Repository
     /**
      * Get all affiliations for a given author.
      */
-    public function getByAuthorId(int $authorId): LazyCollection
+    public function getByAuthorId(int $authorId): array
     {
-        return $this->getCollector()
-            ->filterByAuthorIds([$authorId])
-            ->getMany();
+        return iterator_to_array(
+            $this->getCollector()
+                ->filterByAuthorIds([$authorId])
+                ->getMany()
+        );
     }
 
     /**
@@ -212,8 +213,8 @@ class Repository
         $affiliations = $author->getAffiliations();
         $authorId = $author->getId();
 
-        // delete all affiliations if parameter $affiliations empty array
-        if ($affiliations->isEmpty()) {
+        // delete all affiliations if parameter $affiliations empty
+        if (empty($affiliations)) {
             $this->dao->deleteByAuthorId($authorId);
             return;
         }
@@ -226,7 +227,7 @@ class Repository
             $currentAffiliationId = $currentAffiliation->getId();
 
             foreach ($affiliations as $affiliation) {
-                if (is_a($affiliation, 'Affiliation')) {
+                if (is_a($affiliation, Affiliation::class)) {
                     $affiliationId = (int)$affiliation->getId();
                 } else {
                     $affiliationId = (int)$affiliation['id'];
@@ -246,7 +247,7 @@ class Repository
         // insert, update
         foreach ($affiliations as $affiliation) {
 
-            if (!is_a($affiliation, 'Affiliation')) {
+            if (!is_a($affiliation, Affiliation::class)) {
 
                 if (empty($affiliation)) continue;
 
@@ -267,7 +268,7 @@ class Repository
     /**
      * Migrates affiliation.
      */
-    public function migrateAffiliation(array $userAffiliation, array $allowedLocales): LazyCollection
+    public function migrateAffiliation(array $userAffiliation, array $allowedLocales): Affiliation
     {
         $affiliation = $this->newDataObject();
         $params = [
@@ -292,6 +293,6 @@ class Repository
 
         $affiliation->setAllData($params);
 
-        return new LazyCollection($affiliation);
+        return $affiliation;
     }
 }

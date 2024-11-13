@@ -18,8 +18,6 @@
 namespace PKP\author;
 
 use APP\facades\Repo;
-use Illuminate\Support\LazyCollection;
-use PKP\affiliation\Affiliation;
 use PKP\facades\Locale;
 use PKP\identity\Identity;
 
@@ -277,21 +275,15 @@ class Author extends Identity
     /**
      * Get affiliations (position, institution, etc.).
      */
-    public function getAffiliations(): LazyCollection
+    public function getAffiliations(): array
     {
-        $affiliations = $this->getData('affiliations');
-
-        if(!is_a($affiliations, 'LazyCollection')) {
-            $affiliations = new LazyCollection($affiliations);
-        }
-
-        return $affiliations;
+        return $this->getData('affiliations');
     }
 
     /**
      * Set affiliations.
      */
-    public function setAffiliations(LazyCollection $affiliations): void
+    public function setAffiliations(array $affiliations): void
     {
         $this->setData('affiliations', $affiliations);
     }
@@ -301,24 +293,20 @@ class Author extends Identity
      */
     public function setAffiliationsFromString(string $affiliationName, string $locale): void
     {
-        $this->setData(
-            'affiliations',
-            new LazyCollection(
-                Repo::affiliation()->newDataObject([
-                        "id" => null,
-                        "authorId" => $this->getId(),
-                        "ror" => null,
-                        "name" => [$locale => $affiliationName,],
-                    ]
-                )
-            )
-        );
+        $this->setAffiliations([
+            Repo::affiliation()->newDataObject([
+                "id" => null,
+                "authorId" => $this->getId(),
+                "ror" => null,
+                "name" => [$locale => $affiliationName]
+            ])
+        ]);
     }
 
     /**
      * Get localized affiliations.
      */
-    public function getLocalizedAffiliations(?string $preferredLocale = null): ?LazyCollection
+    public function getLocalizedAffiliations(?string $preferredLocale = null): array
     {
         $value = [];
 
@@ -329,12 +317,12 @@ class Author extends Identity
                     "id" => $affiliation->getId(),
                     "authorId" => $affiliation->getAuthorId(),
                     "ror" => $affiliation->getRor(),
-                    "name" => $affiliation->getLocalizedName(),
+                    "name" => $affiliation->getLocalizedName()
                 ];
             }
         }
 
-        return new LazyCollection($value);
+        return $value;
     }
 
     /**
@@ -344,9 +332,7 @@ class Author extends Identity
     {
         $value = [];
 
-        $affiliations = $this->getAffiliations();
-
-        foreach ($affiliations as $affiliation) {
+        foreach ($this->getAffiliations() as $affiliation) {
             foreach ($this->getLocalePrecedence($preferredLocale) as $locale) {
                 $name = $affiliation->getData('name');
                 if (!empty($name[$locale])) {
