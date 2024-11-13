@@ -106,13 +106,6 @@ class NativeXmlPKPAuthorFilter extends NativeImportFilter
                         }
                         $author->setFamilyName($n->textContent, $locale);
                         break;
-                    case 'affiliation':
-                        $locale = $n->getAttribute('locale');
-                        if (empty($locale)) {
-                            $locale = $publication->getData('locale');
-                        }
-                        $author->setAffiliationsFromString($n->textContent, $locale);
-                        break;
                     case 'country': $author->setCountry($n->textContent);
                         break;
                     case 'email': $author->setEmail($n->textContent);
