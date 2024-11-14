@@ -1,10 +1,9 @@
 <?php
-
 /**
  * @file classes/author/DAO.php
  *
- * Copyright (c) 2014-2021 Simon Fraser University
- * Copyright (c) 2000-2021 John Willinsky
+ * Copyright (c) 2014-2024 Simon Fraser University
+ * Copyright (c) 2000-2024 John Willinsky
  * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
  *
  * @class DAO
@@ -156,6 +155,8 @@ class DAO extends EntityDAO
 
         // Set the primary locale from the submission
         $author->setData('locale', $row->submission_locale);
+
+        $author->setAffiliations(Repo::affiliation()->getByAuthorId($author->getId()));
 
         return $author;
     }

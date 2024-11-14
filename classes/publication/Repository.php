@@ -353,6 +353,8 @@ abstract class Repository
                 $newAuthor->setData('id', null);
                 $newAuthor->setData('publicationId', $newPublication->getId());
                 $newAuthorId = Repo::author()->add($newAuthor);
+                $author->setId($newAuthorId);
+                Repo::affiliation()->saveAffiliations($author);
 
                 if ($author->getId() === $publication->getData('primaryContactId')) {
                     $this->edit($newPublication, ['primaryContactId' => $newAuthorId]);

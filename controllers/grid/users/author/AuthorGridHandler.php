@@ -235,6 +235,7 @@ class AuthorGridHandler extends GridHandler
         $author = Repo::author()->get((int) $rowId, $this->getPublication()->getId());
 
         Repo::author()->edit($author, ['seq' => $newSequence]);
+        Repo::affiliation()->saveAffiliations($author);
     }
 
     /**

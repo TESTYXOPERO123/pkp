@@ -3,8 +3,8 @@
 /**
  * @file api/v1/submissions/PKPSubmissionController.php
  *
- * Copyright (c) 2023 Simon Fraser University
- * Copyright (c) 2023 John Willinsky
+ * Copyright (c) 2023-2024 Simon Fraser University
+ * Copyright (c) 2023-2024 John Willinsky
  * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
  *
  * @class PKPSubmissionController
@@ -666,10 +666,13 @@ class PKPSubmissionController extends PKPBaseController
 
         // Create an author record from the submitter's user account
         if ($submitAsUserGroup->getRoleId() === Role::ROLE_ID_AUTHOR) {
-            $author = Repo::author()->newAuthorFromUser($request->getUser());
+            $author = Repo::author()->newAuthorFromUser($request->getUser(),
+                $submission->getPublicationLanguages($context->getSupportedSubmissionMetadataLocales()));
             $author->setData('publicationId', $publication->getId());
             $author->setUserGroupId($submitAsUserGroup->getId());
             $authorId = Repo::author()->add($author);
+            $author->setId($authorId);
+            Repo::affiliation()->saveAffiliations($author);
             Repo::publication()->edit($publication, ['primaryContactId' => $authorId]);
         }
 
@@ -1558,6 +1561,14 @@ class PKPSubmissionController extends PKPBaseController
 
         $author = Repo::author()->newDataObject($params);
         $newId = Repo::author()->add($author);
+
+        $params['id'] = $newId;
+        $author->setId($newId);
+        $author->setAffiliations($params['affiliations']);
+        $errors = Repo::affiliation()->validate($author, $params, $submission, $submissionContext);
+        if (!empty($errors)) return response()->json($errors, Response::HTTP_BAD_REQUEST);
+        Repo::affiliation()->saveAffiliations($author);
+
         $author = Repo::author()->get($newId);
 
         return response()->json(
@@ -1682,6 +1693,12 @@ class PKPSubmissionController extends PKPBaseController
         }
 
         Repo::author()->edit($author, $params);
+
+        $author->setAffiliations($params['affiliations']);
+        $errors = Repo::affiliation()->validate($author, $params, $submission, $submissionContext);
+        if (!empty($errors)) return response()->json($errors, Response::HTTP_BAD_REQUEST);
+        Repo::affiliation()->saveAffiliations($author);
+
         $author = Repo::author()->get($author->getId());
 
         return response()->json(
@@ -2139,6 +2156,7 @@ class PKPSubmissionController extends PKPBaseController
             ->each(function (Author $contributor) use ($contributorProps, $editProps, $newLocale) {
                 if (!($contributor->getData('givenName')[$newLocale] ?? null)) {
                     Repo::author()->edit($contributor, $editProps($contributor, $contributorProps));
+                    Repo::affiliation()->saveAffiliations($contributor);
                 }
             });
     }
