@@ -596,6 +596,6 @@ class Locale implements LocaleInterface
         if (is_int($index = array_search($serverPreference, $supportedLocales))) {
             array_splice($supportedLocales, $index, 1);
         }
-        return $this->_getRequest()->getPreferredLanguage([$serverPreference, ...$supportedLocales]);
+        return app(\Illuminate\Http\Request::class)->getPreferredLanguage([$serverPreference, ...$supportedLocales]);
     }
 }
