@@ -150,7 +150,7 @@ class PKPEmailTemplateController extends PKPBaseController
 
         Hook::call('API::emailTemplates::params', [$collector, $illuminateRequest]);
 
-        $emailTemplates = $collector->getMany();
+        $emailTemplates = collect(Repo::emailTemplate()->filterTemplatesByUserAccess($collector->getMany(), $request->getUser(), $request->getContext()->getId()));
 
         return response()->json([
             'itemsMax' => $collector->getCount(),
@@ -168,6 +168,12 @@ class PKPEmailTemplateController extends PKPBaseController
         $emailTemplate = Repo::emailTemplate()->getByKey($request->getContext()->getId(), $illuminateRequest->route('key'));
 
         if (!$emailTemplate) {
+            return response()->json([
+                'error' => __('api.emailTemplates.404.templateNotFound')
+            ], Response::HTTP_NOT_FOUND);
+        }
+
+        if (!Repo::emailTemplate()->isTemplateAccessibleToUser($request->getUser(), $emailTemplate, $request->getContext()->getId())) {
             return response()->json([
                 'error' => __('api.emailTemplates.404.templateNotFound')
             ], Response::HTTP_NOT_FOUND);
@@ -195,6 +201,9 @@ class PKPEmailTemplateController extends PKPBaseController
 
         $emailTemplate = Repo::emailTemplate()->newDataObject($params);
         Repo::emailTemplate()->add($emailTemplate);
+
+        Repo::emailTemplate()->setEmailTemplateAccess($emailTemplate, $requestContext->getId(), $params['userGroupIds'], $params['isUnrestricted']);
+
         $emailTemplate = Repo::emailTemplate()->getByKey($emailTemplate->getData('contextId'), $emailTemplate->getData('key'));
 
         return response()->json(Repo::emailTemplate()->getSchemaMap()->map($emailTemplate), Response::HTTP_OK);
@@ -232,6 +241,11 @@ class PKPEmailTemplateController extends PKPBaseController
             $params['contextId'] = $requestContext->getId();
         }
 
+
+        // If the user submitted an empty list (meaning all user groups were unchecked), the empty array is converted to null in the request's data.
+        // Convert back to an empty array.
+        $params['userGroupIds'] = $params['userGroupIds'] ?: [];
+
         $errors = Repo::emailTemplate()->validate(
             $emailTemplate,
             $params,
@@ -243,6 +257,7 @@ class PKPEmailTemplateController extends PKPBaseController
         }
 
         Repo::emailTemplate()->edit($emailTemplate, $params);
+        Repo::emailTemplate()->setEmailTemplateAccess($emailTemplate, $requestContext->getId(), $params['userGroupIds'], $params['isUnrestricted']);
 
         $emailTemplate = Repo::emailTemplate()->getByKey(
             // context ID is null if edited for the first time

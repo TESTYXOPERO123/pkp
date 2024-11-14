@@ -18,6 +18,7 @@ use APP\facades\Repo;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use PKP\context\Context;
+use PKP\emailTemplate\EmailTemplate;
 use PKP\mail\mailables\DecisionNotifyOtherAuthors;
 use PKP\mail\mailables\EditReviewNotify;
 use PKP\mail\mailables\ReviewCompleteNotifyEditors;
@@ -28,6 +29,7 @@ use PKP\mail\mailables\SubmissionNeedsEditor;
 use PKP\mail\mailables\SubmissionSavedForLater;
 use PKP\mail\traits\Configurable;
 use PKP\plugins\Hook;
+use PKP\userGroup\UserGroup;
 
 class Repository
 {
@@ -101,6 +103,23 @@ class Repository
         $dataDescriptions = $class::getDataDescriptions();
         ksort($dataDescriptions);
 
+        // get roles for mailable
+        $roles = $class::getFromRoleIds();
+        // Get the groups for each role
+        $userGroups = [];
+        $roleNames = Application::get()->getRoleNames();
+
+        $userGroups = collect();
+
+        Repo::userGroup()->getCollector()
+            ->filterByContextIds([Application::get()->getRequest()->getContext()->getId()])
+            ->getMany()->each(fn (UserGroup $group) => $userGroups->add([
+                'id' => $group->getId(),
+                'name' => $group->getLocalizedName(),
+                'roleId' => $group->getRoleId(),
+                'roleName' => $roleNames[$group->getRoleId()]
+            ]));
+
         return [
             '_href' => Application::get()->getRequest()->getDispatcher()->url(
                 Application::get()->getRequest(),
@@ -116,12 +135,14 @@ class Repository
             'name' => $class::getName(),
             'supportsTemplates' => $class::getSupportsTemplates(),
             'toRoleIds' => $class::getToRoleIds(),
+            'canAssignUserGroupToTemplates' => $this->isGroupsAssignableToTemplates($class),
+            'assignableTemplateUserGroups' => $userGroups
         ];
     }
 
     /**
      * Get a full description of a mailable's properties, including any
-     * assigned email templates
+     * assigned email templates that are accessible to user
      */
     public function describeMailable(string $class, int $contextId): array
     {
@@ -137,16 +158,14 @@ class Repository
 
             $defaultTemplate = Repo::emailTemplate()->getByKey($contextId, $class::getEmailTemplateKey());
 
+            $request = Application::get()->getRequest();
+            $user = $request->getUser();
+
+            // Limit templates to only those accessible to the user's user group(s)
+            $userAccessibleTemplates = Repo::emailTemplate()->filterTemplatesByUserAccess(collect(array_merge([$defaultTemplate], $templates->values()->toArray())), $user, $contextId);
             $data['emailTemplates'] = Repo::emailTemplate()
                 ->getSchemaMap()
-                ->summarizeMany(
-                    collect(
-                        array_merge(
-                            [$defaultTemplate],
-                            $templates->values()->toArray()
-                        )
-                    )
-                )
+                ->summarizeMany($userAccessibleTemplates, $class)
                 ->values();
         }
 
@@ -204,6 +223,16 @@ class Repository
         }
 
         return true;
+    }
+
+
+    // Check if the templates of a given mailable can be assigned to specific groups
+    /**
+     * @param Mailable|string $mailable - Mailable class or qualified string referencing the class
+ */
+    public function isGroupsAssignableToTemplates(Mailable|string $mailable): bool
+    {
+        return !in_array(Mailable::FROM_SYSTEM, $mailable::getFromRoleIds());
     }
 
     /**
@@ -264,5 +293,20 @@ class Repository
             mailables\ValidateEmailContext::class,
             mailables\ValidateEmailSite::class,
         ]);
+    }
+
+    /**
+     * Gets the mailable for a given email template
+     *
+     * @param EmailTemplate $template
+     *
+     * Note: This does not discover/find mailbles defined within plugins
+     *
+     * @return string|null - Fully Qualified Class Name of a mailable
+     */
+    public function getMailableByEmailTemplate(EmailTemplate $template): ?string
+    {
+        $emailKey = $template->getData('alternateTo') ?? $template->getData('key');
+        return $this->map()->first(fn ($class) => $class::getEmailTemplateKey() === $emailKey);
     }
 }

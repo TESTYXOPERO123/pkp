@@ -13,6 +13,8 @@
 
 namespace PKP\emailTemplate\maps;
 
+use APP\core\Application;
+use APP\facades\Repo;
 use Illuminate\Support\Enumerable;
 use PKP\core\PKPApplication;
 use PKP\emailTemplate\EmailTemplate;
@@ -40,10 +42,12 @@ class Schema extends \PKP\core\maps\Schema
      * Summarize an email template
      *
      * Includes properties with the apiSummary flag in the email template schema.
+     *
+     * @param null|mixed $mailableClass
      */
-    public function summarize(EmailTemplate $item): array
+    public function summarize(EmailTemplate $item, $mailableClass = null): array
     {
-        return $this->mapByProperties($this->getSummaryProps(), $item);
+        return $this->mapByProperties($this->getSummaryProps(), $item, $mailableClass);
     }
 
     /**
@@ -64,20 +68,22 @@ class Schema extends \PKP\core\maps\Schema
      *
      * @see self::summarize
      */
-    public function summarizeMany(Enumerable $collection): Enumerable
+    public function summarizeMany(Enumerable $collection, string $mailableClass = null): Enumerable
     {
         $this->collection = $collection;
-        return $collection->map(function ($item) {
-            return $this->summarize($item);
+        return $collection->map(function ($item) use ($mailableClass) {
+            return $this->summarize($item, $mailableClass);
         });
     }
 
     /**
-     * Map schema properties of an Announcement to an assoc array
+     * Map schema properties of an Email Template to an assoc array
      */
-    protected function mapByProperties(array $props, EmailTemplate $item): array
+    protected function mapByProperties(array $props, EmailTemplate $item, string $mailableClass = null): array
     {
         $output = [];
+
+        $mailableClass = $mailableClass ?? Repo::mailable()->getMailableByEmailTemplate($item);
         foreach ($props as $prop) {
             switch ($prop) {
                 case '_href':
@@ -87,6 +93,16 @@ class Schema extends \PKP\core\maps\Schema
                         $this->context->getData('urlPath'),
                         'emailTemplates/' . $item->getData('key')
                     );
+                    break;
+                case 'isUnrestricted':
+                    $output['isUnrestricted'] = Repo::emailTemplate()->isTemplateUnrestricted($item->getData('key'), Application::get()->getRequest()->getContext()->getId());
+                    break;
+                case 'assignedUserGroupIds':
+                    if ($mailableClass && Repo::mailable()->isGroupsAssignableToTemplates($mailableClass)) {
+                        $output['assignedUserGroupIds'] = Repo::emailTemplate()->getUserGroupsIdsAssignedToTemplate($item->getData('key'), Application::get()->getRequest()->getContext()->getId());
+                    } else {
+                        $output['assignedUserGroupIds'] = [];
+                    }
                     break;
                 default:
                     $output[$prop] = $item->getData($prop);
