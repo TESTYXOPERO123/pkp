@@ -15,18 +15,31 @@
 
 namespace PKP\components\forms;
 
-use PKP\core\PKPApplication;
-
 class FieldAffiliations extends Field
 {
     /** @copydoc Field::$component */
     public $component = 'field-affiliations';
 
-    /** @var array A default for this field when no value is specified. */
+    /** @copydoc Field::$component */
     public $default = [];
 
-    /** @var int Author ID associated with the ORCID */
+    /**
+     * Author ID associated with the affiliations
+     * Filled in components/ListPanel/ContributorsListPanel.vue
+     */
     public int $authorId = 0;
+
+    /**
+     * Primary language
+     * Filled in components/ListPanel/ContributorsListPanel.vue
+     */
+    public string $primaryLocale = '';
+
+    /**
+     * Supported locales for forms
+     * Filled in components/ListPanel/ContributorsListPanel.vue
+     */
+    public array $supportedFormLocales = [];
 
     /**
      * @copydoc Field::getConfig()
@@ -35,26 +48,10 @@ class FieldAffiliations extends Field
     {
         $config = parent::getConfig();
 
-        $submissionContext = PKPApplication::get()->getRequest()->getContext();
-        $currentLocale = $submissionContext->getPrimaryLocale();
-        $supportedLocales = $submissionContext->getSupportedSubmissionLocales();
-
-        // locale display names
-        $localeDisplayNames = [];
-        foreach ($supportedLocales as $locale) {
-            $localeDisplayNames[$locale] = locale_get_display_name($locale, $currentLocale);
-        }
-
-        // sort supported locales, with current locale as first element
-        $dict = array_flip([$currentLocale]);
-        $positions = array_map(function ($elem) use ($dict) { return $dict[$elem] ?? INF; }, $supportedLocales);
-        array_multisort($positions, $supportedLocales);
-
-        $config['value'] = $this->value ?? $this->default ?? null;
-        $config['currentLocale'] = $currentLocale;
-        $config['supportedLocales'] = $supportedLocales;
-        $config['localeDisplayNames'] = $localeDisplayNames;
         $config['authorId'] = $this->authorId;
+        $config['primaryLocale'] = $this->primaryLocale;
+        $config['supportedFormLocales'] = $this->supportedFormLocales;
+        $config['value'] = $this->value ?? $this->default ?? null;
 
         return $config;
     }
