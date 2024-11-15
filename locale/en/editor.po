@@ -647,3 +647,12 @@ msgstr "Record the response on behalf of the reviewer"
 
 msgid "editor.review.logResponse.form.subDetail"
 msgstr "If the reviewer contacts you through email or any other means, you can record their response for them"
+
+msgid "editor.review.download"
+msgstr "Download Review Form"
+
+msgid "editor.review.authorOnly"
+msgstr "Author-Only Sections Displayed"
+
+msgid "editor.review.allSections"
+msgstr "Editor Form Shows All Review Sections"
